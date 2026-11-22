@@ -214,6 +214,11 @@ figcaption .muted { margin-top: .45rem; }
 .result-source a { width: fit-content; color: var(--fg); }
 .result-source summary { cursor: pointer; }
 .result-source details a { display: block; padding-block: .12rem; }
+.race-evaluation { border-top: 1px solid var(--line); margin-top: 1rem; padding-top: .75rem; }
+.race-evaluation p { font-size: .82rem; margin-top: .3rem; }
+.race-evaluation dl { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .6rem 1rem; margin-block: .8rem; }
+.race-evaluation dt { color: var(--muted); font-size: .78rem; }
+.race-evaluation dd { font: 700 1.1rem var(--mono); margin: .1rem 0; }
 @media (min-width: 52.01rem) {
   .insight-grid:has(#swing-card[hidden]) > :first-child { display: grid; grid-template-columns: minmax(13rem, .7fr) minmax(0, 1fr); column-gap: 2.5rem; align-items: start; }
   .insight-grid:has(#swing-card[hidden]) .share-body { grid-row: 1 / 3; grid-column: 2; margin: 0; }

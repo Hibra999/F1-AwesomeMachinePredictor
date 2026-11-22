@@ -18,7 +18,7 @@
   <header class="masthead">
     <div class="shell local-masthead">
       <div class="wordmark"><span class="wordmark-mark" aria-hidden="true"></span>Podio<span>probable</span> <span class="badge">Mesa local</span></div>
-      <nav aria-label="Mesa local"><a href="#circuit-panel">Mapa</a><a href="#timeline-panel">Cronología</a><a href="./analysis.html#resultados">Resultados</a><a href="./analysis.html">Análisis</a></nav>
+      <nav aria-label="Mesa local"><a href="#circuit-panel">Mapa</a><a href="#timeline-panel">Cronología</a><a id="finish-link" href="#finish-panel" hidden>Cierre y evaluación</a><a href="./analysis.html">Análisis</a></nav>
       <p id="live-status" role="status">Esperando datos…</p>
     </div>
   </header>
@@ -115,6 +115,7 @@
           <button id="play" class="button primary" type="button">Reproducir</button>
           <button id="pause" class="button" type="button">Pausar</button>
           <button id="next" class="button" type="button">Siguiente</button>
+          <button id="last-cut" class="button" type="button">Último</button>
           <button id="follow" class="button" type="button" aria-pressed="false">Seguir actualizaciones</button>
         </div>
         <dl class="race-metadata">
@@ -140,6 +141,14 @@
         <p>Probabilidad de esos tres pilotos en ese orden: <strong id="joint-probability"></strong></p>
       </section>
     </div>
+    <section id="finish-panel" class="results-section" aria-labelledby="finish-title" tabindex="-1" hidden>
+      <p class="eyebrow"><span class="finish-flag" aria-hidden="true"></span>Bandera a cuadros · Captura cerrada</p>
+      <h2 id="finish-title">Cierre y evaluación</h2>
+      <p class="muted"><span id="finish-clock"></span> El cierre del cronometraje no confirma el podio.</p>
+      <p id="finish-message" class="muted" role="status"></p>
+      <div id="finish-result" aria-live="polite"></div>
+      <p id="finish-source" class="micro result-updated"></p>
+    </section>
     <section id="probability-insights" class="insight-grid" aria-label="Distribución y cambios de probabilidad" hidden></section>
     <dialog id="circuit-dialog" aria-labelledby="circuit-title"></dialog>
 

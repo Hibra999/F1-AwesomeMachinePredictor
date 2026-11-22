@@ -10,6 +10,7 @@ Probabilidades de los tres puestos de la clasificación oficial del GP principal
 - **GitHub Pages:** muestra la última previa publicada, el análisis agregado y los [dos últimos podios](https://hibra999.github.io/F1-AwesomeMachinePredictor/#resultados). Compara la terna T−30 puesto por puesto; distingue una emisión real de un backtest, una clasificación provisional de una final y un acierto exacto de un piloto correcto en otro puesto. No sirve cronometraje, posiciones ni archivos de carrera.
 - **São Paulo 2026:** repetición local con 71 vueltas y dos previas reconstruidas. Muestra los pilotos ubicables, el progreso y las salidas de SC y VSC hasta cada corte. El prefijo hasta la vuelta 36 contiene 38 cortes; no usa los eventos posteriores.
 - **Las Vegas 2026:** es la carrera que abre el panel local. Conserva 25 cortes publicados durante el GP, hasta la vuelta 50/50 (`2026-11-22 05:31:27 UTC`). Indica **Directo finalizado**: no simula actividad ni rellena las vueltas sin señal. La captura incluida solo contiene probabilidades propias; no contiene paquetes crudos, GPS ni la clasificación oficial.
+  La [clasificación final FIA, documento 65](https://www.fia.com/system/files/decision-document/2026_las_vegas_grand_prix_-_final_race_classification.pdf) se publicó a las **08:20 UTC**: Verstappen, Norris, Piastri. La previa T−30 **reconstruida** acertó el ganador y dos integrantes, solo uno en su puesto. De los 25 cortes **emitidos** se evaluaron 24 (vueltas 13–49, con huecos): ganador **24/24**, podio exacto **0/24**, Brier **0,09463**, log loss **0,85453**. El corte 50 ya contenía el desenlace. Los 24 cortes no son 24 GP independientes.
 
 ## Resultados
 
@@ -38,6 +39,8 @@ El Elo final T−30 pierde en log loss de ganador. El ensamble en carrera pierde
 - **Fuga:** [prueba automática](reports/leakage.json), São Paulo 2026, con semilla 55293: retirar y corromper los eventos posteriores a pre-FP1, T−30 y vuelta 36 mantuvo todas las ternas idénticas (`Δ máx.=0`, `atol=1e-12`). Verifica el reducer y modelo sellado; no demuestra que el proveedor archivado preservó la primera llegada de cada paquete.
 - **Cambios de posición:** [estudio](reports/position-gain.json) con 40 GP/24 circuitos retenidos y ajustes cronológicos, AUC 0,737; Brier 0,09753 vs 0,10384 del prior. La señal no mejoró Brier de podio (0,05517 con/sin); se excluyó. El proxy no identifica adelantamientos en pista.
 - **Rendimiento:** Windows x64, Python 3.12.13, RTX 5070 12 GB, driver 621.01. Fit y selección 54,49 s CPU; preparar corpus + fit 90,83 s en esta máquina. Microbenchmark CatBoost 30 000 × 23, 140 árboles: CPU 0,753 s, CUDA 11,240 s (incluye inicialización). LightGBM CPU 0,149 s; rueda Windows sin CUDA Tree Learner. NGBoost usa scikit-learn CPU. `uv.lock` fija versiones (LGBM 4.7.0, NGB 0.5.11, CatBoost 1.2.10, FastF1 3.9.2). No hubo beneficio medido para usar CUDA ni un cuello de botella que justificara base de datos externa o reescritura.
+
+**En consola:** `uv run --locked python -m f1forecast diagnostico` compara LightGBM, NGBoost, CatBoost, Elo y las mezclas en el walk-forward y en las 20 carreras finales. Imprime el Brier de cada candidato, el log loss y el podio exacto frente a la referencia, la cobertura y las variables más útiles al enmascararlas fuera de muestra. Lee los informes versionados: no necesita descargar pesos ni reentrenar.
 
 ### Ajuste T−30 con Rustuna
 
@@ -77,6 +80,29 @@ uv run --locked python -m f1forecast.rank_study --work .local --offline
 ```
 
 El primer comando se ejecuta solo si falta el clon. El estudio fija la historia del calendario hasta `e50468712d66daaaf8d637551798c8ce70891e82`. La primera ejecución descarga los boletines; la segunda usa la caché. Un archivo meteorológico ausente o dañado no cuenta como tiempo seco: la puntuación se detiene. El informe incluye fechas de emisión y disponibilidad, SHA de calendarios y huellas de boletines; los datos crudos quedan en `.local/`.
+
+### Rendimiento por piloto: puesto medio, no solo podio
+
+`uv run --locked python -m f1forecast rendimiento` muestra el **puesto medio** de cada piloto entre los inscritos de la última previa publicada. Por componente Plackett–Luce, suma la probabilidad de que cada rival termine delante y añade uno; después pondera los puestos medios con los pesos originales del ensamble. No es el orden de las tres mayores probabilidades de podio ni una clasificación oficial. Antes de mostrarlo, reproduce todas las marginales y el MAP publicados con tolerancia absoluta `1e-12`; si falta el modelo, la alineación o un evento original, no sustituye la previa. Usa el modelo sellado y el historial local de aquel corte. `--feed` permite elegir otra previa; `--events` admite sus eventos originales. El cálculo posterior no se presenta como un nuevo corte emitido entonces. Los puestos por debajo del tercero son una extensión del modelo, no una calibración independiente del orden completo.
+
+**¿Mejora un modelo entrenado directamente para el puesto?** [Prerregistro](reports/prerregistro-rendimiento-pilotos.md) · [Cuatro ventanas y cobertura](reports/driver-performance.json) · [Gráfico](https://hibra999.github.io/F1-AwesomeMachinePredictor/analysis.html#pilotos). Se entrenó CatBoost sobre el percentil oficial de llegada, sin identificadores, con el mismo peso por GP. Las dos señales nuevas fueron la diferencia frente al compañero en su última fase común de clasificación y el ritmo relativo en tandas continuas de FP1. En 48 GP de 2024–25 hubo etiqueta para 951 de los 960 pilotos previstos. Hubo evidencia de compañero para 40 y de tanda para 706; no se imputó información posterior.
+
+| T−30 corregido | MAE del puesto medio ↓ | Brier de podio ↓ | Log loss del ganador ↓ |
+|---|---:|---:|---:|
+| Orden según la referencia disponible | 3,163 | — | — |
+| CatBoost de puestos, base | 3,179 | 0,07119 | 1,568 |
+| CatBoost de puestos + dos señales | 3,183 | 0,07400 | 1,611 |
+| Elo, control probabilístico | — | 0,06606 | 1,272 |
+
+ΔMAE con las dos señales frente a CatBoost base: **+0,005 puestos** (IC 95 % pareado por GP: −0,016 a +0,025). ΔBrier frente a Elo: **+0,00794** (IC: +0,00095 a +0,01474). No cumple la regla de mejora; queda como diagnóstico, no sustituye al modelo de podio. Un error medio de tres puestos no significa tres errores de podio. Próximos contrastes: coste de la penalización de parrilla con boletín FIA fechado; ritmos largos separados por compuesto y edad observados; riesgo de abandono del constructor según carreras anteriores. Ninguna de esas mejoras se da por demostrada.
+
+```powershell
+# Tras preparar el corpus 2022–25 y el clon f1schedule de arriba:
+uv run --locked python -m f1forecast.driver_performance --work .local
+uv run --locked python -m f1forecast.driver_performance --work .local --gp 2025-01
+```
+
+El segundo comando separa la previsión histórica por piloto de `evaluation_only`. Para probar CatBoost experimental en un GP futuro, ejecuta `uv run --locked python -m f1forecast.driver_performance --work .local --gp 2026-22` **a T−30**; no emite fuera de la ventana ni con una lista de inscritos de otro GP. Se puede añadir `--events entradas.jsonl` con `gp_id`, `at` UTC de recepción, `source`, `kind` y campos del evento. Su historial de ajuste y forma termina en 2025; los eventos conocidos del fin de semana pueden entrar en la instantánea. No escribe en Pages.
 
 ### Datos e importancia fuera de muestra
 
@@ -141,7 +167,7 @@ uv run --locked python -m f1forecast panel --port 8070 --replay .local/replay-st
 
 Abre [la carrera actual](http://127.0.0.1:8070/). La mesa lee `.local/live.json`; en una instalación limpia muestra la captura real incluida de Las Vegas. Si se crea el archivo de directo más tarde, el panel lo detecta sin reiniciarse. Con `--live` explícito la mesa espera ese archivo; no lo sustituye por otra carrera. **Reproducir** recorre solamente los cortes disponibles.
 
-Para ver una reconstrucción, usa **Sesión que quieres ver → Backtest** o abre [el backtest de São Paulo](http://127.0.0.1:8070/#backtest). Una repetición completa abre en pausa a mitad de carrera y **Inicio** retrocede a la primera previa. Una repetición parcial abre en su último corte. **Resultados** lleva a una vista separada para no revelar el desenlace. El servidor escucha solo en este PC.
+Para ver una reconstrucción, usa **Sesión que quieres ver → Backtest** o abre [el backtest de São Paulo](http://127.0.0.1:8070/#backtest). Una repetición completa abre en pausa a mitad de carrera y **Inicio** retrocede a la primera previa. Una repetición parcial abre en su último corte. En una captura real cerrada, **Último · ver cierre y evaluación** muestra el desenlace sin salir de la mesa. Retroceder, reproducir o cambiar a backtest oculta el resultado. La fecha del cierre de la captura y la publicación de la clasificación FIA son dos relojes distintos. El servidor escucha solo en este PC.
 
 Elige un piloto en el mapa, la tabla o la gráfica. En las cuatro pistas, los puntos avanzan en el sentido de carrera sobre el eje de [OpenStreetMap, ODbL](AUDIT.md#trazados-usados-openstreetmap-odbl-10). Representan el progreso **estimado** por último cruce y ritmo observado, no GPS. Sin evidencia reciente no se extrapola otra vuelta. Mapa, pastel y tabla usan el mismo color por equipo. Sin WebGL funciona la vista 2D; la extrusión 3D no mide elevación.
 
@@ -162,12 +188,16 @@ No necesitas credenciales de GitHub. El HTML consulta el archivo local cada 3 s 
 uv run --locked python -m f1forecast schedule --gp 2026-22
 # Armar antes del 29 nov 2026 a las 15:30 UTC y mantener Windows despierto.
 uv run --locked python -m f1forecast forecast --gp 2026-22 --horizon pre_race --wait --out site/data/upcoming.json
-# Después de un GP terminado, actualizar la retrospectiva local y su copia estática.
-uv run --locked python -m f1forecast.recent_results --refresh
+# Opcional: refrescar sin esperar al sondeo, sin pesos ni corpus privados.
+uv run --locked python -m f1forecast.recent_results --issued-only --refresh
 python -m f1forecast.analysis_data
 python -m f1forecast.pages
 ```
 
 Haz commit y push del pronóstico después de congelarlo. Pages lo publica con `.github/workflows/deploy.yml`; el flujo rechaza archivos ajenos y cortes en directo o reconstruidos. La hora del corte y la emisión del modelo no son la hora de despliegue.
+
+**Después de la bandera:** `watch` cierra al recibir el estado terminal, también si la carrera se acorta. No inventa vueltas en una reconexión ni reescribe los cortes. En el último corte, el navegador busca cambios de clasificación cada minuto. Si hace falta, el servidor consulta las fuentes oficiales en segundo plano, como máximo una vez cada cinco minutos por GP; conserva el último informe válido en `WORK/recent-podiums.json`. Solo la clasificación **final** habilita el Brier, el log loss y los aciertos de los cortes reales anteriores a la bandera. La vuelta del desenlace nunca puntúa. Un GP sin captura verificable no recibe ceros ficticios.
+
+El flujo de Pages consulta los documentos **cada hora de sábado a lunes** y **a las 09:17 UTC de martes a viernes**, además del disparo manual. Solo guarda y despliega una comparación que haya cambiado. No necesita que Windows esté encendido para actualizar el resultado oficial. Si una captura nueva solo existe en el PC, el servidor de GitHub no puede evaluarla por sí solo. Para publicar **solo su agregado**, ejecuta `uv run --locked python -m f1forecast.recent_results --issued-only --refresh --live .local/qatar-live.json`, exporta con `python -m f1forecast.analysis_data`, verifica con `python -m f1forecast.pages` y sube ambos JSON de `recent-podiums`. No subas el cronometraje ni los paquetes recibidos.
 
 Para otro GP congela primero en un archivo nuevo (`forecast --gp 2026-23 --horizon fp1 --out .local/abu-dabi.json`, antes de Libres 1); después sustituye `site/data/upcoming.json` por ese documento para publicarlo. No se vuelven a emitir cortes reales fuera de su ventana. `--events` acepta NDJSON de un proveedor autorizado: `at` en epoch UTC de recepción o emisión comprobada, `source`, `kind` y los campos correspondientes de `RaceState`.

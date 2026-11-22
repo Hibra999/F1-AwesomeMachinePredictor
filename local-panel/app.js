@@ -17,6 +17,7 @@ const percent = new Intl.NumberFormat("es", { style: "percent", maximumFractionD
 const compare = new Intl.Collator("es");
 const entries = { live: {}, replay: {} };
 const view = { mode: null, doc: null, cursor: 0, follow: true, player: null, driver: null, metric: "podium" };
+const finish = { gp: null, request: null, saved: null };
 
 function text(node, value) {
   if (node.textContent !== value) node.textContent = value;
@@ -63,6 +64,7 @@ function decodeDocument(payload, mode) {
   if (payload?.mode !== mode) throw new Error(`El archivo no corresponde al modo ${modes[mode]}.`);
   if (!isText(payload.event?.id) || !isText(payload.event?.name) || !isText(payload.source)
       || !Number.isFinite(timeNumber(payload.updated_utc)) || typeof payload.complete !== "boolean"
+      || (payload.finish_utc != null && !Number.isFinite(timeNumber(payload.finish_utc)))
       || !Array.isArray(payload.predictions)) {
     throw new Error("El documento de predicciones tiene un formato no válido.");
   }
@@ -114,13 +116,13 @@ async function loadEntry(mode) {
     const revision = await response.text();
     if (entry.revision !== revision) {
       const doc = decodeDocument(JSON.parse(revision), mode);
-      if (mode === "live" && entry.doc && timeNumber(doc.updated_utc) < timeNumber(entry.doc.updated_utc)) {
+      if (mode === "live" && entry.doc?.event.id === doc.event.id && timeNumber(doc.updated_utc) < timeNumber(entry.doc.updated_utc)) {
         throw new Error("El archivo recibido es anterior al último corte guardado.");
       }
       entry.doc = doc;
       entry.revision = revision;
-      if (view.mode === mode) syncView(doc);
     }
+    if (view.mode === mode && view.doc !== entry.doc) syncView(entry.doc);
     entry.error = null;
   } catch (error) {
     entry.error = error instanceof SyntaxError ? "El archivo no contiene JSON válido." : error.message;
@@ -183,7 +185,7 @@ function selectMode(mode) {
   view.driver = null;
   view.cursor = 0;
   view.follow = mode === "live";
-  if (entries[mode].doc) syncView(entries[mode].doc);
+  if (mode === "replay" && entries[mode].doc) syncView(entries[mode].doc);
   else render();
   renderHealth();
   void loadEntry(mode);
@@ -204,8 +206,9 @@ function renderTimeline(prediction, count) {
   const label = checkpoint(prediction);
   text(ui.checkpoint, label);
   text(ui["checkpoint-count"], `Corte ${view.cursor + 1} de ${count}`);
-  text(ui["playback-status"], view.player !== null ? "En reproducción" : !view.follow ? "En pausa"
-    : view.doc.complete ? "Último corte recibido" : "Siguiendo actualizaciones");
+  text(ui["playback-status"], view.player !== null ? "En reproducción"
+    : view.mode === "live" && view.doc.complete && view.cursor === count - 1 ? "Último corte · cierre disponible"
+      : !view.follow ? "En pausa" : "Siguiendo actualizaciones");
   ui.timeline.max = count - 1;
   ui.timeline.value = view.cursor;
   ui.timeline.setAttribute("aria-valuetext", `${label}, ${dateLabel(prediction.cutoff_utc)}`);
@@ -213,6 +216,9 @@ function renderTimeline(prediction, count) {
   ui["first-cut"].disabled = view.cursor === 0;
   ui.previous.disabled = view.cursor === 0;
   ui.next.disabled = view.cursor === count - 1;
+  const closedLive = view.mode === "live" && view.doc.complete;
+  text(ui["last-cut"], closedLive ? "Último · ver cierre y evaluación" : "Último");
+  ui["last-cut"].disabled = view.cursor === count - 1 && !closedLive;
   ui.play.disabled = count < 2 || view.player !== null;
   ui.pause.disabled = view.player === null && (!view.follow || view.doc.complete);
   show(ui.follow, view.mode === "live" && !view.doc.complete);
@@ -357,8 +363,71 @@ function chooseDriver(id) {
   updateMap();
 }
 
+async function refreshFinish() {
+  const { gp, saved } = finish;
+  if (!gp || finish.request) return;
+  const request = new AbortController();
+  finish.request = request;
+  try {
+    const report = await raceInsights.fetchResults(AbortSignal.any([request.signal, AbortSignal.timeout(8000)]));
+    if (request.signal.aborted) return;
+    const race = report.races.find((r) => r.gp === gp) ?? report.pending.find((r) => r.gp === gp);
+    const order = { pending: 0, provisional: 1, final: 2 };
+    const asOf = timeNumber(report.as_of_utc);
+    if (saved && (!race || asOf < saved.asOf || order[race.status] < saved.rank)) {
+      throw new Error("La revisión no actualiza el resultado guardado.");
+    }
+    const stamp = raceInsights.sourceStamp(report);
+    if (race) {
+      const revision = JSON.stringify(race);
+      const card = saved?.revision === revision ? saved.card : raceInsights.resultCard(race);
+      if (card !== saved?.card) ui["finish-result"].replaceChildren(card);
+      finish.saved = { gp, asOf, stamp, rank: order[race.status], revision, card };
+    }
+    text(ui["finish-source"], stamp);
+    text(ui["finish-message"], race ? "" : "Clasificación pendiente: todavía no hay informe para este GP.");
+  } catch {
+    if (!request.signal.aborted) text(ui["finish-message"], saved
+      ? "No se pudo actualizar la clasificación. Se conserva el último informe válido."
+      : "Clasificación pendiente de confirmar. Se volverá a consultar el informe.");
+  } finally {
+    if (finish.request === request) finish.request = null;
+  }
+}
+
+function syncFinish() {
+  const { doc, mode, cursor, player } = view;
+  const gp = mode === "live" && doc?.complete && player === null && doc.predictions.length && cursor === doc.predictions.length - 1
+    ? doc.event.id : null;
+  if (gp) text(ui["finish-clock"], doc.finish_utc
+    ? `Cierre observado (recepción): ${dateLabel(doc.finish_utc)}.`
+    : `Hora del documento de cierre: ${dateLabel(doc.updated_utc)}.`);
+  if (gp === finish.gp) return;
+  finish.request?.abort();
+  finish.request = null;
+  finish.gp = gp;
+  show(ui["finish-panel"], Boolean(gp));
+  show(ui["finish-link"], Boolean(gp));
+  ui["finish-result"].replaceChildren();
+  text(ui["finish-message"], "");
+  text(ui["finish-source"], "");
+  if (!gp) {
+    text(ui["finish-clock"], "");
+    return;
+  }
+  if (finish.saved?.gp === gp) {
+    ui["finish-result"].append(finish.saved.card);
+    text(ui["finish-source"], finish.saved.stamp);
+  } else {
+    finish.saved = null;
+    text(ui["finish-message"], "Consultando la clasificación…");
+  }
+  void refreshFinish();
+}
+
 function renderCut() {
   const prediction = currentCut();
+  syncFinish();
   renderFacts(prediction);
   show(ui.origin, Boolean(prediction));
   show(ui["analysis-panel"], Boolean(view.doc));
@@ -411,6 +480,10 @@ ui.timeline.addEventListener("input", (event) => stepTo(Number(event.target.valu
 ui["first-cut"].addEventListener("click", () => stepTo(0));
 ui.previous.addEventListener("click", () => stepTo(view.cursor - 1));
 ui.next.addEventListener("click", () => stepTo(view.cursor + 1));
+ui["last-cut"].addEventListener("click", () => {
+  stepTo(view.doc.predictions.length - 1);
+  if (finish.gp) ui["finish-panel"].focus();
+});
 ui.play.addEventListener("click", play);
 ui.pause.addEventListener("click", () => stepTo(view.cursor));
 ui.follow.addEventListener("click", () => {
@@ -437,5 +510,11 @@ for (const button of sortButtons) {
 selectMode(location.hash === "#backtest" ? "replay" : "live");
 window.setInterval(() => {
   if (view.mode) renderHealth();
-  if (view.mode === "live") void loadEntry("live");
+  if (view.mode === "live" && !view.doc?.complete) void loadEntry("live");
 }, 3000);
+window.setInterval(async () => {
+  if (view.mode === "live" && view.doc?.complete) {
+    await loadEntry("live");
+    void refreshFinish();
+  }
+}, 60_000);

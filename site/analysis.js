@@ -191,6 +191,24 @@ function renderRankingStudy() {
   set("ranking-interval", comparisons.map((p, i) => `${labels[i]}: ${fmt(p.delta, signed)} (IC 95 %: ${fmt(p.ci95[0], signed)} a ${fmt(p.ci95[1], signed)})`).join(" · "));
 }
 
+function renderDriverStudy() {
+  const { metrics: m, coverage: c, contrasts, decision } = report.driver_performance;
+  const labels = ["Referencia T−30", "CatBoost base", "CatBoost + dos señales"];
+  const means = [m.reference.mae, m.base.mae, m.extended.mae];
+  const places = number({ minimumFractionDigits: 3, maximumFractionDigits: 3 });
+  const best = m.extended.mae < m.reference.mae ? "reduce" : "no reduce";
+  set("driver-study-result", `En ${c.gps} GP de 2024–25, el candidato ${best} el error frente a la referencia: ${fmt(m.extended.mae, places)} frente a ${fmt(m.reference.mae, places)} puestos. No cambia el modelo publicado.`);
+  plot("driver-study-plot", [bars(means, labels, [colors.gold, colors.blue, colors.mint], "MAE", {
+    orientation: "h", text: means.map((v) => fmt(v, places)), textposition: "inside", insidetextanchor: "end",
+    hovertemplate: "%{y}: %{x:.3f} puestos<extra></extra>",
+  })], { xaxis: { title: { text: "Error medio en puestos" }, rangemode: "tozero" },
+    yaxis: { type: "category", autorange: "reversed" }, height: 200 });
+  const obs = c.feature_nonmissing;
+  set("driver-study-coverage", `${c.matched}/${c.predicted} pilotos previstos con puesto oficial. Tandas largas de FP1: ${obs.fp1_run_field_pct}/${c.predicted}; ritmo contra el compañero en la misma fase de clasificación: ${obs.qual_teammate_pct}/${c.predicted}. Una señal ausente no equivale a cero.`);
+  const delta = contrasts.mae.base;
+  set("driver-study-interval", `Añadir las dos señales: ΔMAE ${fmt(delta.delta, signed)} puestos frente a CatBoost base (IC 95 % por GP: ${fmt(delta.ci95[0], signed)} a ${fmt(delta.ci95[1], signed)}). Decisión: ${decision}. Para el podio: Brier ${fmt(m.extended.brier, score)} frente a ${fmt(m.elo.brier, score)} de Elo.`);
+}
+
 const paramsText = (params) => Object.entries(params).map(([k, v]) => `${k}=${fmt(v)}`).join(" · ");
 
 function renderTrials() {
@@ -345,6 +363,7 @@ async function load() {
     ui["lab-content"].hidden = false;
     renderEvaluation();
     renderRankingStudy();
+    renderDriverStudy();
     renderTraining();
     renderEda();
     renderProtocol();

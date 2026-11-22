@@ -149,6 +149,9 @@ def watch(args, work, bundle, records):
         saved = read_file(args.out)
         if saved["mode"] != "live" or saved["event"]["id"] != args.gp:
             raise ValueError("cannot replace another GP or mode's frozen cuts")
+        if saved["complete"]:
+            print(f"{args.gp}: captura ya cerrada; se conservan todos los cortes.", flush=True)
+            return
         feed = saved
     published_laps = {p["lap"] for p in feed["predictions"] if p["lap"] is not None}
     prior = next((p["race_context"] for p in reversed(feed["predictions"])
@@ -158,7 +161,6 @@ def watch(args, work, bundle, records):
     docs = get_documents(gp, work, as_of=min(now(), gp["race"]))
     for e in ordered([*document_events(docs), *_read_events(args.events)], now()):
         state.apply(e)
-    finish_seen = False
     for batch in live_batches(gp, seconds=args.seconds):
         if not batch:
             continue
@@ -168,9 +170,20 @@ def watch(args, work, bundle, records):
             state.apply(e)
             if e.get("total_laps"):
                 gp["scheduled_laps"] = int(e["total_laps"])
+                feed["event"]["scheduled_laps"] = gp["scheduled_laps"]
         lap = state.last_lap
         phase = next((e["status"] for e in batch if e["kind"] == "session"), None)
         initial = any(e.get("initial") for e in batch)
+        if phase in {"Finished", "Finalised", "Ends"}:
+            if published_laps:
+                # A terminal subscription can confirm closure, never the time the flag fell.
+                if phase == "Finished" and not initial:
+                    feed["finish_utc"] = utc(at)
+                feed["complete"] = True
+                feed["updated_utc"] = utc(now())
+                _publish(feed, args.out)
+                print("Captura cerrada. La evaluación espera la clasificación final de la FIA.", flush=True)
+            break
         if not initial and lap > previous and lap not in published_laps:
             snap = state.snapshot("race", at, lap=lap)
             if snap is not None:
@@ -179,14 +192,6 @@ def watch(args, work, bundle, records):
                 _publish(feed, args.out)
                 lag = next((at - e["source_at"] for e in batch if e.get("source_at") is not None), None)
                 print(f"Live lap {lap} · cutoff {utc(at)} · packet lag {lag}", flush=True)
-        finish_seen |= phase == "Finished"
-        distance = context.total_laps
-        if phase in {"Finalised", "Ends"} or (finish_seen and distance is not None and lap >= distance):
-            if not initial and published_laps:
-                feed["complete"] = True
-                feed["updated_utc"] = utc(now())
-                _publish(feed, args.out)
-            break
     if not published_laps:
         raise RuntimeError("no real lap forecast published; the existing local feed was not replaced")
 
@@ -201,6 +206,10 @@ def parser():
     fit = commands.add_parser("train", help="fit chronological folds and seal models")
     fit.add_argument("--trials", type=int, default=0, help="Rustuna trials per T-30 learner and outer fold (0: original preset)")
     commands.add_parser("evaluate", help="score the 2026 blind cohort with the sealed model")
+    commands.add_parser("diagnostico", help="comparar boosting, referencias y señales en la consola, sin pesos")
+    positions = commands.add_parser("rendimiento", help="puesto medio de cada piloto derivado de la última previa emitida")
+    positions.add_argument("--feed", type=Path, default=UPCOMING)
+    positions.add_argument("--events", type=Path, help="mismos eventos fechados que usó la previa, si proceden")
     for name in ("forecast", "replay", "watch"):
         cmd = commands.add_parser(name)
         cmd.add_argument("--gp", required=True, help="YYYY-RR (calendar round)")
@@ -235,6 +244,11 @@ def main(argv=None):
         out = args.out.resolve()
         if out.is_relative_to(SITE) and (args.cmd != "forecast" or out != UPCOMING):
             p.error(f"Pages accepts only forecast --out {UPCOMING}; use a local output for race data")
+    if args.cmd == "diagnostico":
+        from .analysis_data import print_diagnosis
+
+        print_diagnosis()
+        return
     if args.cmd == "panel":
         from .local_panel import serve_panel
 
@@ -262,6 +276,11 @@ def main(argv=None):
     bundle, seal = sealed_model(work)
     data = corpora(work)
     records = records_for(*data)
+    if args.cmd == "rendimiento":
+        from .finish_order import print_positions
+
+        print_positions(args, work, bundle, records)
+        return
     if args.cmd == "evaluate":
         target = load_corpus(final)
         by_horizon, _ = examples(target, records)

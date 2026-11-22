@@ -1,0 +1,1093 @@
+{
+  "scope": "retrospective_validation_only_T-30",
+  "target": "(official_rank−1)/(N_official−1)",
+  "estimated_mean_position": "1 + clip(percentile,0,1) × (N_predicted−1); not official order or probability",
+  "ordinal_mae": "MAE of within-field ranks of predicted means (average ties), not magnitude MAE",
+  "pl_score": "negative estimated mean position; temperature fitted on past OOS podium Brier only",
+  "features": [
+    "reference",
+    "driver_elo",
+    "team_elo",
+    "driver_form",
+    "team_form",
+    "qual_gap",
+    "practice_gap",
+    "grid_position",
+    "sprint_position",
+    "qual_teammate_pct",
+    "fp1_run_field_pct"
+  ],
+  "regressor": {
+    "loss_function": "RMSE",
+    "depth": 4,
+    "iterations": 100,
+    "learning_rate": 0.05,
+    "l2_leaf_reg": 5,
+    "random_seed": 55293,
+    "task_type": "CPU",
+    "thread_count": 1,
+    "verbose": false,
+    "allow_writing_files": false
+  },
+  "fp1_rule": "Intervalos FP1 de TracingInsights depurados por archive._timing_events: sin vueltas sintéticas, boxes ni interrupción de sesión cruzada. Duración 45–155 s; mínimo 3 vueltas consecutivas del mismo piloto con numeración continua y |fin previo − inicio actual| ≤ 0.010 s. Excluir números duplicados. Mediana de sus vueltas aceptadas relativa a la mediana de las medianas individuales del campo FP1 (mínimo dos pilotos), en %. Sin evidencia: ausente.",
+  "qual_rule": "100 × (propio/compañero−1) con sus mejores intervalos en la última fase común y pareja FIA fechada.",
+  "missing_policy": "Sin pareja FIA o fase común y sin tanda FP1 demostrable: NaN nativo, incluso columnas enteras.",
+  "limits": "Proxy histórico: reloj de cruce reconstruido, no recepción en vivo. No controla neumático, combustible o tráfico.",
+  "bootstrap": {
+    "unit": "GP",
+    "paired": true,
+    "draws": 10000,
+    "seed": 55293,
+    "ci": "percentile_95"
+  },
+  "folds": [
+    {
+      "start": "2024-01-01T00:00:00.000Z",
+      "until_exclusive": "2024-07-01T00:00:00.000Z",
+      "training_deadline_exclusive": "2024-01-01T00:00:00.000Z",
+      "latest_train_label": "2023-12-03T06:00:00.000Z",
+      "train_gps": 44,
+      "inner_oos_gps": 22,
+      "latest_calibration_label": "2023-12-03T06:00:00.000Z",
+      "temperatures": {
+        "base": 1.7,
+        "extended": 1.7,
+        "elo": 0.75
+      },
+      "test_gp_ids": [
+        "2024-01",
+        "2024-02",
+        "2024-03",
+        "2024-04",
+        "2024-05",
+        "2024-06",
+        "2024-07",
+        "2024-08",
+        "2024-09",
+        "2024-10",
+        "2024-11"
+      ],
+      "train_coverage": {
+        "gps": 44,
+        "predicted": 881,
+        "official": 880,
+        "matched": 880,
+        "matched_fraction_of_predicted": 0.9988649262202043,
+        "matched_fraction_of_official": 1.0,
+        "feature_nonmissing": {
+          "reference": 881,
+          "driver_elo": 881,
+          "team_elo": 881,
+          "driver_form": 881,
+          "team_form": 881,
+          "qual_gap": 794,
+          "practice_gap": 705,
+          "grid_position": 40,
+          "sprint_position": 176,
+          "qual_teammate_pct": 60,
+          "fp1_run_field_pct": 636
+        }
+      },
+      "metrics": {
+        "base": {
+          "mae": 3.0392761748337804,
+          "ordinal_mae": 3.0301435406698563,
+          "brier": 0.07515329558686022,
+          "winner_log_loss": 1.7074029745778092
+        },
+        "extended": {
+          "mae": 3.0340716017797744,
+          "ordinal_mae": 3.035645933014354,
+          "brier": 0.07070959821020202,
+          "winner_log_loss": 1.6463693487042987
+        },
+        "reference": {
+          "mae": 2.6818181818181825,
+          "ordinal_mae": 2.6818181818181825
+        },
+        "elo": {
+          "brier": 0.06665279247124911,
+          "winner_log_loss": 1.24910276126567
+        }
+      },
+      "coverage": {
+        "gps": 11,
+        "predicted": 220,
+        "official": 219,
+        "matched": 219,
+        "matched_fraction_of_predicted": 0.9954545454545455,
+        "matched_fraction_of_official": 1.0,
+        "feature_nonmissing": {
+          "reference": 220,
+          "driver_elo": 220,
+          "team_elo": 220,
+          "driver_form": 220,
+          "team_form": 220,
+          "qual_gap": 198,
+          "practice_gap": 193,
+          "grid_position": 0,
+          "sprint_position": 40,
+          "qual_teammate_pct": 20,
+          "fp1_run_field_pct": 183
+        }
+      }
+    },
+    {
+      "start": "2024-07-01T00:00:00.000Z",
+      "until_exclusive": "2025-01-01T00:00:00.000Z",
+      "training_deadline_exclusive": "2024-07-01T00:00:00.000Z",
+      "latest_train_label": "2024-06-23T18:00:00.000Z",
+      "train_gps": 53,
+      "inner_oos_gps": 31,
+      "latest_calibration_label": "2024-06-23T18:00:00.000Z",
+      "temperatures": {
+        "base": 1.7,
+        "extended": 1.3,
+        "elo": 0.75
+      },
+      "test_gp_ids": [
+        "2024-12",
+        "2024-13",
+        "2024-14",
+        "2024-15",
+        "2024-16",
+        "2024-17",
+        "2024-18",
+        "2024-19",
+        "2024-20",
+        "2024-21",
+        "2024-22",
+        "2024-23",
+        "2024-24"
+      ],
+      "train_coverage": {
+        "gps": 53,
+        "predicted": 1061,
+        "official": 1059,
+        "matched": 1059,
+        "matched_fraction_of_predicted": 0.998114985862394,
+        "matched_fraction_of_official": 1.0,
+        "feature_nonmissing": {
+          "reference": 1061,
+          "driver_elo": 1061,
+          "team_elo": 1061,
+          "driver_form": 1061,
+          "team_form": 1061,
+          "qual_gap": 952,
+          "practice_gap": 859,
+          "grid_position": 40,
+          "sprint_position": 196,
+          "qual_teammate_pct": 80,
+          "fp1_run_field_pct": 780
+        }
+      },
+      "metrics": {
+        "base": {
+          "mae": 3.0974001928547477,
+          "ordinal_mae": 3.352226720647773,
+          "brier": 0.0829465215881006,
+          "winner_log_loss": 1.88311023678344
+        },
+        "extended": {
+          "mae": 3.06687388720856,
+          "ordinal_mae": 3.2755285650022494,
+          "brier": 0.08660069907549678,
+          "winner_log_loss": 1.8816907143199868
+        },
+        "reference": {
+          "mae": 3.17638326585695,
+          "ordinal_mae": 3.17638326585695
+        },
+        "elo": {
+          "brier": 0.08295581458006884,
+          "winner_log_loss": 1.8417669931116714
+        }
+      },
+      "coverage": {
+        "gps": 13,
+        "predicted": 260,
+        "official": 260,
+        "matched": 254,
+        "matched_fraction_of_predicted": 0.9769230769230769,
+        "matched_fraction_of_official": 0.9769230769230769,
+        "feature_nonmissing": {
+          "reference": 260,
+          "driver_elo": 260,
+          "team_elo": 260,
+          "driver_form": 260,
+          "team_form": 260,
+          "qual_gap": 120,
+          "practice_gap": 108,
+          "grid_position": 20,
+          "sprint_position": 20,
+          "qual_teammate_pct": 0,
+          "fp1_run_field_pct": 107
+        }
+      }
+    },
+    {
+      "start": "2025-01-01T00:00:00.000Z",
+      "until_exclusive": "2025-07-01T00:00:00.000Z",
+      "training_deadline_exclusive": "2025-01-01T00:00:00.000Z",
+      "latest_train_label": "2024-12-22T13:00:00.000Z",
+      "train_gps": 68,
+      "inner_oos_gps": 46,
+      "latest_calibration_label": "2024-12-22T13:00:00.000Z",
+      "temperatures": {
+        "base": 1.7,
+        "extended": 1.7,
+        "elo": 0.75
+      },
+      "test_gp_ids": [
+        "2025-01",
+        "2025-02",
+        "2025-03",
+        "2025-04",
+        "2025-05",
+        "2025-06",
+        "2025-07",
+        "2025-08",
+        "2025-09",
+        "2025-10",
+        "2025-11"
+      ],
+      "train_coverage": {
+        "gps": 68,
+        "predicted": 1361,
+        "official": 1359,
+        "matched": 1353,
+        "matched_fraction_of_predicted": 0.994121969140338,
+        "matched_fraction_of_official": 0.9955849889624724,
+        "feature_nonmissing": {
+          "reference": 1361,
+          "driver_elo": 1361,
+          "team_elo": 1361,
+          "driver_form": 1361,
+          "team_form": 1361,
+          "qual_gap": 1112,
+          "practice_gap": 1006,
+          "grid_position": 60,
+          "sprint_position": 236,
+          "qual_teammate_pct": 80,
+          "fp1_run_field_pct": 926
+        }
+      },
+      "metrics": {
+        "base": {
+          "mae": 3.148161394434497,
+          "ordinal_mae": 3.2507177033492822,
+          "brier": 0.05415668592259614,
+          "winner_log_loss": 1.430794883028273
+        },
+        "extended": {
+          "mae": 3.1583959078846884,
+          "ordinal_mae": 3.315311004784689,
+          "brier": 0.058776713950508014,
+          "winner_log_loss": 1.5671704271301155
+        },
+        "reference": {
+          "mae": 3.200956937799043,
+          "ordinal_mae": 3.200956937799043
+        },
+        "elo": {
+          "brier": 0.04625324498625456,
+          "winner_log_loss": 0.958266998895656
+        }
+      },
+      "coverage": {
+        "gps": 11,
+        "predicted": 220,
+        "official": 219,
+        "matched": 218,
+        "matched_fraction_of_predicted": 0.990909090909091,
+        "matched_fraction_of_official": 0.9954337899543378,
+        "feature_nonmissing": {
+          "reference": 220,
+          "driver_elo": 220,
+          "team_elo": 220,
+          "driver_form": 220,
+          "team_form": 220,
+          "qual_gap": 218,
+          "practice_gap": 208,
+          "grid_position": 0,
+          "sprint_position": 39,
+          "qual_teammate_pct": 0,
+          "fp1_run_field_pct": 198
+        }
+      }
+    },
+    {
+      "start": "2025-07-01T00:00:00.000Z",
+      "until_exclusive": "2026-01-01T00:00:00.000Z",
+      "training_deadline_exclusive": "2025-07-01T00:00:00.000Z",
+      "latest_train_label": "2025-06-29T18:00:00.000Z",
+      "train_gps": 78,
+      "inner_oos_gps": 56,
+      "latest_calibration_label": "2025-06-29T18:00:00.000Z",
+      "temperatures": {
+        "base": 1.3,
+        "extended": 1.3,
+        "elo": 0.75
+      },
+      "test_gp_ids": [
+        "2025-12",
+        "2025-13",
+        "2025-14",
+        "2025-15",
+        "2025-16",
+        "2025-17",
+        "2025-18",
+        "2025-19",
+        "2025-20",
+        "2025-21",
+        "2025-22",
+        "2025-23",
+        "2025-24"
+      ],
+      "train_coverage": {
+        "gps": 78,
+        "predicted": 1561,
+        "official": 1558,
+        "matched": 1551,
+        "matched_fraction_of_predicted": 0.9935938500960922,
+        "matched_fraction_of_official": 0.9955070603337612,
+        "feature_nonmissing": {
+          "reference": 1561,
+          "driver_elo": 1561,
+          "team_elo": 1561,
+          "driver_form": 1561,
+          "team_form": 1561,
+          "qual_gap": 1310,
+          "practice_gap": 1196,
+          "grid_position": 60,
+          "sprint_position": 275,
+          "qual_teammate_pct": 80,
+          "fp1_run_field_pct": 1107
+        }
+      },
+      "metrics": {
+        "base": {
+          "mae": 3.4043320786699343,
+          "ordinal_mae": 3.5,
+          "brier": 0.07048219818906493,
+          "winner_log_loss": 1.2510702574409582
+        },
+        "extended": {
+          "mae": 3.4474100791472115,
+          "ordinal_mae": 3.515384615384615,
+          "brier": 0.07704948306712696,
+          "winner_log_loss": 1.3490551886358413
+        },
+        "reference": {
+          "mae": 3.5230769230769234,
+          "ordinal_mae": 3.5230769230769234
+        },
+        "elo": {
+          "brier": 0.06540437242612583,
+          "winner_log_loss": 0.9885253421625584
+        }
+      },
+      "coverage": {
+        "gps": 13,
+        "predicted": 260,
+        "official": 260,
+        "matched": 260,
+        "matched_fraction_of_predicted": 1.0,
+        "matched_fraction_of_official": 1.0,
+        "feature_nonmissing": {
+          "reference": 260,
+          "driver_elo": 260,
+          "team_elo": 260,
+          "driver_form": 260,
+          "team_form": 260,
+          "qual_gap": 257,
+          "practice_gap": 230,
+          "grid_position": 19,
+          "sprint_position": 77,
+          "qual_teammate_pct": 20,
+          "fp1_run_field_pct": 218
+        }
+      }
+    }
+  ],
+  "coverage": {
+    "gps": 48,
+    "predicted": 960,
+    "official": 958,
+    "matched": 951,
+    "matched_fraction_of_predicted": 0.990625,
+    "matched_fraction_of_official": 0.9926931106471816,
+    "feature_nonmissing": {
+      "reference": 960,
+      "driver_elo": 960,
+      "team_elo": 960,
+      "driver_form": 960,
+      "team_form": 960,
+      "qual_gap": 793,
+      "practice_gap": 739,
+      "grid_position": 39,
+      "sprint_position": 176,
+      "qual_teammate_pct": 40,
+      "fp1_run_field_pct": 706
+    }
+  },
+  "metrics": {
+    "base": {
+      "mae": 3.1788402664952486,
+      "ordinal_mae": 3.295175438596491,
+      "brier": 0.07118714903556607,
+      "winner_log_loss": 1.5680108928871686
+    },
+    "extended": {
+      "mae": 3.1833923785194607,
+      "ordinal_mae": 3.294633284600389,
+      "brier": 0.07399587086712332,
+      "winner_log_loss": 1.6114298806792569
+    },
+    "reference": {
+      "mae": 3.162573099415205,
+      "ordinal_mae": 3.162573099415205
+    },
+    "elo": {
+      "brier": 0.0660551842315223,
+      "winner_log_loss": 1.2723930775070746
+    }
+  },
+  "contrasts": {
+    "mae": {
+      "base": {
+        "delta": 0.004552112024212351,
+        "ci95": [
+          -0.015536717435784286,
+          0.025026983567829973
+        ]
+      },
+      "reference": {
+        "delta": 0.02081927910425624,
+        "ci95": [
+          -0.13429266327431896,
+          0.17399896833016193
+        ]
+      }
+    },
+    "brier_vs_elo": {
+      "base": {
+        "delta": 0.005131964804043762,
+        "ci95": [
+          -0.0004566140493291645,
+          0.0105729740307928
+        ]
+      },
+      "extended": {
+        "delta": 0.007940686635600993,
+        "ci95": [
+          0.000947916320378159,
+          0.014738074821684342
+        ]
+      }
+    },
+    "winner_log_loss_vs_elo": {
+      "base": {
+        "delta": 0.29561781538009396,
+        "ci95": [
+          0.10407796077920543,
+          0.4889039994726563
+        ]
+      },
+      "extended": {
+        "delta": 0.3390368031721822,
+        "ci95": [
+          0.11660707521369956,
+          0.5596776443964484
+        ]
+      }
+    }
+  },
+  "decision": "no demuestra mejora de MAE frente a ambos controles",
+  "promoted_to_production": false,
+  "corpus_sha256": "9157139d56f71add346b5eca9b63c33c9dfd7e26c6bdc323d988a0b741fcf023",
+  "clock_audit": {
+    "2022-01": {
+      "status": "confirmed",
+      "revision": "c71ff08b4c429812fb1ea071190da5c42b6e76ed",
+      "revision_utc": "2022-03-16T14:05:23.000Z"
+    },
+    "2022-02": {
+      "status": "confirmed",
+      "revision": "c71ff08b4c429812fb1ea071190da5c42b6e76ed",
+      "revision_utc": "2022-03-16T14:05:23.000Z"
+    },
+    "2022-03": {
+      "status": "confirmed",
+      "revision": "1ecdfd5f867b8d25d43894f0564d56abd79ebdff",
+      "revision_utc": "2022-03-29T16:33:27.000Z"
+    },
+    "2022-04": {
+      "status": "confirmed",
+      "revision": "01bc1cc197a8a2d3a9ddf6d2f61ca6f8c4d4370d",
+      "revision_utc": "2022-04-24T12:09:09.000Z"
+    },
+    "2022-05": {
+      "status": "confirmed",
+      "revision": "4d807e883e9a1b0d970489b5a7b62f0052d87586",
+      "revision_utc": "2022-04-24T15:46:55.000Z"
+    },
+    "2022-06": {
+      "status": "confirmed",
+      "revision": "4d807e883e9a1b0d970489b5a7b62f0052d87586",
+      "revision_utc": "2022-04-24T15:46:55.000Z"
+    },
+    "2022-07": {
+      "status": "confirmed",
+      "revision": "4d807e883e9a1b0d970489b5a7b62f0052d87586",
+      "revision_utc": "2022-04-24T15:46:55.000Z"
+    },
+    "2022-08": {
+      "status": "confirmed",
+      "revision": "4d807e883e9a1b0d970489b5a7b62f0052d87586",
+      "revision_utc": "2022-04-24T15:46:55.000Z"
+    },
+    "2022-09": {
+      "status": "confirmed",
+      "revision": "c99f66675e5327be2f20344a6c3c5a7ae2aff232",
+      "revision_utc": "2022-06-13T15:50:33.000Z"
+    },
+    "2022-10": {
+      "status": "confirmed",
+      "revision": "c99f66675e5327be2f20344a6c3c5a7ae2aff232",
+      "revision_utc": "2022-06-13T15:50:33.000Z"
+    },
+    "2022-11": {
+      "status": "confirmed",
+      "revision": "c99f66675e5327be2f20344a6c3c5a7ae2aff232",
+      "revision_utc": "2022-06-13T15:50:33.000Z"
+    },
+    "2022-12": {
+      "status": "confirmed",
+      "revision": "3980c23811fef770c6b715f8f73000bd6d37c997",
+      "revision_utc": "2022-07-18T13:17:29.000Z"
+    },
+    "2022-13": {
+      "status": "confirmed",
+      "revision": "3980c23811fef770c6b715f8f73000bd6d37c997",
+      "revision_utc": "2022-07-18T13:17:29.000Z"
+    },
+    "2022-14": {
+      "status": "confirmed",
+      "revision": "3980c23811fef770c6b715f8f73000bd6d37c997",
+      "revision_utc": "2022-07-18T13:17:29.000Z"
+    },
+    "2022-15": {
+      "status": "confirmed",
+      "revision": "3980c23811fef770c6b715f8f73000bd6d37c997",
+      "revision_utc": "2022-07-18T13:17:29.000Z"
+    },
+    "2022-16": {
+      "status": "confirmed",
+      "revision": "3980c23811fef770c6b715f8f73000bd6d37c997",
+      "revision_utc": "2022-07-18T13:17:29.000Z"
+    },
+    "2022-17": {
+      "status": "confirmed",
+      "revision": "3980c23811fef770c6b715f8f73000bd6d37c997",
+      "revision_utc": "2022-07-18T13:17:29.000Z"
+    },
+    "2022-18": {
+      "status": "confirmed",
+      "revision": "3980c23811fef770c6b715f8f73000bd6d37c997",
+      "revision_utc": "2022-07-18T13:17:29.000Z"
+    },
+    "2022-19": {
+      "status": "confirmed",
+      "revision": "3980c23811fef770c6b715f8f73000bd6d37c997",
+      "revision_utc": "2022-07-18T13:17:29.000Z"
+    },
+    "2022-20": {
+      "status": "confirmed",
+      "revision": "3980c23811fef770c6b715f8f73000bd6d37c997",
+      "revision_utc": "2022-07-18T13:17:29.000Z"
+    },
+    "2022-21": {
+      "status": "confirmed",
+      "revision": "3980c23811fef770c6b715f8f73000bd6d37c997",
+      "revision_utc": "2022-07-18T13:17:29.000Z"
+    },
+    "2022-22": {
+      "status": "confirmed",
+      "revision": "3980c23811fef770c6b715f8f73000bd6d37c997",
+      "revision_utc": "2022-07-18T13:17:29.000Z"
+    },
+    "2023-01": {
+      "status": "confirmed",
+      "revision": "16a18efaf241dc1faac1b354ddbc2c2da505e5bd",
+      "revision_utc": "2023-03-01T13:09:15.000Z"
+    },
+    "2023-02": {
+      "status": "confirmed",
+      "revision": "16a18efaf241dc1faac1b354ddbc2c2da505e5bd",
+      "revision_utc": "2023-03-01T13:09:15.000Z"
+    },
+    "2023-03": {
+      "status": "confirmed",
+      "revision": "16a18efaf241dc1faac1b354ddbc2c2da505e5bd",
+      "revision_utc": "2023-03-01T13:09:15.000Z"
+    },
+    "2023-04": {
+      "status": "confirmed",
+      "revision": "48a98e41b028a51582694f85ff999c5d8cb0b406",
+      "revision_utc": "2023-04-25T20:48:08.000Z"
+    },
+    "2023-05": {
+      "status": "confirmed",
+      "revision": "9f25ed549868291fa358286875edbe0bed6b7a62",
+      "revision_utc": "2023-05-04T09:52:17.000Z"
+    },
+    "2023-06": {
+      "status": "confirmed",
+      "revision": "9f25ed549868291fa358286875edbe0bed6b7a62",
+      "revision_utc": "2023-05-04T09:52:17.000Z"
+    },
+    "2023-07": {
+      "status": "confirmed",
+      "revision": "d0c22c1c8e7688eb2746d4e2312846a99befa0d3",
+      "revision_utc": "2023-05-31T16:43:36.000Z"
+    },
+    "2023-08": {
+      "status": "confirmed",
+      "revision": "4e1a4551ae3c112d72fc1197964c642a720f68c5",
+      "revision_utc": "2023-06-16T19:41:56.000Z"
+    },
+    "2023-09": {
+      "status": "confirmed",
+      "revision": "4e1a4551ae3c112d72fc1197964c642a720f68c5",
+      "revision_utc": "2023-06-16T19:41:56.000Z"
+    },
+    "2023-10": {
+      "status": "confirmed",
+      "revision": "4e1a4551ae3c112d72fc1197964c642a720f68c5",
+      "revision_utc": "2023-06-16T19:41:56.000Z"
+    },
+    "2023-11": {
+      "status": "confirmed",
+      "revision": "4e1a4551ae3c112d72fc1197964c642a720f68c5",
+      "revision_utc": "2023-06-16T19:41:56.000Z"
+    },
+    "2023-12": {
+      "status": "confirmed",
+      "revision": "74a731b6ddd0b667369bc2a337c505940ec9ce9b",
+      "revision_utc": "2023-07-29T13:09:57.000Z"
+    },
+    "2023-13": {
+      "status": "confirmed",
+      "revision": "74a731b6ddd0b667369bc2a337c505940ec9ce9b",
+      "revision_utc": "2023-07-29T13:09:57.000Z"
+    },
+    "2023-14": {
+      "status": "confirmed",
+      "revision": "74a731b6ddd0b667369bc2a337c505940ec9ce9b",
+      "revision_utc": "2023-07-29T13:09:57.000Z"
+    },
+    "2023-15": {
+      "status": "confirmed",
+      "revision": "74a731b6ddd0b667369bc2a337c505940ec9ce9b",
+      "revision_utc": "2023-07-29T13:09:57.000Z"
+    },
+    "2023-16": {
+      "status": "confirmed",
+      "revision": "74a731b6ddd0b667369bc2a337c505940ec9ce9b",
+      "revision_utc": "2023-07-29T13:09:57.000Z"
+    },
+    "2023-17": {
+      "status": "confirmed",
+      "revision": "3386398e13be4cc7fcc6344e81f21f22756dad3d",
+      "revision_utc": "2023-10-07T12:53:07.000Z"
+    },
+    "2023-18": {
+      "status": "confirmed",
+      "revision": "3386398e13be4cc7fcc6344e81f21f22756dad3d",
+      "revision_utc": "2023-10-07T12:53:07.000Z"
+    },
+    "2023-19": {
+      "status": "confirmed",
+      "revision": "3386398e13be4cc7fcc6344e81f21f22756dad3d",
+      "revision_utc": "2023-10-07T12:53:07.000Z"
+    },
+    "2023-20": {
+      "status": "confirmed",
+      "revision": "3386398e13be4cc7fcc6344e81f21f22756dad3d",
+      "revision_utc": "2023-10-07T12:53:07.000Z"
+    },
+    "2023-21": {
+      "status": "confirmed",
+      "revision": "61730b11267c7630339506f0ffc0ee4e08ab56b4",
+      "revision_utc": "2023-11-17T09:55:38.000Z"
+    },
+    "2023-22": {
+      "status": "confirmed",
+      "revision": "61730b11267c7630339506f0ffc0ee4e08ab56b4",
+      "revision_utc": "2023-11-17T09:55:38.000Z"
+    },
+    "2024-01": {
+      "status": "confirmed",
+      "revision": "dc59d4dd869fe8b9a5ac78ab03c8f64e7465ea28",
+      "revision_utc": "2024-03-01T08:47:45.000Z"
+    },
+    "2024-02": {
+      "status": "confirmed",
+      "revision": "dc59d4dd869fe8b9a5ac78ab03c8f64e7465ea28",
+      "revision_utc": "2024-03-01T08:47:45.000Z"
+    },
+    "2024-03": {
+      "status": "confirmed",
+      "revision": "9ffebe5e95518ffddc6fc2f64a52a52ae77d2f33",
+      "revision_utc": "2024-03-20T12:42:40.000Z"
+    },
+    "2024-04": {
+      "status": "confirmed",
+      "revision": "9ffebe5e95518ffddc6fc2f64a52a52ae77d2f33",
+      "revision_utc": "2024-03-20T12:42:40.000Z"
+    },
+    "2024-05": {
+      "status": "confirmed",
+      "revision": "4a983d2aa2ad82f45ab53c7ebae3b70c01138c66",
+      "revision_utc": "2024-04-16T17:06:16.000Z"
+    },
+    "2024-06": {
+      "status": "confirmed",
+      "revision": "9fc05f8a072ea4ddf842641060d06124e5c9ef15",
+      "revision_utc": "2024-04-24T09:35:14.000Z"
+    },
+    "2024-07": {
+      "status": "confirmed",
+      "revision": "6fb922dbe56c28ab5cd58bdc0abb7013e57cb56f",
+      "revision_utc": "2024-05-13T14:40:33.000Z"
+    },
+    "2024-08": {
+      "status": "confirmed",
+      "revision": "865bcdca5dc873eee860ab1df9baf7b1d623f5f7",
+      "revision_utc": "2024-05-22T17:34:01.000Z"
+    },
+    "2024-09": {
+      "status": "confirmed",
+      "revision": "865bcdca5dc873eee860ab1df9baf7b1d623f5f7",
+      "revision_utc": "2024-05-22T17:34:01.000Z"
+    },
+    "2024-10": {
+      "status": "confirmed",
+      "revision": "aa22927e2744ddc22de51ce6ada33e31c3fc71f8",
+      "revision_utc": "2024-06-13T09:05:22.000Z"
+    },
+    "2024-11": {
+      "status": "confirmed",
+      "revision": "aa22927e2744ddc22de51ce6ada33e31c3fc71f8",
+      "revision_utc": "2024-06-13T09:05:22.000Z"
+    },
+    "2024-12": {
+      "status": "confirmed",
+      "revision": "aa22927e2744ddc22de51ce6ada33e31c3fc71f8",
+      "revision_utc": "2024-06-13T09:05:22.000Z"
+    },
+    "2024-13": {
+      "status": "confirmed",
+      "revision": "aa22927e2744ddc22de51ce6ada33e31c3fc71f8",
+      "revision_utc": "2024-06-13T09:05:22.000Z"
+    },
+    "2024-14": {
+      "status": "confirmed",
+      "revision": "aa22927e2744ddc22de51ce6ada33e31c3fc71f8",
+      "revision_utc": "2024-06-13T09:05:22.000Z"
+    },
+    "2024-15": {
+      "status": "confirmed",
+      "revision": "aa22927e2744ddc22de51ce6ada33e31c3fc71f8",
+      "revision_utc": "2024-06-13T09:05:22.000Z"
+    },
+    "2024-16": {
+      "status": "confirmed",
+      "revision": "aa22927e2744ddc22de51ce6ada33e31c3fc71f8",
+      "revision_utc": "2024-06-13T09:05:22.000Z"
+    },
+    "2024-17": {
+      "status": "confirmed",
+      "revision": "aa22927e2744ddc22de51ce6ada33e31c3fc71f8",
+      "revision_utc": "2024-06-13T09:05:22.000Z"
+    },
+    "2024-18": {
+      "status": "confirmed",
+      "revision": "aa22927e2744ddc22de51ce6ada33e31c3fc71f8",
+      "revision_utc": "2024-06-13T09:05:22.000Z"
+    },
+    "2024-19": {
+      "status": "confirmed",
+      "revision": "22c28664187cabbe332f99772d9fb6aa8ffb2cd3",
+      "revision_utc": "2024-09-25T08:48:28.000Z"
+    },
+    "2024-20": {
+      "status": "confirmed",
+      "revision": "279f49a6507ee1b55478b5c7c610f910b7b918e7",
+      "revision_utc": "2024-10-27T14:56:47.000Z"
+    },
+    "2024-21": {
+      "status": "corrected",
+      "revision": "22dbe26db7467bd08ca6e6eac30f5fdbb1b7753f",
+      "revision_utc": "2024-11-02T22:38:59.000Z",
+      "original_race_utc": "2024-11-03T17:00:00.000Z",
+      "corrected_race_utc": "2024-11-03T15:30:00.000Z"
+    },
+    "2024-22": {
+      "status": "corrected",
+      "revision": "4c5a017c31dd3c6928a420f97108ee84f59c7466",
+      "revision_utc": "2024-11-18T13:18:36.000Z",
+      "original_race_utc": "2024-11-23T06:00:00.000Z",
+      "corrected_race_utc": "2024-11-24T06:00:00.000Z"
+    },
+    "2024-23": {
+      "status": "confirmed",
+      "revision": "4c5a017c31dd3c6928a420f97108ee84f59c7466",
+      "revision_utc": "2024-11-18T13:18:36.000Z"
+    },
+    "2024-24": {
+      "status": "confirmed",
+      "revision": "4c5a017c31dd3c6928a420f97108ee84f59c7466",
+      "revision_utc": "2024-11-18T13:18:36.000Z"
+    },
+    "2025-01": {
+      "status": "confirmed",
+      "revision": "6597ab0cc02f07f23f8bd14e0a7821bfff717f1a",
+      "revision_utc": "2025-02-12T15:17:17.000Z"
+    },
+    "2025-02": {
+      "status": "confirmed",
+      "revision": "6597ab0cc02f07f23f8bd14e0a7821bfff717f1a",
+      "revision_utc": "2025-02-12T15:17:17.000Z"
+    },
+    "2025-03": {
+      "status": "confirmed",
+      "revision": "6597ab0cc02f07f23f8bd14e0a7821bfff717f1a",
+      "revision_utc": "2025-02-12T15:17:17.000Z"
+    },
+    "2025-04": {
+      "status": "confirmed",
+      "revision": "6597ab0cc02f07f23f8bd14e0a7821bfff717f1a",
+      "revision_utc": "2025-02-12T15:17:17.000Z"
+    },
+    "2025-05": {
+      "status": "confirmed",
+      "revision": "6597ab0cc02f07f23f8bd14e0a7821bfff717f1a",
+      "revision_utc": "2025-02-12T15:17:17.000Z"
+    },
+    "2025-06": {
+      "status": "confirmed",
+      "revision": "6597ab0cc02f07f23f8bd14e0a7821bfff717f1a",
+      "revision_utc": "2025-02-12T15:17:17.000Z"
+    },
+    "2025-07": {
+      "status": "confirmed",
+      "revision": "6597ab0cc02f07f23f8bd14e0a7821bfff717f1a",
+      "revision_utc": "2025-02-12T15:17:17.000Z"
+    },
+    "2025-08": {
+      "status": "confirmed",
+      "revision": "6597ab0cc02f07f23f8bd14e0a7821bfff717f1a",
+      "revision_utc": "2025-02-12T15:17:17.000Z"
+    },
+    "2025-09": {
+      "status": "confirmed",
+      "revision": "6597ab0cc02f07f23f8bd14e0a7821bfff717f1a",
+      "revision_utc": "2025-02-12T15:17:17.000Z"
+    },
+    "2025-10": {
+      "status": "confirmed",
+      "revision": "6597ab0cc02f07f23f8bd14e0a7821bfff717f1a",
+      "revision_utc": "2025-02-12T15:17:17.000Z"
+    },
+    "2025-11": {
+      "status": "confirmed",
+      "revision": "6597ab0cc02f07f23f8bd14e0a7821bfff717f1a",
+      "revision_utc": "2025-02-12T15:17:17.000Z"
+    },
+    "2025-12": {
+      "status": "confirmed",
+      "revision": "6597ab0cc02f07f23f8bd14e0a7821bfff717f1a",
+      "revision_utc": "2025-02-12T15:17:17.000Z"
+    },
+    "2025-13": {
+      "status": "confirmed",
+      "revision": "6597ab0cc02f07f23f8bd14e0a7821bfff717f1a",
+      "revision_utc": "2025-02-12T15:17:17.000Z"
+    },
+    "2025-14": {
+      "status": "confirmed",
+      "revision": "6597ab0cc02f07f23f8bd14e0a7821bfff717f1a",
+      "revision_utc": "2025-02-12T15:17:17.000Z"
+    },
+    "2025-15": {
+      "status": "confirmed",
+      "revision": "6597ab0cc02f07f23f8bd14e0a7821bfff717f1a",
+      "revision_utc": "2025-02-12T15:17:17.000Z"
+    },
+    "2025-16": {
+      "status": "confirmed",
+      "revision": "6597ab0cc02f07f23f8bd14e0a7821bfff717f1a",
+      "revision_utc": "2025-02-12T15:17:17.000Z"
+    },
+    "2025-17": {
+      "status": "confirmed",
+      "revision": "6597ab0cc02f07f23f8bd14e0a7821bfff717f1a",
+      "revision_utc": "2025-02-12T15:17:17.000Z"
+    },
+    "2025-18": {
+      "status": "confirmed",
+      "revision": "d2497ff5c13a78e82f701dc8d428b1cfaba8b4e6",
+      "revision_utc": "2025-09-29T16:06:07.000Z"
+    },
+    "2025-19": {
+      "status": "confirmed",
+      "revision": "d2497ff5c13a78e82f701dc8d428b1cfaba8b4e6",
+      "revision_utc": "2025-09-29T16:06:07.000Z"
+    },
+    "2025-20": {
+      "status": "confirmed",
+      "revision": "d2497ff5c13a78e82f701dc8d428b1cfaba8b4e6",
+      "revision_utc": "2025-09-29T16:06:07.000Z"
+    },
+    "2025-21": {
+      "status": "confirmed",
+      "revision": "d2497ff5c13a78e82f701dc8d428b1cfaba8b4e6",
+      "revision_utc": "2025-09-29T16:06:07.000Z"
+    },
+    "2025-22": {
+      "status": "confirmed",
+      "revision": "d2497ff5c13a78e82f701dc8d428b1cfaba8b4e6",
+      "revision_utc": "2025-09-29T16:06:07.000Z"
+    },
+    "2025-23": {
+      "status": "confirmed",
+      "revision": "f866c5ea1998c478d973150a48bdda4990c37d92",
+      "revision_utc": "2025-11-24T16:06:21.000Z"
+    },
+    "2025-24": {
+      "status": "confirmed",
+      "revision": "f866c5ea1998c478d973150a48bdda4990c37d92",
+      "revision_utc": "2025-11-24T16:06:21.000Z"
+    }
+  },
+  "sources": {
+    "calendar": "https://github.com/theOehrly/f1schedule",
+    "timing": [
+      "https://github.com/TracingInsights/2022/tree/df396d091c4a40a3a6b733631da3497f8c91d89f/Abu%20Dhabi%20Grand%20Prix",
+      "https://github.com/TracingInsights/2022/tree/df396d091c4a40a3a6b733631da3497f8c91d89f/Australian%20Grand%20Prix",
+      "https://github.com/TracingInsights/2022/tree/df396d091c4a40a3a6b733631da3497f8c91d89f/Austrian%20Grand%20Prix",
+      "https://github.com/TracingInsights/2022/tree/df396d091c4a40a3a6b733631da3497f8c91d89f/Azerbaijan%20Grand%20Prix",
+      "https://github.com/TracingInsights/2022/tree/df396d091c4a40a3a6b733631da3497f8c91d89f/Bahrain%20Grand%20Prix",
+      "https://github.com/TracingInsights/2022/tree/df396d091c4a40a3a6b733631da3497f8c91d89f/Belgian%20Grand%20Prix",
+      "https://github.com/TracingInsights/2022/tree/df396d091c4a40a3a6b733631da3497f8c91d89f/British%20Grand%20Prix",
+      "https://github.com/TracingInsights/2022/tree/df396d091c4a40a3a6b733631da3497f8c91d89f/Canadian%20Grand%20Prix",
+      "https://github.com/TracingInsights/2022/tree/df396d091c4a40a3a6b733631da3497f8c91d89f/Dutch%20Grand%20Prix",
+      "https://github.com/TracingInsights/2022/tree/df396d091c4a40a3a6b733631da3497f8c91d89f/Emilia%20Romagna%20Grand%20Prix",
+      "https://github.com/TracingInsights/2022/tree/df396d091c4a40a3a6b733631da3497f8c91d89f/French%20Grand%20Prix",
+      "https://github.com/TracingInsights/2022/tree/df396d091c4a40a3a6b733631da3497f8c91d89f/Hungarian%20Grand%20Prix",
+      "https://github.com/TracingInsights/2022/tree/df396d091c4a40a3a6b733631da3497f8c91d89f/Italian%20Grand%20Prix",
+      "https://github.com/TracingInsights/2022/tree/df396d091c4a40a3a6b733631da3497f8c91d89f/Japanese%20Grand%20Prix",
+      "https://github.com/TracingInsights/2022/tree/df396d091c4a40a3a6b733631da3497f8c91d89f/Mexico%20City%20Grand%20Prix",
+      "https://github.com/TracingInsights/2022/tree/df396d091c4a40a3a6b733631da3497f8c91d89f/Miami%20Grand%20Prix",
+      "https://github.com/TracingInsights/2022/tree/df396d091c4a40a3a6b733631da3497f8c91d89f/Monaco%20Grand%20Prix",
+      "https://github.com/TracingInsights/2022/tree/df396d091c4a40a3a6b733631da3497f8c91d89f/S%C3%A3o%20Paulo%20Grand%20Prix",
+      "https://github.com/TracingInsights/2022/tree/df396d091c4a40a3a6b733631da3497f8c91d89f/Saudi%20Arabian%20Grand%20Prix",
+      "https://github.com/TracingInsights/2022/tree/df396d091c4a40a3a6b733631da3497f8c91d89f/Singapore%20Grand%20Prix",
+      "https://github.com/TracingInsights/2022/tree/df396d091c4a40a3a6b733631da3497f8c91d89f/Spanish%20Grand%20Prix",
+      "https://github.com/TracingInsights/2022/tree/df396d091c4a40a3a6b733631da3497f8c91d89f/United%20States%20Grand%20Prix",
+      "https://github.com/TracingInsights/2023/tree/737c84d3ae14b9883a671ca248d015b69cf1cb58/Abu%20Dhabi%20Grand%20Prix",
+      "https://github.com/TracingInsights/2023/tree/737c84d3ae14b9883a671ca248d015b69cf1cb58/Australian%20Grand%20Prix",
+      "https://github.com/TracingInsights/2023/tree/737c84d3ae14b9883a671ca248d015b69cf1cb58/Austrian%20Grand%20Prix",
+      "https://github.com/TracingInsights/2023/tree/737c84d3ae14b9883a671ca248d015b69cf1cb58/Azerbaijan%20Grand%20Prix",
+      "https://github.com/TracingInsights/2023/tree/737c84d3ae14b9883a671ca248d015b69cf1cb58/Bahrain%20Grand%20Prix",
+      "https://github.com/TracingInsights/2023/tree/737c84d3ae14b9883a671ca248d015b69cf1cb58/Belgian%20Grand%20Prix",
+      "https://github.com/TracingInsights/2023/tree/737c84d3ae14b9883a671ca248d015b69cf1cb58/British%20Grand%20Prix",
+      "https://github.com/TracingInsights/2023/tree/737c84d3ae14b9883a671ca248d015b69cf1cb58/Canadian%20Grand%20Prix",
+      "https://github.com/TracingInsights/2023/tree/737c84d3ae14b9883a671ca248d015b69cf1cb58/Dutch%20Grand%20Prix",
+      "https://github.com/TracingInsights/2023/tree/737c84d3ae14b9883a671ca248d015b69cf1cb58/Hungarian%20Grand%20Prix",
+      "https://github.com/TracingInsights/2023/tree/737c84d3ae14b9883a671ca248d015b69cf1cb58/Italian%20Grand%20Prix",
+      "https://github.com/TracingInsights/2023/tree/737c84d3ae14b9883a671ca248d015b69cf1cb58/Japanese%20Grand%20Prix",
+      "https://github.com/TracingInsights/2023/tree/737c84d3ae14b9883a671ca248d015b69cf1cb58/Las%20Vegas%20Grand%20Prix",
+      "https://github.com/TracingInsights/2023/tree/737c84d3ae14b9883a671ca248d015b69cf1cb58/Mexico%20City%20Grand%20Prix",
+      "https://github.com/TracingInsights/2023/tree/737c84d3ae14b9883a671ca248d015b69cf1cb58/Qatar%20Grand%20Prix",
+      "https://github.com/TracingInsights/2023/tree/737c84d3ae14b9883a671ca248d015b69cf1cb58/S%C3%A3o%20Paulo%20Grand%20Prix",
+      "https://github.com/TracingInsights/2023/tree/737c84d3ae14b9883a671ca248d015b69cf1cb58/Singapore%20Grand%20Prix",
+      "https://github.com/TracingInsights/2023/tree/737c84d3ae14b9883a671ca248d015b69cf1cb58/United%20States%20Grand%20Prix",
+      "https://github.com/TracingInsights/2024/tree/d1543a71370d9b617b627319f8ad80b2f85dfd5e/Abu%20Dhabi%20Grand%20Prix",
+      "https://github.com/TracingInsights/2024/tree/d1543a71370d9b617b627319f8ad80b2f85dfd5e/Australian%20Grand%20Prix",
+      "https://github.com/TracingInsights/2024/tree/d1543a71370d9b617b627319f8ad80b2f85dfd5e/Austrian%20Grand%20Prix",
+      "https://github.com/TracingInsights/2024/tree/d1543a71370d9b617b627319f8ad80b2f85dfd5e/Azerbaijan%20Grand%20Prix",
+      "https://github.com/TracingInsights/2024/tree/d1543a71370d9b617b627319f8ad80b2f85dfd5e/Bahrain%20Grand%20Prix",
+      "https://github.com/TracingInsights/2024/tree/d1543a71370d9b617b627319f8ad80b2f85dfd5e/British%20Grand%20Prix",
+      "https://github.com/TracingInsights/2024/tree/d1543a71370d9b617b627319f8ad80b2f85dfd5e/Canadian%20Grand%20Prix",
+      "https://github.com/TracingInsights/2024/tree/d1543a71370d9b617b627319f8ad80b2f85dfd5e/Chinese%20Grand%20Prix",
+      "https://github.com/TracingInsights/2024/tree/d1543a71370d9b617b627319f8ad80b2f85dfd5e/Emilia%20Romagna%20Grand%20Prix",
+      "https://github.com/TracingInsights/2024/tree/d1543a71370d9b617b627319f8ad80b2f85dfd5e/Italian%20Grand%20Prix",
+      "https://github.com/TracingInsights/2024/tree/d1543a71370d9b617b627319f8ad80b2f85dfd5e/Japanese%20Grand%20Prix",
+      "https://github.com/TracingInsights/2024/tree/d1543a71370d9b617b627319f8ad80b2f85dfd5e/Las%20Vegas%20Grand%20Prix",
+      "https://github.com/TracingInsights/2024/tree/d1543a71370d9b617b627319f8ad80b2f85dfd5e/Monaco%20Grand%20Prix",
+      "https://github.com/TracingInsights/2024/tree/d1543a71370d9b617b627319f8ad80b2f85dfd5e/Qatar%20Grand%20Prix",
+      "https://github.com/TracingInsights/2024/tree/d1543a71370d9b617b627319f8ad80b2f85dfd5e/Saudi%20Arabian%20Grand%20Prix",
+      "https://github.com/TracingInsights/2024/tree/d1543a71370d9b617b627319f8ad80b2f85dfd5e/Spanish%20Grand%20Prix",
+      "https://github.com/TracingInsights/2025/tree/dfb3ea3f50b69857fe8e40cabe5e899743c59f6a/Abu%20Dhabi%20Grand%20Prix",
+      "https://github.com/TracingInsights/2025/tree/dfb3ea3f50b69857fe8e40cabe5e899743c59f6a/Australian%20Grand%20Prix",
+      "https://github.com/TracingInsights/2025/tree/dfb3ea3f50b69857fe8e40cabe5e899743c59f6a/Austrian%20Grand%20Prix",
+      "https://github.com/TracingInsights/2025/tree/dfb3ea3f50b69857fe8e40cabe5e899743c59f6a/Azerbaijan%20Grand%20Prix",
+      "https://github.com/TracingInsights/2025/tree/dfb3ea3f50b69857fe8e40cabe5e899743c59f6a/Bahrain%20Grand%20Prix",
+      "https://github.com/TracingInsights/2025/tree/dfb3ea3f50b69857fe8e40cabe5e899743c59f6a/Belgian%20Grand%20Prix",
+      "https://github.com/TracingInsights/2025/tree/dfb3ea3f50b69857fe8e40cabe5e899743c59f6a/British%20Grand%20Prix",
+      "https://github.com/TracingInsights/2025/tree/dfb3ea3f50b69857fe8e40cabe5e899743c59f6a/Canadian%20Grand%20Prix",
+      "https://github.com/TracingInsights/2025/tree/dfb3ea3f50b69857fe8e40cabe5e899743c59f6a/Chinese%20Grand%20Prix",
+      "https://github.com/TracingInsights/2025/tree/dfb3ea3f50b69857fe8e40cabe5e899743c59f6a/Dutch%20Grand%20Prix",
+      "https://github.com/TracingInsights/2025/tree/dfb3ea3f50b69857fe8e40cabe5e899743c59f6a/Emilia%20Romagna%20Grand%20Prix",
+      "https://github.com/TracingInsights/2025/tree/dfb3ea3f50b69857fe8e40cabe5e899743c59f6a/Hungarian%20Grand%20Prix",
+      "https://github.com/TracingInsights/2025/tree/dfb3ea3f50b69857fe8e40cabe5e899743c59f6a/Italian%20Grand%20Prix",
+      "https://github.com/TracingInsights/2025/tree/dfb3ea3f50b69857fe8e40cabe5e899743c59f6a/Japanese%20Grand%20Prix",
+      "https://github.com/TracingInsights/2025/tree/dfb3ea3f50b69857fe8e40cabe5e899743c59f6a/Las%20Vegas%20Grand%20Prix",
+      "https://github.com/TracingInsights/2025/tree/dfb3ea3f50b69857fe8e40cabe5e899743c59f6a/Mexico%20City%20Grand%20Prix",
+      "https://github.com/TracingInsights/2025/tree/dfb3ea3f50b69857fe8e40cabe5e899743c59f6a/Miami%20Grand%20Prix",
+      "https://github.com/TracingInsights/2025/tree/dfb3ea3f50b69857fe8e40cabe5e899743c59f6a/Monaco%20Grand%20Prix",
+      "https://github.com/TracingInsights/2025/tree/dfb3ea3f50b69857fe8e40cabe5e899743c59f6a/Qatar%20Grand%20Prix",
+      "https://github.com/TracingInsights/2025/tree/dfb3ea3f50b69857fe8e40cabe5e899743c59f6a/S%C3%A3o%20Paulo%20Grand%20Prix",
+      "https://github.com/TracingInsights/2025/tree/dfb3ea3f50b69857fe8e40cabe5e899743c59f6a/Saudi%20Arabian%20Grand%20Prix",
+      "https://github.com/TracingInsights/2025/tree/dfb3ea3f50b69857fe8e40cabe5e899743c59f6a/Singapore%20Grand%20Prix",
+      "https://github.com/TracingInsights/2025/tree/dfb3ea3f50b69857fe8e40cabe5e899743c59f6a/Spanish%20Grand%20Prix",
+      "https://github.com/TracingInsights/2025/tree/dfb3ea3f50b69857fe8e40cabe5e899743c59f6a/United%20States%20Grand%20Prix"
+    ],
+    "labels": [
+      "https://api.jolpi.ca/ergast/f1/2022/results/?limit=100&offset=0",
+      "https://api.jolpi.ca/ergast/f1/2022/results/?limit=100&offset=100",
+      "https://api.jolpi.ca/ergast/f1/2022/results/?limit=100&offset=200",
+      "https://api.jolpi.ca/ergast/f1/2022/results/?limit=100&offset=300",
+      "https://api.jolpi.ca/ergast/f1/2022/results/?limit=100&offset=400",
+      "https://api.jolpi.ca/ergast/f1/2023/results/?limit=100&offset=0",
+      "https://api.jolpi.ca/ergast/f1/2023/results/?limit=100&offset=100",
+      "https://api.jolpi.ca/ergast/f1/2023/results/?limit=100&offset=200",
+      "https://api.jolpi.ca/ergast/f1/2023/results/?limit=100&offset=300",
+      "https://api.jolpi.ca/ergast/f1/2023/results/?limit=100&offset=400",
+      "https://api.jolpi.ca/ergast/f1/2024/results/?limit=100&offset=0",
+      "https://api.jolpi.ca/ergast/f1/2024/results/?limit=100&offset=100",
+      "https://api.jolpi.ca/ergast/f1/2024/results/?limit=100&offset=200",
+      "https://api.jolpi.ca/ergast/f1/2024/results/?limit=100&offset=300",
+      "https://api.jolpi.ca/ergast/f1/2024/results/?limit=100&offset=400",
+      "https://api.jolpi.ca/ergast/f1/2025/results/?limit=100&offset=0",
+      "https://api.jolpi.ca/ergast/f1/2025/results/?limit=100&offset=100",
+      "https://api.jolpi.ca/ergast/f1/2025/results/?limit=100&offset=200",
+      "https://api.jolpi.ca/ergast/f1/2025/results/?limit=100&offset=300",
+      "https://api.jolpi.ca/ergast/f1/2025/results/?limit=100&offset=400"
+    ],
+    "documents": [
+      "https://www.fia.com/sites/default/files/2023_bahrain_grand_prix_-_entry_list.pdf",
+      "https://www.fia.com/sites/default/files/decision-document/2023%20Qatar%20Grand%20Prix%20-%20Entry%20List.pdf",
+      "https://www.fia.com/sites/default/files/decision-document/2024%20Bahrain%20Grand%20Prix%20-%20Entry%20List.pdf",
+      "https://www.fia.com/sites/default/files/decision-document/2024%20Qatar%20Grand%20Prix%20-%20Final%20Starting%20Grid.pdf",
+      "https://www.fia.com/sites/default/files/doc_29_-_2023_bahrain_grand_prix_-_final_starting_grid.pdf",
+      "https://www.fia.com/sites/default/files/doc_38_-_2022_bahrain_grand_prix_-_final_starting_grid.pdf",
+      "https://www.fia.com/sites/default/files/doc_7_-_2022_bahrain_grand_prix_-_entry_list.pdf",
+      "https://www.fia.com/system/files/decision-document/2025_qatar_grand_prix_-_entry_list.pdf",
+      "https://www.fia.com/system/files/decision-document/2025_qatar_grand_prix_-_final_starting_grid.pdf"
+    ]
+  }
+}

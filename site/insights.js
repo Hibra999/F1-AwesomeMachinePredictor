@@ -10,6 +10,9 @@ const raceInsights = (() => {
   };
   const pct = new Intl.NumberFormat("es-ES", { style: "percent", maximumFractionDigits: 2 });
   const signed = new Intl.NumberFormat("es-ES", { maximumFractionDigits: 2, signDisplay: "exceptZero" });
+  const score = new Intl.NumberFormat("es-ES", { maximumFractionDigits: 4 });
+  const utc = (value) => new Date(Date.parse(value)).toISOString().slice(0, 16).replace("T", " ") + " UTC";
+  const sourceStamp = (report) => `Última revisión guardada: ${utc(report.as_of_utc)}`;
   const slots = { first: "Victoria", second: "Segundo puesto", third: "Tercer puesto" };
   const color = (name) => getComputedStyle(document.documentElement).getPropertyValue(`--${name}`).trim();
   // DriverList.TeamColour, Las Vegas 2026. Keys use the published roster's canonical team names.
@@ -94,12 +97,43 @@ const raceInsights = (() => {
   }
 
   const results = byId("resultados");
+  function raceEvaluation(race) {
+    const box = make("section", undefined, "race-evaluation");
+    box.append(make("h4", "Pronósticos emitidos durante la carrera"));
+    const e = race.race_evaluation;
+    if (!e) {
+      box.append(make("p", "Sin archivo de carrera o sin cortes emitidos verificables antes de bandera. No se puntúa."));
+      return box;
+    }
+    if (!Number.isInteger(e.cuts) || e.cuts < 1 || !Number.isInteger(e.excluded_finish) || e.excluded_finish < 0
+        || !Number.isInteger(e.first_lap) || !Number.isInteger(e.last_lap) || e.last_lap < e.first_lap
+        || ![e.winner_hits, e.exact_hits].every((n) => Number.isInteger(n) && n >= 0 && n <= e.cuts)
+        || ![e.brier_podium, e.winner_log_loss].every((n) => Number.isFinite(n) && n >= 0) || !e.model) {
+      throw new Error("Evaluación de carrera no válida.");
+    }
+    box.append(make("p", `${e.cuts} de ${e.cuts + e.excluded_finish} cortes emitidos verificables se puntúan antes de bandera (vueltas ${e.first_lap}–${e.last_lap}). Cortes de bandera o posteriores excluidos: ${e.excluded_finish}.`));
+    const values = make("dl");
+    for (const [label, value] of [
+      ["Brier de podio", score.format(e.brier_podium)], ["Log loss del ganador", score.format(e.winner_log_loss)],
+      ["Ganador acertado", `${e.winner_hits}/${e.cuts}`], ["Podio en orden exacto", `${e.exact_hits}/${e.cuts}`],
+    ]) {
+      const item = make("div");
+      item.append(make("dt", label), make("dd", value));
+      values.append(item);
+    }
+    box.append(values, make("p", `Modelo: ${e.model}. En Brier y log loss, menos es mejor.`, "muted"));
+    return box;
+  }
   function resultCard(race) {
     const card = make("article", undefined, "panel result-card");
     const top = make("div", undefined, "insight-head");
     const heading = make("div");
     heading.append(make("p", `GP ${race.gp} · Fecha local: ${race.date}`, "micro"), make("h3", race.name));
     const status = { final: "Clasificación final", provisional: "Provisional", pending: "Pendiente" }[race.status];
+    const validPodium = (p) => Array.isArray(p) && p.length === 3 && new Set(p).size === 3
+      && p.every((code) => typeof code === "string" && /^[A-Z]{3}$/.test(code));
+    if (!status || (race.official != null && !validPodium(race.official)) || (race.forecast != null && !validPodium(race.forecast))
+        || (race.status !== "pending" && !race.official)) throw new Error("Podio no válido.");
     top.append(heading, make("span", status, "badge"));
     card.append(top);
     const predicted = race.forecast;
@@ -121,7 +155,8 @@ const raceInsights = (() => {
     const table = make("table", undefined, "result-table");
     table.setAttribute("aria-label", `Pronóstico y clasificación de ${race.name}`);
     const tr = table.createTHead().insertRow();
-    for (const title of ["Puesto", "Previsto", "Resultado", "Acierto"]) { const th = make("th", title); th.scope = "col"; tr.append(th); }
+    const resultHeading = race.status === "provisional" ? "Podio provisional" : "Podio oficial";
+    for (const title of ["Puesto", "Previa T−30", resultHeading, "Acierto"]) { const th = make("th", title); th.scope = "col"; tr.append(th); }
     const body = table.createTBody();
     for (let i = 0; i < 3; i += 1) {
       const row = body.insertRow();
@@ -140,8 +175,11 @@ const raceInsights = (() => {
     const evidence = make("div", undefined, "result-source");
     if (predicted) {
       const origin = race.origin === "published" ? "Pronóstico publicado" : "Backtest · no publicado entonces";
-      evidence.append(make("span", `${origin} · T−30: ${race.cutoff_utc.replace("T", " ").slice(0, 16)} UTC · ${race.model}`));
+      evidence.append(make("span", `${origin} · T−30: ${utc(race.cutoff_utc)} · ${race.model}`));
     }
+    if (race.status === "final") evidence.append(make("span", race.classification_utc
+      ? `Documento de clasificación final: ${utc(race.classification_utc)}`
+      : "Hora del documento de clasificación final no registrada."));
     const url = new URL(race.source_url);
     if (url.protocol === "https:") {
       const link = make("a", `${race.status === "pending" ? "Consultar el estado" : "Ver clasificación"} ↗`);
@@ -164,22 +202,45 @@ const raceInsights = (() => {
       evidence.append(details);
     }
     card.append(table, evidence);
+    if (race.status === "final") card.append(raceEvaluation(race));
     return card;
   }
 
+  async function fetchResults(signal) {
+    const res = await fetch("./data/recent-podiums.json", { cache: "no-store", signal });
+    if (!res.ok) throw new Error(`Informe no disponible (HTTP ${res.status}).`);
+    const report = await res.json();
+    if (!Array.isArray(report.races) || !Array.isArray(report.pending) || !Number.isFinite(Date.parse(report.as_of_utc))) {
+      throw new Error("Informe no válido.");
+    }
+    return report;
+  }
+
+  let resultsStamp = -Infinity;
+  let checkingResults = false;
   async function loadResults() {
+    if (checkingResults) return;
+    checkingResults = true;
     const cards = byId("recent-cards");
     try {
-      const res = await fetch("./data/recent-podiums.json", { cache: "no-cache", signal: AbortSignal.timeout(8000) });
-      if (!res.ok) throw new Error();
-      const report = await res.json();
-      const stamp = document.createElement("p");
-      stamp.className = "micro result-updated";
-      stamp.textContent = `Fuentes consultadas: ${report.as_of_utc.replace("T", " ").slice(0, 16)} UTC`;
+      const report = await fetchResults(AbortSignal.timeout(8000));
+      const updated = Date.parse(report.as_of_utc);
+      if (updated <= resultsStamp) return;
+      const stamp = make("p", sourceStamp(report), "micro result-updated");
       const latest = [...report.pending, ...report.races].sort((a, b) => b.gp.localeCompare(a.gp)).slice(0, 2);
       cards.replaceChildren(...latest.map(resultCard), stamp);
-    } catch { cards.textContent = "No se pudo leer la comparación de podios."; }
+      resultsStamp = updated;
+    } catch {
+      if (!Number.isFinite(resultsStamp)) cards.textContent = "No se pudo leer la comparación de podios.";
+    } finally {
+      checkingResults = false;
+    }
   }
-  if (results) void loadResults();
-  return { showChances, teamColor };
+  if (results) {
+    void loadResults();
+    const refreshVisible = () => { if (!document.hidden) void loadResults(); };
+    document.addEventListener("visibilitychange", refreshVisible);
+    window.setInterval(refreshVisible, 60_000);
+  }
+  return { showChances, teamColor, fetchResults, resultCard, sourceStamp };
 })();

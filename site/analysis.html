@@ -18,7 +18,7 @@
     <div class="shell masthead-inner lab-masthead">
       <a class="wordmark" href="./"><span class="wordmark-mark" aria-hidden="true"></span>Podio<span>probable</span></a>
       <nav aria-label="Secciones del laboratorio">
-        <a href="#resultados">Dos últimos GP</a><a href="#evaluacion">Evaluación</a><a href="#ranking">Ranking T−30</a><a href="#entrenamiento">Rustuna</a><a href="#datos">Datos</a>
+        <a href="#resultados">Dos últimos GP</a><a href="#evaluacion">Evaluación</a><a href="#pilotos">Pilotos</a><a href="#ranking">Ranking T−30</a><a href="#entrenamiento">Rustuna</a><a href="#datos">Datos</a>
       </nav>
       <a href="./" class="lab-back">← Inicio</a>
     </div>
@@ -48,7 +48,7 @@
     <section id="resultados" class="results-section" aria-labelledby="recent-title">
       <p class="eyebrow">Pronóstico frente a clasificación</p>
       <h2 id="recent-title">¿Acertamos los dos últimos podios?</h2>
-      <p class="muted">El veredicto exige el piloto en el puesto previsto. Estas dos carreras no sustituyen la evaluación por período.</p>
+      <p class="muted">La previa T−30 se compara puesto por puesto. Los cortes emitidos durante un mismo GP no son carreras independientes.</p>
       <div id="recent-cards" class="result-grid" aria-live="polite">Cargando los resultados…</div>
     </section>
 
@@ -109,6 +109,16 @@
         <div id="ranking-plot" class="lab-plot" role="img" aria-label="Diferencia de Brier con intervalo pareado del 95 %. A la izquierda de cero mejora el candidato."></div>
         <p id="ranking-interval" class="muted"></p>
         <p class="lab-links"><a href="https://github.com/Hibra999/F1-AwesomeMachinePredictor/blob/main/reports/metodos-y-datos.md">Artículos, repositorios y fuentes ↗</a><a href="https://github.com/Hibra999/F1-AwesomeMachinePredictor/blob/main/reports/prerregistro-ranking-t30.md">Prerregistro ↗</a><a href="https://github.com/Hibra999/F1-AwesomeMachinePredictor/blob/main/reports/enmienda-reloj-t30.md">Corrección de horarios ↗</a></p>
+      </section>
+
+      <section id="pilotos" class="lab-section panel lab-card" aria-labelledby="driver-study-title">
+        <p class="eyebrow">Rendimiento por piloto / T−30</p>
+        <h2 id="driver-study-title">¿A cuántos puestos del resultado nos quedamos?</h2>
+        <p id="driver-study-result"></p>
+        <div id="driver-study-plot" class="lab-plot" role="img" aria-label="Error absoluto medio en puestos de los tres métodos. Menor es mejor."></div>
+        <p id="driver-study-coverage" class="muted"></p>
+        <p id="driver-study-interval" class="muted"></p>
+        <p class="lab-links"><a href="https://github.com/Hibra999/F1-AwesomeMachinePredictor/blob/main/reports/prerregistro-rendimiento-pilotos.md">Reglas antes de puntuar ↗</a><a href="https://github.com/Hibra999/F1-AwesomeMachinePredictor/blob/main/reports/driver-performance.json">Resultados por semestre ↗</a></p>
       </section>
 
       <section id="entrenamiento" class="lab-section" aria-labelledby="training-title">

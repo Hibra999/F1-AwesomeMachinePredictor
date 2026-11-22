@@ -86,6 +86,11 @@
 #podium { display: grid; gap: .35rem; padding-left: 1.4rem; }
 #podium li::marker, #joint-probability { color: var(--accent); font-weight: 800; }
 
+#finish-panel { max-width: 65rem; }
+#finish-panel .result-card { margin-block: .7rem; }
+.finish-flag { display: inline-block; width: 1.5rem; height: 1rem; margin-inline-end: .45rem; vertical-align: -.13rem;
+  border: 1px solid var(--muted); background: repeating-conic-gradient(#fafafa 0 25%, #151515 0 50%) 0 0 / .55rem .55rem; }
+
 .cut-badge { border-color: var(--mint); color: var(--mint); }
 .circuit-stage {
   position: relative;

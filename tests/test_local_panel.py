@@ -38,6 +38,15 @@ class LocalPanelTest(unittest.TestCase):
             (Path(directory) / "live.json").write_text(json.dumps(live), encoding="utf-8")
             self.assertEqual(document(url + "data/live.json")["event"]["id"], "next-race")
 
+    def test_interrupted_private_result_does_not_hide_the_published_retrospective(self):
+        with TemporaryDirectory() as directory, panel(directory, "--live", str(Path(directory) / "next.json")) as url:
+            public = document(url + "data/recent-podiums.json")
+            private = Path(directory) / "recent-podiums.json"
+            private.write_text('{"as_of_utc":"2099-01-01T00:00:00Z"}', encoding="utf-8")
+            self.assertEqual(document(url + "data/recent-podiums.json"), public)
+            private.write_text("{", encoding="utf-8")
+            self.assertEqual(document(url + "data/recent-podiums.json"), public)
+
     def test_missing_explicit_watch_does_not_substitute_another_race(self):
         with TemporaryDirectory() as directory, panel(directory, "--live", str(Path(directory) / "next.json")) as url:
             with self.assertRaises(HTTPError) as error:
