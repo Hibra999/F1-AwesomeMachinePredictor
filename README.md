@@ -7,8 +7,9 @@ Probabilidades de los tres puestos de la clasificación oficial del GP principal
 ## Entrega
 
 - **Catar 2026:** [22 pilotos, cuatro probabilidades y corte UTC](site/data/upcoming.json). Corte congelado `2026-11-22 04:22:54.481 UTC`, antes de FP1; el roster es el último fechado de clasificación en Las Vegas, provisional para Catar. Incluye a Rafael Câmara en Haas, no a Esteban Ocon. MAP: Verstappen → Antonelli → Norris, **0,9322%** conjunto. [Horario del GP](https://www.formula1.com/en/latest/article/formula-1-qatar-airways-qatar-grand-prix-2026.3XJyoYSnpJEcuZovstTdcG): FP1 **27 nov 13:30 UTC**; T−30 **29 nov 15:30 UTC**; carrera **29 nov 16:00 UTC**. El corte T−30 no ha ocurrido; arrancar el comando armado que se indica abajo.
-- **São Paulo 2026:** repetición de 71 vueltas con dos cortes previos reconstruidos. En vuelta 36 el prefijo contiene 38 cortes y coincide exacto con el prefijo de la repetición completa. No se añade ninguna predicción o punto de evolución posterior a la pausa.
-- **Las Vegas 2026:** SignalR Core anónimo comprobado durante `SessionStatus=Started`. El PC publicó al Gist [feed.json](https://gist.github.com/Hibra999/6e6438ae11bbbc1c9514f6b46810b0ce) a partir de la vuelta **13**, corte `2026-11-22 04:25:18.327 UTC`, retardo del paquete **1,54 s**. [Despliegue Pages verificado](https://github.com/Hibra999/F1-AwesomeMachinePredictor/actions/runs/44985011513): el navegador móvil (390 px) recibió y mostró la vuelta 14, con 22 pilotos. Al desconectar la red en la prueba del panel se conservaron corte y tabla y apareció «Datos anteriores» con su edad. Gist se lee sin cuenta cada 65 s; el emisor necesita un PC conectado y encendido.
+- **GitHub Pages:** solo la última proyección previa publicada. Muestra el corte T−30 cuando exista; hasta entonces, el anticipado con su etiqueta y la hora prevista. No hay archivo, señal ni selector de directo en Pages.
+- **São Paulo 2026:** repetición local de 71 vueltas y dos cortes previos reconstruidos. Hasta la vuelta 36, el replay parcial coincide exactamente con los primeros 38 cortes de la carrera completa. La gráfica y el ranking se limitan al corte elegido.
+- **Las Vegas 2026:** cronometraje anónimo por SignalR Core verificado durante `SessionStatus=Started`. La mesa local mostró la vuelta 36 con 22 pilotos y un archivo de 1 s de antigüedad. Al desconectar el navegador en la vuelta 37, conservó el corte y la tabla e indicó que no podía actualizar. No se rellenan huecos. El antiguo Gist público no se usa ni se actualiza.
 
 ## Resultados
 
@@ -33,6 +34,18 @@ El Elo final T−30 pierde en log loss de ganador. El ensamble en carrera pierde
 - **Fuga:** [prueba automática](reports/leakage.json), São Paulo 2026, con semilla 55293: retirar y corromper los eventos posteriores a pre-FP1, T−30 y vuelta 36 mantuvo todas las ternas idénticas (`Δ máx.=0`, `atol=1e-12`). Verifica el reducer y modelo sellado; no demuestra que el proveedor archivado preservó la primera llegada de cada paquete.
 - **Cambios de posición:** [estudio](reports/position-gain.json) con 40 GP/24 circuitos retenidos y ajustes cronológicos, AUC 0,737; Brier 0,09753 vs 0,10384 del prior. La señal no mejoró Brier de podio (0,05517 con/sin); se excluyó. El proxy no identifica adelantamientos en pista.
 - **Rendimiento:** Windows x64, Python 3.12.13, RTX 5070 12 GB, driver 621.01. Fit y selección 54,49 s CPU; preparar corpus + fit 90,83 s en esta máquina. Microbenchmark CatBoost 30 000 × 23, 140 árboles: CPU 0,753 s, CUDA 11,240 s (incluye inicialización). LightGBM CPU 0,149 s; rueda Windows sin CUDA Tree Learner. NGBoost usa scikit-learn CPU. `uv.lock` fija versiones (LGBM 4.7.0, NGB 0.5.11, CatBoost 1.2.10, FastF1 3.9.2). No hubo beneficio medido para usar CUDA ni un cuello de botella que justificara base de datos externa o reescritura.
+
+### Ajuste T−30 con Rustuna
+
+[Rustuna 0.3.1](https://github.com/optuna/rustuna) ejecutó TPE con semilla 55293: ocho ensayos por familia y ventana, 168 en total. Cada estudio usa dos bloques cronológicos internos por GP completo, con embargo de etiquetas. Las temperaturas y mezclas de evaluación se ajustan con OOS previo. El experimento no leyó 2026 ni cambió el modelo desplegado.
+
+| Familia | Política original | Mejor preset fijo observado | Rustuna |
+|---|---:|---:|---:|
+| LightGBM | 0,07217 | 0,07127 | 0,07681 |
+| NGBoost | 0,06970 | 0,06820 | 0,06991 |
+| CatBoost | 0,06915 | 0,06783 | 0,07127 |
+
+Brier de podio en los mismos 48 GP de 2024–25; menor es mejor. Se conserva **Elo (0,06764)**. La búsqueda tomó 39,09 s y el entrenamiento completo 112,51 s en Windows CPU con rueda nativa Rustuna. [Informe y huellas del experimento](reports/rustuna-t30.json). Los parámetros de cada ensayo, tiempos y GP por bloque quedan en el `selection.json` local.
 
 ## Fuentes y disponibilidad
 
@@ -68,27 +81,47 @@ uv run --locked python -m f1forecast.gain_study
 
 `--work .local/repro` **antes del subcomando** permite repetir sin sobrescribir la selección congelada. Archivo de pesos sellado: SHA-256 `abba0fabe47c2f66404b57a40a22cd7f2f58251bd91aa766fba50368ba260dd3`. `train` rehúsa abrir 2026, `prepare --period final` requiere selección sellada y `evaluate` verifica SHA. Para usar los pesos publicados sin reentrenar, ejecutar `prepare`, `gh release download pl-5d7f9a659617 --pattern model.joblib --dir .local`, `Copy-Item reports/walk-forward.json .local/selection.json`, luego `prepare --period final` para disponer del historial reciente.
 
-```powershell
-# Consultar reloj del GP o congelar pre-FP1 de otro evento antes de Libres 1.
-uv run --locked python -m f1forecast schedule --gp 2026-22
-uv run --locked python -m f1forecast forecast --gp 2026-23 --horizon fp1 --out .local/abu-dabi.json
+### Repetir el ajuste sin tocar el modelo publicado
 
-# Generar replay para el panel o materializar solo su prefijo hasta la vuelta 36.
-uv run --locked python -m f1forecast replay --gp 2026-20 --out site/data/sao-paulo-2026.json
+```powershell
+uv run --locked python -m f1forecast --work .local/rustuna prepare
+uv run --locked python -m f1forecast --work .local/rustuna train --trials 8
+```
+
+Usa un directorio limpio sin datos finales. `train` sin `--trials` reproduce la selección original.
+
+### Mesa de carrera local
+
+```powershell
+# Panel y replay incluido; no hacen falta pesos para ver el replay incluido.
+uv run --locked python -m f1forecast panel --port 8070
+
+# Opcional: regenerar replay con el modelo sellado o materializar el prefijo causal.
+uv run --locked python -m f1forecast replay --gp 2026-20 --out .local/replay.json
 uv run --locked python -m f1forecast replay --gp 2026-20 --through-lap 36 --out .local/replay-stop.json
-uv run --locked python -m http.server 8070 --directory site
+uv run --locked python -m f1forecast panel --port 8070 --replay .local/replay-stop.json
 ```
 
-Abrir [http://localhost:8070/](http://localhost:8070/) y elegir **Archivo · São Paulo**. Los datos servidos son pronósticos generados, no resultados de vueltas. Para publicar un replay en tu Gist, `gist-init --file .local/replay-stop.json` crea uno nuevo; configura `feed_url` en `site/data/index.json`. `replay --gist <id> --interval 2` emite los cortes sucesivamente. Si no hay señal, no se mezcla una repetición con el directo: seleccionar el archivo identificado.
+Abre [http://127.0.0.1:8070/](http://127.0.0.1:8070/) y elige **Repetición** o **Directo**. El servidor escucha solo en el PC. Si ya hay un panel abierto, detenlo antes de lanzar otro en el mismo puerto.
+
+Para Catar, inicia `watch` en una consola cuando se abra la sesión Race, unos minutos antes de la salida. Abre el panel en otra consola:
 
 ```powershell
-# Autenticación GitHub únicamente para publicar, no para recibir datos F1.
-gh auth status
-$gist = '6e6438ae11bbbc1c9514f6b46810b0ce'
-# Armar antes de 29 nov 15:30 UTC. Mantener Windows despierto.
-uv run --locked python -m f1forecast forecast --gp 2026-22 --horizon pre_race --wait --seed-feed site/data/upcoming.json --out .local/qatar-frozen.json --gist $gist
-# Ejecutar al abrirse la sesión Race, unos minutos antes de las 16:00 UTC.
-uv run --locked python -m f1forecast watch --gp 2026-22 --seed-feed .local/qatar-frozen.json --out .local/qatar-live.json --gist $gist
+uv run --locked python -m f1forecast watch --gp 2026-22 --seed-feed site/data/upcoming.json --out .local/qatar-live.json
+uv run --locked python -m f1forecast panel --port 8070 --live .local/qatar-live.json
 ```
 
-Los cortes reales no se regeneran con la etiqueta «publicado» después de su ventana. `--events` permite adjuntar NDJSON de un proveedor autorizado antes del corte: `at` (epoch UTC de recepción/emisión comprobada), `source`, `kind`, y campos del contrato de `RaceState` (`forecast_weather` con `air`/`rain_p`, `qualifying` con `driver`/`seconds`, `sprint` con `driver`/`position`, por ejemplo). Al iniciar el `watch` tarde, no se inventan los cierres que ya pasaron. Si no hay un cierre válido, no reemplaza el Gist. Detener/reanudar la captura usando el mismo `--out` conserva cortes publicados y no duplica vueltas. GitHub Pages sirve `site/` por `.github/workflows/deploy.yml`; la escritura del feed no espera un nuevo despliegue por vuelta.
+No necesitas credenciales de GitHub. El HTML consulta el archivo local cada 3 s y conserva la última revisión válida. No rellena vueltas perdidas al arrancar tarde. Reanudar con el mismo `--out` conserva los cortes previos. Plotly.js Basic 4.3.0 se sirve desde el proyecto bajo [licencia MIT](site/vendor/plotly.LICENSE.txt), sin CDN.
+
+### Publicar la proyección previa
+
+```powershell
+uv run --locked python -m f1forecast schedule --gp 2026-22
+# Armar antes del 29 nov 2026 a las 15:30 UTC y mantener Windows despierto.
+uv run --locked python -m f1forecast forecast --gp 2026-22 --horizon pre_race --wait --out site/data/upcoming.json
+python -m f1forecast.pages
+```
+
+Haz commit y push del pronóstico después de congelarlo. Pages lo publica con `.github/workflows/deploy.yml`; el flujo rechaza archivos ajenos y cortes en directo o reconstruidos. La hora del corte y la emisión del modelo no son la hora de despliegue.
+
+Para otro GP congela primero en un archivo nuevo (`forecast --gp 2026-23 --horizon fp1 --out .local/abu-dabi.json`, antes de Libres 1); después sustituye `site/data/upcoming.json` por ese documento para publicarlo. No se vuelven a emitir cortes reales fuera de su ventana. `--events` acepta NDJSON de un proveedor autorizado: `at` en epoch UTC de recepción o emisión comprobada, `source`, `kind` y los campos correspondientes de `RaceState`.

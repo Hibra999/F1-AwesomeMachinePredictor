@@ -4,126 +4,143 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="color-scheme" content="dark">
-  <title>Podio probable · Pronósticos de automovilismo</title>
+  <meta name="description" content="Pronóstico previo a cada Gran Premio de Fórmula 1: probabilidades de victoria y del podio oficial.">
+  <title>Podio probable · Proyección previa al GP</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Crect width='48' height='48' rx='9' fill='%23101318'/%3E%3Cpath d='M14 33l9-18h6l-9 18zM25 33l9-18h4l-9 18z' fill='%23ff514a'/%3E%3C/svg%3E">
   <link rel="stylesheet" href="styles.css">
+  <script src="vendor/plotly-basic.min.js" defer></script>
   <script src="app.js" defer></script>
 </head>
 <body>
+  <a class="skip-link" href="#inicio">Saltar al pronóstico</a>
   <header class="masthead">
     <div class="shell masthead-inner">
-      <div class="wordmark"><span class="wordmark-mark" aria-hidden="true"></span>Podio probable</div>
-      <p id="live-status" class="status" role="status" data-testid="live-status">Cargando el estado de la publicación…</p>
+      <a class="wordmark" href="#inicio"><span class="wordmark-mark" aria-hidden="true"></span>Podio<span>probable</span></a>
+      <nav aria-label="Secciones del pronóstico">
+        <a href="#proyeccion">Proyección</a><a href="#pilotos">Pilotos</a><a href="#metodo">Método</a>
+      </nav>
+      <span class="badge edition"><span aria-hidden="true"></span> Edición previa</span>
     </div>
   </header>
-  <main class="shell">
-    <section class="hero" aria-labelledby="event-name">
-      <div>
-        <p class="eyebrow">Análisis de carrera · Fórmula 1</p>
-        <h1 id="event-name" data-testid="event-name">Probabilidades de podio</h1>
-        <div class="badges" id="badges" hidden>
-          <span id="mode" class="badge badge-mode" data-testid="mode"></span>
-          <span id="origin" class="badge" data-testid="origin"></span>
-          <span id="freshness" class="badge badge-warning" data-testid="freshness" hidden>Datos anteriores</span>
+  <main id="inicio" class="shell">
+    <section class="forecast-hero" aria-labelledby="event-name">
+      <div class="hero-copy">
+        <p id="round" class="eyebrow">Pronóstico de Fórmula 1</p>
+        <p class="hero-kicker">Antes de apagar los semáforos.</p>
+        <h1 id="event-name">El próximo<br>Gran Premio</h1>
+        <p id="summary" class="hero-description">Una proyección del ganador y del podio oficial.</p>
+        <div class="hero-actions">
+          <a id="see-forecast" href="#pilotos" class="button primary" hidden>Ver probabilidades <span aria-hidden="true">↘</span></a>
+          <div id="cut-note" class="cut-note" hidden>
+            <span id="cut-label" class="micro"></span><time id="cut-time"></time>
+          </div>
         </div>
       </div>
-      <div class="event-control">
-        <label for="event-select">Seleccionar evento</label>
-        <select id="event-select" data-testid="event-select" disabled>
-          <option>Cargando eventos…</option>
-        </select>
+      <div class="hero-scene">
+        <svg class="circuit-art" viewBox="0 0 660 420" aria-hidden="true" focusable="false">
+          <defs>
+            <pattern id="plot-grid" width="32" height="32" patternUnits="userSpaceOnUse">
+              <path d="M 32 0 H 0 V 32" fill="none" stroke="currentColor" stroke-width=".7"/>
+            </pattern>
+            <linearGradient id="racing-light" x1="0%" y1="100%" x2="100%" y2="0%">
+              <stop offset="0" stop-color="#ff493f"/><stop offset=".48" stop-color="#fa9a85"/>
+              <stop offset="1" stop-color="#e8eaf1" stop-opacity=".82"/>
+            </linearGradient>
+            <path id="racing-ink" d="M125 323C100 319 89 299 95 276L115 201C122 175 144 156 171 153L323 136C348 133 365 122 383 100L399 80C422 52 459 48 484 69C505 86 506 111 499 138L488 179C479 208 491 227 514 237L542 249C568 261 579 282 571 306C561 334 541 348 501 349L320 350C286 350 264 336 251 314L232 280C217 254 193 245 171 260L148 276C129 289 134 311 155 313L197 318"/>
+          </defs>
+          <rect x="38" y="32" width="584" height="350" fill="url(#plot-grid)" class="art-grid"/>
+          <path class="art-marks" d="M47 112H111M79 80V144M549 92H597M573 68V116M575 366H623M599 342V390M65 335H85M75 325V345M303 44V71M290 57H316"/>
+          <use href="#racing-ink" class="art-runoff"/>
+          <use href="#racing-ink" class="art-track"/>
+          <use href="#racing-ink" class="art-center"/>
+          <path class="art-finish" d="m311 123 4 33m4-34 4 33"/>
+          <circle cx="487" cy="180" r="9" class="art-ring"/><circle cx="487" cy="180" r="3.5" class="art-dot"/>
+        </svg>
+        <aside id="favorite" class="favorite panel" aria-label="Favorito del modelo" hidden>
+          <div class="favorite-top"><span class="micro">Mayor P(ganar)</span><span id="favorite-code" class="badge"></span></div>
+          <strong id="favorite-probability" class="favorite-number"></strong>
+          <strong id="favorite-driver" class="favorite-name"></strong>
+          <span id="favorite-team" class="muted"></span>
+        </aside>
+        <span class="scene-caption micro">Ilustración editorial · no es un mapa</span>
       </div>
     </section>
 
-    <dl id="schedule" class="schedule panel" hidden>
-      <div><dt>Libres 1 · UTC</dt><dd id="fp1-utc"></dd></div>
-      <div><dt>Corte previo · UTC</dt><dd id="pre-race-utc"></dd></div>
-      <div><dt>Carrera · UTC</dt><dd id="race-utc"></dd></div>
-      <div><dt>Vueltas previstas</dt><dd id="scheduled-laps"></dd></div>
-    </dl>
-
-    <div id="notice" class="notice" role="status" data-testid="notice">
-      <p id="notice-text">Cargando el catálogo…</p>
-      <button id="retry" type="button" hidden>Reintentar</button>
+    <div id="notice" class="panel notice" role="status">
+      <span id="notice-text">Cargando la proyección publicada…</span>
+      <button type="button" id="retry" hidden>Reintentar</button>
     </div>
 
-    <section id="timeline-panel" class="panel timeline-panel" aria-labelledby="timeline-title" hidden>
-      <div class="section-heading">
-        <div>
-          <p class="eyebrow">Ventana de predicción</p>
-          <h2 id="timeline-title">Cronología</h2>
-        </div>
-        <p id="playback-status" class="muted" data-testid="playback-status"></p>
-      </div>
-      <div class="timeline-readout">
-        <label for="timeline" id="checkpoint" data-testid="checkpoint"></label>
-        <span id="checkpoint-count" class="muted" data-testid="checkpoint-count"></span>
-      </div>
-      <input id="timeline" data-testid="timeline" type="range" min="0" max="0" value="0" step="1">
-      <div class="transport">
-        <button id="previous" data-testid="previous" type="button">Anterior</button>
-        <button id="play" data-testid="play" class="primary" type="button">Reproducir</button>
-        <button id="pause" data-testid="pause" type="button">Pausar</button>
-        <button id="next" data-testid="next" type="button">Siguiente</button>
-        <button id="follow" data-testid="follow" type="button" aria-pressed="false" hidden>Seguir actualizaciones</button>
-      </div>
-      <dl class="metadata">
-        <div><dt>Corte del modelo · UTC</dt><dd id="cutoff" data-testid="cutoff"></dd></div>
-        <div><dt>Publicación · UTC</dt><dd id="published" data-testid="published"></dd></div>
-        <div><dt>Versión del modelo</dt><dd id="version" data-testid="version"></dd></div>
+    <div id="forecast" hidden>
+      <dl class="race-strip panel" aria-label="Ficha del Gran Premio">
+        <div><dt>Salida programada</dt><dd><time id="race-time"></time></dd></div>
+        <div><dt>Distancia prevista</dt><dd id="race-distance"></dd></div>
+        <div><dt>Alineación del pronóstico</dt><dd id="roster-count"></dd></div>
+        <div><dt>Horizonte mostrado</dt><dd id="horizon"></dd></div>
       </dl>
-    </section>
 
-    <section id="podium-panel" class="panel podium-panel" aria-labelledby="podium-title" hidden>
-      <div>
-        <p class="eyebrow">Predicción conjunta · MAP</p>
-        <h2 id="podium-title">Podio ordenado más probable</h2>
-        <p class="muted">La probabilidad corresponde a esos tres pilotos en ese orden.</p>
+      <div id="proyeccion" class="forecast-grid">
+        <section class="panel forecast-panel" aria-labelledby="podium-title">
+          <p class="eyebrow">01 / Resultado conjunto</p>
+          <h2 id="podium-title">Podio más probable</h2>
+          <div class="joint"><strong id="joint-probability"></strong><span>Probabilidad de estos tres<br>pilotos en este orden.</span></div>
+          <ol id="podium" class="podium-order" aria-label="Podio en orden de llegada"></ol>
+        </section>
+        <figure class="panel forecast-panel" aria-labelledby="chart-title">
+          <figcaption>
+            <p class="eyebrow">02 / Desglose de puestos</p>
+            <h2 id="chart-title">¿Cómo se reparte el podio?</h2>
+            <p class="muted">Los seis pilotos con más probabilidad de terminar entre los tres primeros.</p>
+          </figcaption>
+          <ul class="position-legend" aria-label="Puestos en la gráfica">
+            <li class="series-first">1.º</li><li class="series-second">2.º</li><li class="series-third">3.º</li>
+          </ul>
+          <div id="chart" class="forecast-chart" role="img" aria-label="Barras de probabilidad de primero, segundo y tercero para los seis pilotos con más opciones"></div>
+          <p id="chart-note" class="muted" hidden>Gráfica no disponible. La tabla contiene todas las probabilidades.</p>
+        </figure>
       </div>
-      <ol id="podium" class="podium" data-testid="podium"></ol>
-      <div class="joint"><strong id="joint-probability" data-testid="joint-probability"></strong><span>Probabilidad conjunta</span></div>
-    </section>
 
-    <div id="analysis-panel" class="analysis" hidden>
-      <section class="panel ranking-panel" aria-labelledby="ranking-title">
-        <p class="eyebrow">Distribución del modelo</p>
-        <h2 id="ranking-title">Probabilidades por piloto</h2>
-        <p class="muted">Selecciona una columna para cambiar el orden.</p>
-        <table id="ranking" data-testid="ranking" aria-label="Clasificación por probabilidades">
+      <section id="pilotos" class="panel forecast-panel standings" aria-labelledby="ranking-title">
+        <div class="section-heading">
+          <div><p class="eyebrow">03 / Todos los pilotos</p><h2 id="ranking-title">Probabilidades por piloto</h2></div>
+          <span class="muted">Elige una columna para ordenar.</span>
+        </div>
+        <table class="grid-table" aria-labelledby="ranking-title">
+          <colgroup><col class="rank-col"><col class="driver-col"><col span="4"></colgroup>
           <thead>
             <tr>
               <th scope="col"><span aria-label="Puesto del ranking">#</span></th>
               <th scope="col">Piloto</th>
-              <th scope="col" aria-sort="none"><button type="button" data-metric="first" aria-label="Ordenar por probabilidad de terminar primero">1.º</button></th>
+              <th scope="col" aria-sort="descending"><button type="button" data-metric="first" aria-label="Ordenar por probabilidad de ganar">1.º</button></th>
               <th scope="col" aria-sort="none"><button type="button" data-metric="second" aria-label="Ordenar por probabilidad de terminar segundo">2.º</button></th>
               <th scope="col" aria-sort="none"><button type="button" data-metric="third" aria-label="Ordenar por probabilidad de terminar tercero">3.º</button></th>
-              <th scope="col" aria-sort="descending"><button type="button" data-metric="podium" aria-label="Ordenar por probabilidad de podio">Podio</button></th>
+              <th scope="col" aria-sort="none"><button type="button" data-metric="podium" aria-label="Ordenar por probabilidad de podio">Podio</button></th>
             </tr>
           </thead>
           <tbody id="ranking-body"></tbody>
         </table>
       </section>
-      <section class="panel chart-panel" aria-labelledby="chart-title">
-        <p class="eyebrow">Hasta el corte seleccionado</p>
-        <h2 id="chart-title">Evolución por vuelta</h2>
-        <div class="driver-control">
-          <label for="driver-select">Piloto de la gráfica</label>
-          <select id="driver-select" data-testid="driver-select"></select>
+
+      <section id="metodo" class="panel forecast-panel provenance" aria-labelledby="method-title">
+        <div>
+          <p class="eyebrow">04 / Trazabilidad</p><h2 id="method-title">Corte, modelo y fuentes</h2>
+          <p>Sumamos los órdenes posibles con pilotos distintos. Cada puesto suma 100 % antes de redondear.</p>
+          <p id="source" class="muted"></p>
+          <ul id="evidence" class="evidence"></ul>
         </div>
-        <p id="chart-empty" class="chart-empty muted" data-testid="chart-empty"></p>
-        <svg id="chart" data-testid="chart" viewBox="0 0 480 240" role="img" aria-labelledby="chart-svg-title chart-svg-desc" hidden></svg>
-        <ul id="chart-legend" class="chart-legend" aria-label="Probabilidades en la última vuelta mostrada" hidden></ul>
+        <dl class="model-details">
+          <div><dt>Corte UTC</dt><dd><time id="model-cutoff"></time></dd></div>
+          <div><dt>Emisión UTC</dt><dd><time id="model-published"></time></dd></div>
+          <div><dt>Versión</dt><dd id="version"></dd></div>
+          <div><dt>Método</dt><dd id="method"></dd></div>
+        </dl>
       </section>
     </div>
 
-    <dl id="publication" class="publication panel" hidden>
-      <div><dt>Fuente de los datos</dt><dd id="source" data-testid="source"></dd></div>
-      <div><dt>Última actualización del documento · UTC</dt><dd id="updated" data-testid="updated"></dd></div>
-    </dl>
-    <footer>
-      <a href="https://github.com/Hibra999/F1-AwesomeMachinePredictor">Código, evaluación y fuentes</a>.
-      Las reconstrucciones históricas no son publicaciones originales.
-      <br>This website is unofficial and is not associated in any way with the Formula 1 companies.
-      F1, FORMULA ONE, FORMULA 1, FIA FORMULA ONE WORLD CHAMPIONSHIP, GRAND PRIX and related marks are trade marks of Formula One Licensing B.V.
+    <footer class="site-footer">
+      <div><strong>Podio probable</strong><a href="https://github.com/Hibra999/F1-AwesomeMachinePredictor">Código y evaluación ↗</a></div>
+      <p>This website is unofficial and is not associated in any way with the Formula 1 companies.
+        F1, FORMULA ONE, FORMULA 1, FIA FORMULA ONE WORLD CHAMPIONSHIP, GRAND PRIX and related marks are trade marks of Formula One Licensing B.V.</p>
     </footer>
   </main>
 </body>

@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <title>Mesa de carrera · Podio probable</title>
+  <link rel="stylesheet" href="/shared/styles.css">
+  <link rel="stylesheet" href="/styles.css">
+  <script src="/vendor/plotly-basic.min.js" defer></script>
+  <script src="/app.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#race-desk">Saltar a la mesa de carrera</a>
+  <header class="masthead">
+    <div class="shell local-masthead">
+      <div class="wordmark"><span class="wordmark-mark" aria-hidden="true"></span>Podio<span>probable</span> <span class="badge">Mesa local</span></div>
+      <p id="live-status" role="status">Esperando datos…</p>
+    </div>
+  </header>
+  <main id="race-desk" class="shell">
+    <section class="race-header" aria-labelledby="event-name">
+      <div>
+        <p class="eyebrow">Mesa de carrera / Cronometraje</p>
+        <h1 id="event-name">Mesa de carrera</h1>
+        <div class="race-badges">
+          <span id="mode" class="badge">Directo</span>
+          <span id="origin" class="badge" hidden></span>
+          <span id="freshness" class="badge" hidden></span>
+        </div>
+      </div>
+      <div class="race-controls">
+        <p class="micro">Corte mostrado</p>
+        <p id="race-lap">—</p>
+        <label for="mode-select">Modo de consulta</label>
+        <select id="mode-select">
+          <option value="live">Directo</option>
+          <option value="replay">Repetición</option>
+        </select>
+      </div>
+    </section>
+
+    <div id="notice" class="panel race-notice" role="status" hidden>
+      <p id="notice-text"></p>
+      <button id="retry" class="button" type="button" hidden>Reintentar</button>
+    </div>
+
+    <div id="analysis-panel" class="race-grid" hidden>
+      <section class="panel timing-tower" aria-labelledby="ranking-title">
+        <p class="eyebrow">01 / Torre de probabilidades</p>
+        <h2 id="ranking-title">Pilotos</h2>
+        <div class="table-scroll">
+          <table id="ranking" aria-label="Clasificación por probabilidades">
+            <thead>
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col">Piloto</th>
+                <th scope="col"><button class="button" type="button" data-metric="first" aria-label="Ordenar por probabilidad de terminar primero">1.º</button></th>
+                <th scope="col"><button class="button" type="button" data-metric="second" aria-label="Ordenar por probabilidad de terminar segundo">2.º</button></th>
+                <th scope="col"><button class="button" type="button" data-metric="third" aria-label="Ordenar por probabilidad de terminar tercero">3.º</button></th>
+                <th scope="col" aria-sort="descending"><button class="button" type="button" data-metric="podium" aria-label="Ordenar por probabilidad de podio">Podio</button></th>
+              </tr>
+            </thead>
+            <tbody id="ranking-body"></tbody>
+          </table>
+        </div>
+      </section>
+      <div class="race-analysis">
+        <section id="timeline-panel" class="panel" aria-labelledby="timeline-title">
+          <div class="race-row">
+            <div><p class="eyebrow">02 / Ventana de predicción</p><h2 id="timeline-title">Cronología</h2></div>
+            <p id="playback-status" class="muted"></p>
+          </div>
+          <div class="race-row">
+            <label for="timeline" id="checkpoint"></label>
+            <span id="checkpoint-count" class="muted"></span>
+          </div>
+          <input id="timeline" type="range" min="0" max="0" value="0" step="1">
+          <div class="race-transport">
+            <button id="previous" class="button" type="button">Anterior</button>
+            <button id="play" class="button primary" type="button">Reproducir</button>
+            <button id="pause" class="button" type="button">Pausar</button>
+            <button id="next" class="button" type="button">Siguiente</button>
+            <button id="follow" class="button" type="button" aria-pressed="false">Seguir actualizaciones</button>
+          </div>
+          <dl class="race-metadata">
+            <div><dt>Corte del modelo</dt><dd id="cutoff"></dd></div>
+            <div><dt>Publicación</dt><dd id="published"></dd></div>
+            <div><dt>Versión del modelo</dt><dd id="version"></dd></div>
+          </dl>
+        </section>
+        <section class="panel" aria-labelledby="chart-title">
+          <div class="race-row">
+            <div><p class="eyebrow">03 / Hasta el corte seleccionado</p><h2 id="chart-title">Evolución por vuelta</h2></div>
+            <div><label for="driver-select">Piloto de la gráfica</label><select id="driver-select"></select></div>
+          </div>
+          <p id="chart-empty" class="muted" hidden>No hay vueltas de carrera registradas para este piloto hasta este corte.</p>
+          <div id="chart" role="group" aria-labelledby="chart-title" hidden></div>
+          <ul id="chart-legend" aria-label="Probabilidades en la última vuelta del piloto"></ul>
+          <p class="muted chart-note">Los huecos indican vueltas sin corte registrado.</p>
+        </section>
+        <section class="panel" aria-labelledby="podium-title">
+          <p class="eyebrow">04 / Predicción conjunta</p>
+          <h2 id="podium-title">Podio ordenado más probable</h2>
+          <ol id="podium"></ol>
+          <p>Probabilidad de esos tres pilotos en ese orden: <strong id="joint-probability"></strong></p>
+        </section>
+      </div>
+    </div>
+
+    <dl id="publication" class="panel race-metadata" hidden>
+      <div><dt>Fuente de los datos</dt><dd id="source"></dd></div>
+      <div><dt>Última actualización del documento</dt><dd id="updated"></dd></div>
+    </dl>
+    <footer class="site-footer">Panel no oficial. Las reconstrucciones históricas no son publicaciones originales. El seguimiento permanece en este equipo.</footer>
+  </main>
+</body>
+</html>

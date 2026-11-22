@@ -14,9 +14,11 @@ dependencies = [
   "pandas==2.3.3",
   "pypdf==6.21.4",
   "requests==2.34.2",
+  "rustuna==0.3.1",
   "scikit-learn==1.9.1",
   "scipy==1.18.1",
 ]
 
 [tool.uv]
 package = false
+no-build-package = ["rustuna"]

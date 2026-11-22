@@ -2,7 +2,7 @@ name: Deploy forecasting panel
 on:
   push:
     branches: [main]
-    paths: ['site/**', '.github/workflows/deploy.yml']
+    paths: ['site/**', 'f1forecast/pages.py', '.github/workflows/deploy.yml']
   workflow_dispatch:
 
 permissions:
@@ -22,6 +22,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - name: Verify pre-race-only artifact
+        run: python3 -m f1forecast.pages
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:

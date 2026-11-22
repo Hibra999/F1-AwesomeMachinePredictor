@@ -4,6 +4,7 @@ from collections import Counter, defaultdict
 from dataclasses import dataclass
 from datetime import UTC, datetime
 from hashlib import sha256
+from importlib.metadata import version as package_version
 import json
 from pathlib import Path
 from time import perf_counter
@@ -27,9 +28,12 @@ TEMPERATURES = (0.40, 0.55, 0.75, 1.0, 1.3, 1.7, 2.2, 3.0, 4.0)
 HALVES = tuple(epoch(f"{y}-{m}-01T00:00:00Z") for y in range(2023, 2027) for m in ("01", "07"))[:7]
 FAMILIES = ("lightgbm", "ngboost", "catboost")
 PRESETS = tuple(f"{family}/{size}" for family in FAMILIES for size in ("small", "large"))
+TUNED = tuple(f"{family}/rustuna" for family in FAMILIES)
 BASELINE = "reference"
 METRIC_NAMES = ("brier", "winner_log_loss", "winner_hit", "ordered_hit", "map_members_hit")
 RACE_BINS = ("early", "middle", "late")
+MODEL_SOURCES = ("archive.py", "dataset.py", "engine.py", "probability.py", "results.py", "training.py")
+TPE_STARTUP_TRIALS = 4
 
 
 def _weight(rows):
@@ -71,10 +75,11 @@ def _sample(rows, horizon):
     return [r for r in rows if r.snapshot.lap in (1, 2) or r.snapshot.lap % 5 == 0] if horizon == "race" else rows
 
 
-def fit(horizon, preset, rows):
+def fit(horizon, preset, rows, *, params=None):
     family, size = preset.split("/", 1)
     drop = size.split("-", 1)[1] if size.startswith("drop-") else None
     wide = size == "large"
+    params = {} if params is None else params
     cols = _columns(horizon, drop)
     rows = _sample(rows, horizon)
     x = np.concatenate([r.snapshot.x[:, cols] for r in rows])
@@ -82,20 +87,22 @@ def fit(horizon, preset, rows):
     w = np.concatenate([np.full(len(r.rank), v / len(r.rank)) for r, v in zip(rows, _weight(rows))]) * len(y)
     imputer = None
     if family == "lightgbm":
-        estimator = lgb.LGBMClassifier(n_estimators=85 if wide else 55, num_leaves=19 if wide else 9,
-                                      learning_rate=0.045, min_child_samples=25, reg_lambda=2.0,
-                                      random_state=SEED, n_jobs=THREADS, verbosity=-1,
+        settings = dict(n_estimators=85 if wide else 55, num_leaves=19 if wide else 9,
+                        learning_rate=0.045, min_child_samples=25, reg_lambda=2.0) | params
+        estimator = lgb.LGBMClassifier(**settings, random_state=SEED, n_jobs=THREADS, verbosity=-1,
                                       deterministic=True, force_col_wise=True)
     elif family == "catboost":
-        estimator = CatBoostClassifier(iterations=100 if wide else 65, depth=5 if wide else 4,
-                                       learning_rate=0.055, l2_leaf_reg=5, random_seed=SEED, verbose=False,
+        settings = dict(iterations=100 if wide else 65, depth=5 if wide else 4,
+                        learning_rate=0.055, l2_leaf_reg=5) | params
+        estimator = CatBoostClassifier(**settings, random_seed=SEED, verbose=False,
                                        thread_count=THREADS, allow_writing_files=False, task_type="CPU")
     elif family == "ngboost":
         imputer = SimpleImputer(strategy="median", add_indicator=True, keep_empty_features=True)
         x = imputer.fit_transform(x)
-        tree = DecisionTreeRegressor(max_depth=3 if wide else 2, min_samples_leaf=22, random_state=SEED)
-        estimator = NGBClassifier(Base=tree, n_estimators=55 if wide else 35, learning_rate=0.05,
-                                 random_state=SEED, verbose=False)
+        settings = dict(n_estimators=55 if wide else 35, learning_rate=0.05) | params
+        tree = DecisionTreeRegressor(max_depth=settings.pop("max_depth", 3 if wide else 2),
+                                     min_samples_leaf=22, random_state=SEED)
+        estimator = NGBClassifier(**settings, Base=tree, random_state=SEED, verbose=False)
     else:
         raise ValueError(f"unknown learner {preset}")
     estimator.fit(x, y, sample_weight=w)
@@ -180,6 +187,8 @@ def _recipes(rows, scores, losses, ix):
     policies = {name: [(raw, t, 1.0)] for name, (raw, t, _) in best.items() if name in (BASELINE, "elo")}
     policies.update({name: [(raw, t, 1.0)] for name, (raw, t, _) in zip(FAMILIES, specs)})
     policies.update(average=simple, learned=learned)
+    if TUNED[0] in best:
+        policies.update({name: [(name, best[name][1], 1.0)] for name in (*PRESETS, *TUNED)})
     fixed = {name: (t, float(value)) for name, (_, t, value) in best.items()
              if name.startswith("lightgbm/drop-") or name == "lightgbm/small"}
     return policies, fixed
@@ -277,11 +286,88 @@ def _active_drops(horizon, initial):
                    for r in initial)]
 
 
-def _fit_horizon(horizon, examples, timings):
+def _tuning_folds(rows):
+    by_gp = defaultdict(list)
+    for row in rows:
+        by_gp[row.gp_id].append(row)
+    groups = sorted(by_gp.values(), key=lambda group: (group[0].snapshot.gp["race"], group[0].gp_id))
+    n = len(groups)
+    if n < 4:
+        raise ValueError("Rustuna needs at least four distinct training GPs")
+    edges = (n // 2, 3 * n // 4, n)
+    folds = []
+    for start, end in zip(edges, edges[1:]):
+        test = [r for group in groups[start:end] for r in group]
+        cutoff = min(r.snapshot.cutoff for r in test)
+        fit_rows = [r for group in groups[:start]
+                    if all(max(r.label_at, r.snapshot.gp["race"]) < cutoff for r in group)
+                    for r in group]
+        if not fit_rows:
+            raise ValueError(f"no embargo-eligible GPs for Rustuna fold at {utc(cutoff)}")
+        folds.append((fit_rows, test))
+    return folds
+
+
+def _tune_window(rows, boundary, trials, cycles):
+    from rustuna import create_study
+    from rustuna.samplers import TPESampler
+
+    folds = _tuning_folds(rows)
+    oos = [r for _, test in folds for r in test]
+    weights = _weight(oos)
+    cycle = {"start": utc(boundary), "inner_folds": [
+        {"cutoff": utc(min(r.snapshot.cutoff for r in test)),
+         "fit_gps": sorted({r.gp_id for r in fit_rows}), "oos_gps": sorted({r.gp_id for r in test})}
+        for fit_rows, test in folds], "studies": {}}
+    cycles.append(cycle)
+    results = {}
+    for name in TUNED:
+        study_start = perf_counter()
+        history = []
+
+        def objective(trial):
+            started = perf_counter()
+            params = {"learning_rate": trial.suggest_float("learning_rate", 0.025, 0.11, log=True)}
+            if name == "lightgbm/rustuna":
+                params.update(n_estimators=trial.suggest_int("n_estimators", 40, 100, step=5),
+                              num_leaves=trial.suggest_int("num_leaves", 7, 23, step=2))
+            elif name == "ngboost/rustuna":
+                params.update(n_estimators=trial.suggest_int("n_estimators", 25, 65, step=5),
+                              max_depth=trial.suggest_int("max_depth", 2, 4))
+            else:
+                params.update(iterations=trial.suggest_int("iterations", 50, 115, step=5),
+                              depth=trial.suggest_int("depth", 3, 6))
+            scores = []
+            for fit_rows, test in folds:
+                learner = fit("pre_race", name, fit_rows, params=params)
+                scores.extend(_scores(name, test, {name: learner}))
+            # Profile temperature for ranking trials only; recipes recalibrate on prior outer OOS.
+            loss = float((weights @ _loss_grid(oos, scores)).min())
+            history.append({"trial": trial.number, "params": params, "brier": loss,
+                            "seconds": perf_counter() - started})
+            return loss
+
+        study = create_study(direction="minimize",
+                             sampler=TPESampler(seed=SEED, n_startup_trials=TPE_STARTUP_TRIALS))
+        study.optimize(objective, n_trials=trials)
+        best = study.best_trial
+        results[name] = best.params
+        elapsed = perf_counter() - study_start
+        cycle["studies"][name] = {"params": best.params, "brier": best.value,
+                                  "best_trial": best.number, "seconds": elapsed, "trials": history}
+        print(f"pre_race {utc(boundary)[:10]} {name}: {trials} trials, "
+              f"inner Brier {best.value:.6f}, {elapsed:.2f}s", flush=True)
+    return results
+
+
+def _fit_horizon(horizon, examples, timings, *, trials=0):
     if not examples or any(r.snapshot.gp["year"] > 2025 for r in examples):
         raise ValueError("fit is restricted to the pre-2026 corpus")
     train_init = [r for r in examples if r.label_at < HALVES[0]]
     names = (*PRESETS, *_active_drops(horizon, train_init))
+    cycles = []
+    if trials:
+        names += TUNED
     split_rows = []
     raw = {name: [] for name in (BASELINE, "elo", *names)}
     scopes = []
@@ -296,9 +382,10 @@ def _fit_horizon(horizon, examples, timings):
         for name in (BASELINE, "elo"):
             raw[name].extend(_scores(name, test, {}))
         print(f"{horizon} {utc(lower)[:10]}: {len({r.gp_id for r in train})} GP train / {len({r.gp_id for r in test})} GP test", flush=True)
+        tuned = _tune_window(train, lower, trials, cycles) if trials else {}
         for name in names:
             t0 = perf_counter()
-            learner = fit(horizon, name, train)
+            learner = fit(horizon, name, train, params=tuned.get(name))
             raw[name].extend(_scores(name, test, {name: learner}))
             timings[f"{horizon}:{name}"] += perf_counter() - t0
     losses = {name: _loss_grid(split_rows, s) for name, s in raw.items()}
@@ -327,16 +414,19 @@ def _fit_horizon(horizon, examples, timings):
     boundary = HALVES[-1]
     final_inner = [i for i, r in enumerate(split_rows) if r.label_at < boundary]
     final_recipes, _ = _recipes(split_rows, raw, losses, final_inner)
-    train = [r for r in examples if r.label_at < boundary]
+    train = [r for r in examples if max(r.label_at, r.snapshot.gp["race"]) < boundary]
+    tuned = _tune_window(train, boundary, trials, cycles) if trials else {}
     learners = {}
     for recipe in final_recipes.values():
         for name, _, _ in recipe:
-            if name in PRESETS and name not in learners:
-                learners[name] = fit(horizon, name, train)
-    return {"selected": selected, "recipes": final_recipes, "learners": learners}, {
-        "validation": validation, "selected": selected, "recipes_for_final": final_recipes,
-        "ablation_delta_brier_when_removed": ablations, "folds": folds,
-        "coverage": counts({horizon: all_rows})[horizon]}
+            if name in names and name not in learners:
+                learners[name] = fit(horizon, name, train, params=tuned.get(name))
+    report = {"validation": validation, "selected": selected, "recipes_for_final": final_recipes,
+              "ablation_delta_brier_when_removed": ablations, "folds": folds,
+              "coverage": counts({horizon: all_rows})[horizon]}
+    if cycles:
+        report["rustuna_cycles"] = cycles
+    return {"selected": selected, "recipes": final_recipes, "learners": learners}, report
 
 
 def digest(path: Path):
@@ -348,16 +438,28 @@ def _store_json(path, value):
     path.write_text(json.dumps(value, indent=2, ensure_ascii=False, allow_nan=False) + "\n", encoding="utf-8")
 
 
-def train(by_horizon, corpus_path: Path, work: Path):
+def train(by_horizon, corpus_path: Path, work: Path, *, trials: int = 0):
+    """Seal the walk-forward winner, optionally tuning T−30 trials per family and window."""
+    if trials < 0:
+        raise ValueError("trials must be non-negative")
     models, reports = {}, {}
     timings = defaultdict(float)
     t0 = perf_counter()
     for horizon in HORIZON_GROUPS:
-        models[horizon], reports[horizon] = _fit_horizon(horizon, by_horizon[horizon], timings)
+        models[horizon], reports[horizon] = _fit_horizon(
+            horizon, by_horizon[horizon], timings, trials=trials if horizon == "pre_race" else 0)
     training_sha = digest(corpus_path)
     recipes = {h: (v["selected"], v["recipes"]) for h, v in models.items()}
-    impl = {p.name: digest(p) for p in sorted(Path(__file__).parent.glob("*.py"))}
-    key = json.dumps([training_sha, recipes, SEED, impl], sort_keys=True).encode()
+    impl = {name: digest(Path(__file__).with_name(name)) for name in MODEL_SOURCES}
+    identity = [training_sha, recipes, SEED, impl]
+    if trials:
+        cycles = reports["pre_race"]["rustuna_cycles"]
+        tuning = {"backend": "rustuna", "version": package_version("rustuna"), "seed": SEED,
+                  "sampler": "TPE", "startup_trials": TPE_STARTUP_TRIALS, "trials_per_family": trials,
+                  "objective": "minimum GP-weighted podium Brier over the inner OOS temperature grid",
+                  "temperatures": TEMPERATURES}
+        identity.extend((tuning, {name: s["params"] for name, s in cycles[-1]["studies"].items()}))
+    key = json.dumps(identity, sort_keys=True).encode()
     version = "pl-" + sha256(key).hexdigest()[:12]
     bundle = {"version": version, "horizons": models, "training_sha256": training_sha, "seed": SEED}
     work.mkdir(parents=True, exist_ok=True)
@@ -367,6 +469,8 @@ def train(by_horizon, corpus_path: Path, work: Path):
                  "seed": SEED, "implementation_sha256": impl, "fit_utc": utc(datetime.now(UTC).timestamp()),
                  "train_max_time_exclusive": utc(HALVES[-1]), "wall_seconds": perf_counter() - t0,
                  "model_seconds": dict(timings), "horizons": reports}
+    if trials:
+        selection["tuning"] = tuning
     _store_json(work / "selection.json", selection)
     return selection
 

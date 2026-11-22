@@ -9,13 +9,14 @@ from .dataset import (FINAL_LAST_ROUND, FINAL_YEAR, TRAIN_YEARS, document_events
                       load_corpus, prepare, records_for, snapshots)
 from .engine import RaceState, asof, history_at, ordered, utc
 from .leakage import verify_leakage
-from .publication import append_cut, create_gist, event_card, new_feed, now, prediction, read_file, update_gist, write_file
+from .pages import SITE, UPCOMING, verify_forecast
+from .publication import append_cut, event_card, new_feed, now, prediction, read_file, write_file
 from .results import get_documents, get_schedule
 from .training import evaluate, sealed_model, train
 
 
 SOURCE_RECORDING = "TracingInsights / FastF1: reloj histórico reconstruido, no recepción en directo. Resultados: Jolpica-F1 / FIA."
-SOURCE_LIVE = "Live Timing SignalR Core sin cuenta; hora UTC de recepción en el PC. Solo se publican probabilidades propias."
+SOURCE_LIVE = "Live Timing SignalR Core sin cuenta; hora UTC de recepción en el PC. Pronósticos conservados en local."
 SOURCE_FORECAST = "FIA y calendario oficial; forma y ritmo de cronometraje anterior (TracingInsights/FastF1). Resultados: Jolpica-F1 / FIA."
 
 
@@ -52,10 +53,10 @@ def _read_events(path: Path | None):
         return [json.loads(line) for line in fp if line.strip()]
 
 
-def _publish(feed, out, gist):
+def _publish(feed, out):
+    if out.resolve().is_relative_to(SITE):
+        verify_forecast(feed)
     write_file(out, feed)
-    if gist is not None:
-        update_gist(gist, feed)
     print(feed["event"]["id"], feed["mode"], len(feed["predictions"]), feed["updated_utc"], str(out), flush=True)
 
 
@@ -87,13 +88,15 @@ def freeze(args, work, bundle, records):
     feed = read_file(prior) if prior else new_feed(gp, "forecast", SOURCE_FORECAST)
     if feed["event"]["id"] != args.gp or feed["mode"] != "forecast":
         raise ValueError("existing frozen forecast belongs to another event or mode")
+    feed["event"] = event_card(gp)
+    feed["source"] = SOURCE_FORECAST
     feed["entries_status"] = docs.get("entries_status", "carried_prior_timed_roster")
     feed["evidence_urls"] = docs.get("source", [])
     if feed["entries_status"] == "provisional_previous_gp_qualifying":
         feed["source"] = SOURCE_FORECAST + " Alineación provisional: clasificación del GP de Las Vegas, no lista oficial del GP de Catar."
     cut = prediction(bundle, snap, published=now())
     append_cut(feed, cut)
-    _publish(feed, args.out, args.gist)
+    _publish(feed, args.out)
     print(json.dumps({"cutoff_utc": cut["cutoff_utc"], "probable_order": cut["podium"],
                       "entrants": len(cut["drivers"]), "method": cut["method"]}, ensure_ascii=False))
 
@@ -112,13 +115,10 @@ def replay(args, bundle, data, records):
     feed["evidence_urls"] = [row["source"]]
     for snap in snapshots(row, records, through=through):
         append_cut(feed, prediction(bundle, snap))
-        if args.gist and args.interval > 0 and snap.lap is not None:
-            _publish(feed, args.out, args.gist)
-            sleep(args.interval)
     feed["complete"] = through is None
     if not feed["predictions"]:
         raise ValueError("no reconstructed predictions to publish")
-    _publish(feed, args.out, args.gist)
+    _publish(feed, args.out)
 
 
 def watch(args, work, bundle, records):
@@ -161,7 +161,7 @@ def watch(args, work, bundle, records):
             if snap is not None:
                 append_cut(feed, prediction(bundle, snap, published=now()))
                 published_laps.add(lap)
-                _publish(feed, args.out, args.gist)
+                _publish(feed, args.out)
                 lag = next((at - e["source_at"] for e in batch if e.get("source_at") is not None), None)
                 print(f"Live lap {lap} · cutoff {utc(at)} · packet lag {lag}", flush=True)
         finish_seen |= phase == "Finished"
@@ -170,10 +170,10 @@ def watch(args, work, bundle, records):
             if not initial and published_laps:
                 feed["complete"] = True
                 feed["updated_utc"] = utc(now())
-                _publish(feed, args.out, args.gist)
+                _publish(feed, args.out)
             break
     if not published_laps:
-        raise RuntimeError("no real lap forecast published; the existing public feed was not replaced")
+        raise RuntimeError("no real lap forecast published; the existing local feed was not replaced")
 
 
 def parser():
@@ -183,13 +183,13 @@ def parser():
     dl = commands.add_parser("prepare", help="download local-only timestamped training or final data")
     dl.add_argument("--period", choices=("training", "final"), default="training")
     dl.add_argument("--refresh", action="store_true")
-    commands.add_parser("train", help="fit chronological folds and seal models")
+    fit = commands.add_parser("train", help="fit chronological folds and seal models")
+    fit.add_argument("--trials", type=int, default=0, help="Rustuna trials per T-30 learner and outer fold (0: original preset)")
     commands.add_parser("evaluate", help="score the 2026 blind cohort with the sealed model")
     for name in ("forecast", "replay", "watch"):
         cmd = commands.add_parser(name)
         cmd.add_argument("--gp", required=True, help="YYYY-RR (calendar round)")
         cmd.add_argument("--out", type=Path, required=True)
-        cmd.add_argument("--gist", help="publish derived probabilities to this public Gist id")
         if name in {"forecast", "watch"}:
             cmd.add_argument("--events", type=Path, help="authorized pre-session JSONL events, max at=cutoff")
             cmd.add_argument("--seed-feed", type=Path, help="existing frozen forecast for the same GP")
@@ -198,13 +198,14 @@ def parser():
             cmd.add_argument("--wait", action="store_true", help="arm exact T−30 cutoff before scheduled start")
         if name == "replay":
             cmd.add_argument("--through-lap", type=int)
-            cmd.add_argument("--interval", type=float, default=0, help="seconds between Gist replay publications")
         if name == "watch":
             cmd.add_argument("--seconds", type=float, help="stop after this long instead of watching to the finish")
     proof = commands.add_parser("leakage")
     proof.add_argument("--gp", required=True)
-    gist = commands.add_parser("gist-init")
-    gist.add_argument("--file", type=Path, required=True, help="derived feed document, never a raw source")
+    panel = commands.add_parser("panel", help="serve the live and replay dashboard on loopback only")
+    panel.add_argument("--port", type=int, default=8070)
+    panel.add_argument("--live", type=Path, help="local JSON written by watch (default: WORK/live.json)")
+    panel.add_argument("--replay", type=Path, help="local JSON written by replay (default: bundled São Paulo)")
     card = commands.add_parser("schedule")
     card.add_argument("--gp", required=True)
     return p
@@ -215,8 +216,15 @@ def main(argv=None):
     args = p.parse_args(argv)
     work = args.work
     training, final = paths(work)
-    if args.cmd == "gist-init":
-        print(create_gist(read_file(args.file)))
+    if args.cmd in {"forecast", "watch", "replay"}:
+        out = args.out.resolve()
+        if out.is_relative_to(SITE) and (args.cmd != "forecast" or out != UPCOMING):
+            p.error(f"Pages accepts only forecast --out {UPCOMING}; use a local output for race data")
+    if args.cmd == "panel":
+        from .local_panel import serve_panel
+
+        serve_panel(port=args.port, live=args.live or work / "live.json",
+                    replay=args.replay or SITE.parent / "local-panel" / "sao-paulo-2026.json")
         return
     if args.cmd == "schedule":
         print(json.dumps(event_card(lookup(args.gp, work)), ensure_ascii=False))
@@ -229,11 +237,13 @@ def main(argv=None):
             prepare((FINAL_YEAR,), work, final, refresh=args.refresh, last_round=FINAL_LAST_ROUND)
         return
     if args.cmd == "train":
+        if args.trials < 0:
+            p.error("--trials must be nonnegative")
         if (work / "selection.json").exists() or final.exists():
             raise ValueError("selection is frozen; reproduce training in a clean --work directory")
         data = load_corpus(training)
         by_horizon, _ = examples(data, records_for(data))
-        print(train(by_horizon, training, work)["version"])
+        print(train(by_horizon, training, work, trials=args.trials)["version"])
         return
     bundle, seal = sealed_model(work)
     data = corpora(work)

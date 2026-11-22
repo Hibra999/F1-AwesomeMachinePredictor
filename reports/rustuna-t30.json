@@ -1,0 +1,45 @@
+{
+  "experiment": "Nested Rustuna hyperparameter search for T−30",
+  "released_model_unchanged": "pl-5d7f9a659617",
+  "experimental_seal": "pl-bd8f2e520f6a",
+  "experimental_model_sha256": "57926116766b7339c10fd6167cf93a929ec75919c8fe0543b4aaaab6915288ac",
+  "training_corpus_sha256": "9157139d56f71add346b5eca9b63c33c9dfd7e26c6bdc323d988a0b741fcf023",
+  "training_cutoff_exclusive_utc": "2026-01-01T00:00:00.000Z",
+  "final_2026_opened_by_experiment": false,
+  "environment": {
+    "os": "Windows x64",
+    "python": "3.12.13",
+    "estimator_device": "CPU",
+    "rustuna": "0.3.1",
+    "wheel_abi": "cp311-abi3-win_amd64"
+  },
+  "search": {
+    "sampler": "Seeded TPE",
+    "seed": 55293,
+    "startup_trials": 4,
+    "outer_windows_including_calibration_and_final_refit": 7,
+    "chronological_gp_splits_per_study": 2,
+    "trials_per_family_per_window": 8,
+    "trials_total": 168,
+    "objective": "Minimum equal-GP podium Brier over the inner OOS temperature grid; outer evaluation temperatures are fitted separately on prior outer OOS predictions.",
+    "wall_seconds_sum_of_studies": 39.09,
+    "wall_seconds_train_and_selection": 112.51
+  },
+  "walk_forward_2024_25": {
+    "gp_count": 48,
+    "cut_count": 48,
+    "reference_gps": {"grid": 2, "qualifying": 37, "form": 9},
+    "selected": "elo",
+    "podium_brier": {
+      "reference": 0.07140638475131833,
+      "elo": 0.06763815921141314,
+      "average": 0.06897679275555339,
+      "learned": 0.06834756276308351,
+      "lightgbm": {"original_policy": 0.07217131083635558, "best_fixed_preset_observed": 0.0712730061706363, "rustuna": 0.07681339814195902},
+      "ngboost": {"original_policy": 0.06970273559679213, "best_fixed_preset_observed": 0.06819918378665844, "rustuna": 0.06991407643182686},
+      "catboost": {"original_policy": 0.06915379120221113, "best_fixed_preset_observed": 0.06783087308947611, "rustuna": 0.07127298413061212}
+    }
+  },
+  "reproduce": "uv run --locked python -m f1forecast --work .local/rustuna train --trials 8",
+  "trial_logs": "The reproducible command saves per-study trials, chosen parameters and inner train/validation GP IDs in selection.json. Trials never read final-data.joblib."
+}

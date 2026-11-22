@@ -1,18 +1,14 @@
-"""Immutable cuts and a credential-free read path for the public panel."""
+"""Immutable cuts and atomic writes for forecast and local race feeds."""
 
 from datetime import UTC, datetime
 import json
 from pathlib import Path
-import re
-import subprocess
 
 import numpy as np
 
 from .engine import utc
 from .probability import summarize
 from .training import distribution
-
-FEED_FILE = "feed.json"
 
 
 def now():
@@ -66,34 +62,3 @@ def append_cut(feed, cut):
     feed["predictions"].append(cut)
     feed["predictions"].sort(key=lambda p: p["cutoff_utc"])
     feed["updated_utc"] = utc(now())
-
-
-def _gh(args, content):
-    proc = subprocess.run(["gh", *args], input=content.encode("utf-8"), stdout=subprocess.PIPE,
-                          stderr=subprocess.PIPE, timeout=25, check=False)
-    if proc.returncode:
-        raise RuntimeError(proc.stderr.decode("utf-8", errors="replace").strip() or "gh failed")
-    return proc.stdout.decode("utf-8").strip()
-
-
-def create_gist(feed):
-    source = json.dumps(feed, ensure_ascii=True, allow_nan=False, separators=(",", ":"))
-    url = _gh(["gist", "create", "-", "--public", "--filename", FEED_FILE,
-               "--desc", "Probabilidades de podio · solo pronósticos derivados"], source)
-    gist_id = url.rsplit("/", 1)[-1]
-    _valid_gist(gist_id)
-    return gist_id
-
-
-def _valid_gist(gist_id):
-    if not re.fullmatch(r"[0-9a-f]{20,64}", gist_id):
-        raise ValueError("expected a GitHub Gist id, not a token or URL")
-
-
-def update_gist(gist_id, feed):
-    _valid_gist(gist_id)
-    payload = json.dumps(feed, ensure_ascii=False, allow_nan=False, separators=(",", ":"))
-    if len(payload.encode("utf-8")) >= 900_000:
-        raise ValueError("feed exceeds the size readable inline by the anonymous Gist API")
-    body = json.dumps({"files": {FEED_FILE: {"content": payload}}}, ensure_ascii=True)
-    _gh(["api", "--method", "PATCH", f"gists/{gist_id}", "--input", "-", "--jq", ".id"], body)

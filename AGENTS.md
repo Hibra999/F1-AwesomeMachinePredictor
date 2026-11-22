@@ -15,14 +15,15 @@ flowchart TD
     D --> M["training.py: sealed model"]
     S --> P["publication.py: immutable forecast cuts"]
     M --> P
-    P --> U["site/app.js reads static JSON or Gist feed.json"]
+    P -->|issued pre-race only| U["site/: GitHub Pages"]
+    P -->|local JSON| L["local-panel/: live and replay"]
 ```
 
 `probability.py` enumerates ordered triples of distinct drivers. Mix Plackett–Luce distributions **before** deriving position probabilities. Display the most probable joint triple, not the three drivers with the highest individual podium probabilities.
 
 ## Key Directories
 
-- `f1forecast/` owns data ingestion, model training and forecasting. `site/` is the deployable dashboard; `site/data/index.json` points to the upcoming forecast, archived replays and live feed.
+- `f1forecast/` owns ingestion, training and forecasts. `site/data/upcoming.json` is the only feed on GitHub Pages. `local-panel/` holds the loopback dashboard and a derived São Paulo replay.
 - `reports/` holds derived evaluation and leakage evidence. Keep raw timing, classifications, datasets and model bundles in ignored `.local/`, outside Git and the public site.
 
 ## Delivery
@@ -36,12 +37,15 @@ Run from the repository root:
 ```sh
 uv sync --locked --python 3.12
 uv run --locked python -m f1forecast --help
-uv run --locked python -m http.server 8070 --bind 127.0.0.1 --directory site
+uv run --locked python -m f1forecast panel --port 8070
+uv run --locked python -m http.server 8071 --bind 127.0.0.1 --directory site
 ```
 
-Open `http://127.0.0.1:8070/` and select **Archivo · São Paulo** to check the shipped replay without model weights.
+Open `http://127.0.0.1:8070/` and select **Repetición** to check the shipped replay without model weights. Port 8071 previews the public site.
 
 For a fresh model run, start with `uv run --locked python -m f1forecast --work .local/repro prepare`. Keep the same prefix and run `train`, `prepare --period final`, then `evaluate`. Put `--work` **before** each subcommand. Preparation downloads source data; evaluation verifies the sealed model without refitting.
+
+For Rustuna use `train --trials 8` in a separate work directory with training data only. Keep the released bundle and 2026 final reports unchanged unless a new selection is justified without using the final period.
 
 ## Code Conventions & Common Patterns
 
@@ -58,11 +62,11 @@ For a fresh model run, start with `uv run --locked python -m f1forecast --work .
 
 ## Runtime/Tooling Preferences
 
-Use Python 3.12 and uv with `pyproject.toml` and `uv.lock`. The project is not installed as a package. `.github/workflows/deploy.yml` uploads `site/` directly; no bundler, Node runtime or build step. Omit `--gist` for local runs. Gist writes use authenticated `gh`; `gist-init --file` publishes the supplied JSON without redaction.
+Use Python 3.12 and uv with `pyproject.toml` and `uv.lock`. The project is not installed as a package. Plotly.js is vendored; no Node runtime, build step or CDN. `f1forecast.pages` checks the Pages artifact before upload. `watch` and `replay` cannot write under `site/`.
 
 ## Testing & QA
 
-There is no checked-in unit-test suite, lint command, code-coverage threshold or CI test gate. After preparing final data in the work directory above, run:
+Run `python -m f1forecast.pages` for the public artifact and `uv run --locked python -m unittest discover -s tests` for the Rustuna chronological split test. After preparing final data in the work directory above, run:
 
 ```sh
 uv run --locked python -m f1forecast --work .local/repro leakage --gp 2026-20
