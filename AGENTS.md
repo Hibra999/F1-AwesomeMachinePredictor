@@ -17,14 +17,15 @@ flowchart TD
     M --> P
     P -->|issued pre-race only| U["site/: GitHub Pages"]
     P -->|local JSON| L["local-panel/: live and replay"]
+    M -->|aggregate metrics| E["site/analysis.html: shared with loopback"]
 ```
 
 `probability.py` enumerates ordered triples of distinct drivers. Mix Plackett–Luce distributions **before** deriving position probabilities. Display the most probable joint triple, not the three drivers with the highest individual podium probabilities.
 
 ## Key Directories
 
-- `f1forecast/` owns ingestion, training and forecasts. `site/data/upcoming.json` is the only feed on GitHub Pages. `local-panel/` holds the loopback dashboard and a derived São Paulo replay.
-- `reports/` holds derived evaluation and leakage evidence. Keep raw timing, classifications, datasets and model bundles in ignored `.local/`, outside Git and the public site.
+- `f1forecast/` owns ingestion, training and forecasts. `site/data/upcoming.json` is the only forecast feed on GitHub Pages. `local-panel/` holds the loopback dashboard, licensed circuit geometry and a derived São Paulo replay.
+- `reports/` holds evaluation and inspection aggregates. `python -m f1forecast.analysis_data` exports them for the shared analysis page. Keep raw timing, classifications, datasets and model bundles in ignored `.local/`.
 
 ## Delivery
 
@@ -41,7 +42,7 @@ uv run --locked python -m f1forecast panel --port 8070
 uv run --locked python -m http.server 8071 --bind 127.0.0.1 --directory site
 ```
 
-Open `http://127.0.0.1:8070/` and select **Repetición** to check the shipped replay without model weights. Port 8071 previews the public site.
+Open `http://127.0.0.1:8070/` and select **Repetición** to check the shipped replay without model weights. Both endpoints serve the same `analysis.html` and aggregate JSON; port 8071 previews Pages.
 
 For a fresh model run, start with `uv run --locked python -m f1forecast --work .local/repro prepare`. Keep the same prefix and run `train`, `prepare --period final`, then `evaluate`. Put `--work` **before** each subcommand. Preparation downloads source data; evaluation verifies the sealed model without refitting.
 
@@ -66,7 +67,7 @@ Use Python 3.12 and uv with `pyproject.toml` and `uv.lock`. The project is not i
 
 ## Testing & QA
 
-Run `python -m f1forecast.pages` for the public artifact and `uv run --locked python -m unittest discover -s tests` for the Rustuna chronological split test. After preparing final data in the work directory above, run:
+Run `python -m f1forecast.pages` for the public artifact and `uv run --locked python -m unittest discover -s tests` for chronological folds, inspection and export. `node --test local-panel/circuits.test.cjs` checks the licensed geometry; Node is not needed to run the panel. After preparing final data in the work directory above, run:
 
 ```sh
 uv run --locked python -m f1forecast --work .local/repro leakage --gp 2026-20

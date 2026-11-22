@@ -1,14 +1,17 @@
-"""The Pages artifact contains issued pre-race forecasts, never race feeds."""
+"""The Pages artifact contains issued forecasts and aggregate analysis, never race feeds."""
 
 import json
 from datetime import datetime, timedelta
 from math import isclose
 from pathlib import Path
 
+from .analysis_data import ANALYSIS_JSON, analysis_data
+
 SITE = Path(__file__).resolve().parents[1] / "site"
 UPCOMING = SITE / "data" / "upcoming.json"
 FILES = {
     "index.html", "styles.css", "app.js", "data/upcoming.json",
+    "analysis.html", "analysis.css", "analysis.js", ANALYSIS_JSON,
     "vendor/plotly-basic.min.js", "vendor/plotly.LICENSE.txt",
 }
 POSITIONS = ("first", "second", "third")
@@ -67,8 +70,10 @@ def verify_site(root=SITE):
     if files != FILES:
         raise ValueError(f"unexpected Pages files: {sorted(files - FILES)}; missing: {sorted(FILES - files)}")
     verify_forecast(json.loads((root / "data" / "upcoming.json").read_text(encoding="utf-8")))
+    if json.loads((root / ANALYSIS_JSON).read_text(encoding="utf-8")) != analysis_data(root.parent):
+        raise ValueError("public analysis does not match the tracked aggregate reports")
 
 
 if __name__ == "__main__":
     verify_site()
-    print("Pages: only published pre-race forecasts and static assets")
+    print("Pages: issued pre-race forecasts and aggregate analysis only")

@@ -8,6 +8,7 @@ const horizonOrder = Object.keys(horizons);
 const metrics = { first: "1.º", second: "2.º", third: "3.º", podium: "Podio" };
 const metricKeys = Object.keys(metrics);
 const sortButtons = [...document.querySelectorAll("[data-metric]")];
+const cutPanels = [ui["timing-tower"], ui["timeline-panel"], ui["probability-panel"], ui["podium-panel"]];
 const clock = new Intl.DateTimeFormat("es", {
   year: "numeric", month: "short", day: "2-digit", hour: "2-digit", minute: "2-digit",
   second: "2-digit", timeZone: "UTC", hourCycle: "h23",
@@ -288,9 +289,12 @@ function currentCut() {
 
 function renderCut() {
   const prediction = currentCut();
-  text(ui["race-lap"], prediction ? checkpoint(prediction) : "—");
+  const label = prediction ? checkpoint(prediction) : null;
+  text(ui["race-lap"], label ?? "—");
   show(ui.origin, Boolean(prediction));
-  show(ui["analysis-panel"], Boolean(prediction));
+  show(ui["analysis-panel"], Boolean(view.doc));
+  for (const panel of cutPanels) show(panel, Boolean(prediction));
+  circuitMap.render(view.doc?.event, label);
   if (!prediction) {
     if (ui.chart.data) Plotly.purge(ui.chart);
     return;

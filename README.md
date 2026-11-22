@@ -1,19 +1,21 @@
 # Podio probable
 
-[Panel público](https://hibra999.github.io/F1-AwesomeMachinePredictor/) · [Modelo `pl-5d7f9a659617`](https://github.com/Hibra999/F1-AwesomeMachinePredictor/releases/tag/pl-5d7f9a659617) · [Auditorías upstream](AUDIT.md) · [Protocolo sellado](PROTOCOL.md)
+[Panel público](https://hibra999.github.io/F1-AwesomeMachinePredictor/) · [Laboratorio de pronóstico](https://hibra999.github.io/F1-AwesomeMachinePredictor/analysis.html) · [Modelo `pl-5d7f9a659617`](https://github.com/Hibra999/F1-AwesomeMachinePredictor/releases/tag/pl-5d7f9a659617) · [Auditorías upstream](AUDIT.md) · [Protocolo sellado](PROTOCOL.md)
 
 Probabilidades de los tres puestos de la clasificación oficial del GP principal. Cada candidato estima una fuerza por piloto y la convierte en una distribución Plackett–Luce. La mezcla combina **distribuciones de ternas**, no rankings ni probabilidades marginales calibradas por separado. Se enumeran exactamente las `n × (n−1) × (n−2)` ternas. Cada puesto suma 100%, P(podio) es la suma de los tres puestos, y el total de P(podio) es 300%. La terna visible maximiza la probabilidad conjunta. Tolerancia de publicación por posición: `1e-12` absoluta, antes de redondear en el panel.
 
 ## Entrega
 
 - **Catar 2026:** [22 pilotos, cuatro probabilidades y corte UTC](site/data/upcoming.json). Corte congelado `2026-11-22 04:22:54.481 UTC`, antes de FP1; el roster es el último fechado de clasificación en Las Vegas, provisional para Catar. Incluye a Rafael Câmara en Haas, no a Esteban Ocon. MAP: Verstappen → Antonelli → Norris, **0,9322%** conjunto. [Horario del GP](https://www.formula1.com/en/latest/article/formula-1-qatar-airways-qatar-grand-prix-2026.3XJyoYSnpJEcuZovstTdcG): FP1 **27 nov 13:30 UTC**; T−30 **29 nov 15:30 UTC**; carrera **29 nov 16:00 UTC**. El corte T−30 no ha ocurrido; arrancar el comando armado que se indica abajo.
-- **GitHub Pages:** solo la última proyección previa publicada. Muestra el corte T−30 cuando exista; hasta entonces, el anticipado con su etiqueta y la hora prevista. No hay archivo, señal ni selector de directo en Pages.
+- **GitHub Pages:** muestra la última proyección previa publicada y el análisis agregado. No sirve archivos de carrera, el mapa local ni señal en directo.
 - **São Paulo 2026:** repetición local de 71 vueltas y dos cortes previos reconstruidos. Hasta la vuelta 36, el replay parcial coincide exactamente con los primeros 38 cortes de la carrera completa. La gráfica y el ranking se limitan al corte elegido.
 - **Las Vegas 2026:** cronometraje anónimo por SignalR Core verificado durante `SessionStatus=Started`. La mesa local mostró la vuelta 36 con 22 pilotos y un archivo de 1 s de antigüedad. Al desconectar el navegador en la vuelta 37, conservó el corte y la tabla e indicó que no podía actualizar. No se rellenan huecos. El antiguo Gist público no se usa ni se actualiza.
 
 ## Resultados
 
 Brier de podio promedio por piloto/corte y después por GP (menor es mejor). Modelo elegido solo con 2024–25, con 2023 para OOS interno y 2022 de arranque. Período final fijo: 20 GP de 2026, carreras 1–20. No se cambia el ganador tras abrirlo.
+
+El [laboratorio](https://hibra999.github.io/F1-AwesomeMachinePredictor/analysis.html) tiene filtros por período, horizonte y métrica. Incluye calibración, cobertura de la referencia y tercios de carrera. El panel local sirve la misma vista y el mismo JSON en [127.0.0.1:8070/analysis.html](http://127.0.0.1:8070/analysis.html).
 
 | Horizonte | Elegido | GP WF | Brier WF / ref. | GP final | Brier final / ref. | Log loss ganador final / ref. | ECE podio final | Ganador / podio ordenado final |
 |---|---|---:|---:|---:|---:|---:|---:|---:|
@@ -45,7 +47,11 @@ El Elo final T−30 pierde en log loss de ganador. El ensamble en carrera pierde
 | NGBoost | 0,06970 | 0,06820 | 0,06991 |
 | CatBoost | 0,06915 | 0,06783 | 0,07127 |
 
-Brier de podio en los mismos 48 GP de 2024–25; menor es mejor. Se conserva **Elo (0,06764)**. La búsqueda tomó 39,09 s y el entrenamiento completo 112,51 s en Windows CPU con rueda nativa Rustuna. [Informe y huellas del experimento](reports/rustuna-t30.json). Los parámetros de cada ensayo, tiempos y GP por bloque quedan en el `selection.json` local.
+Brier de podio en los mismos 48 GP de 2024–25; menor es mejor. Se conserva **Elo (0,06764)**. La búsqueda tomó 39,09 s y el entrenamiento completo 112,51 s en Windows CPU con rueda nativa Rustuna. [Informe y huellas del experimento](reports/rustuna-t30.json). El laboratorio muestra los 168 ensayos, sus parámetros, tiempos y mejores valores por ventana.
+
+### Datos e importancia fuera de muestra
+
+El [estudio agregado](reports/analysis-inspection.json) resume tamaños de alineación y faltantes del corpus 2022–25. Mide el cambio de Brier al enmascarar una variable fuera de muestra en 2024–25. Usa el LightGBM pequeño fijo en los tres horizontes y repite la medición para cada candidato Rustuna en T−30, con los mismos GP y temperaturas que su resultado original. La ablación por grupo es distinta: reentrena sin el grupo. Ninguna mide causalidad ni el peso de una variable en Elo.
 
 ## Fuentes y disponibilidad
 
@@ -90,6 +96,8 @@ uv run --locked python -m f1forecast --work .local/rustuna train --trials 8
 
 Usa un directorio limpio sin datos finales. `train` sin `--trials` reproduce la selección original.
 
+Para regenerar la vista estática desde los informes versionados, basta `python -m f1forecast.analysis_data`. Para repetir además la inspección estadística medida en este PC, `uv run --locked python -m f1forecast.inspection` exige el corpus original y el sello Rustuna correspondiente en `.local/rustuna`. El flujo de Pages verifica que el JSON público coincida con los informes.
+
 ### Mesa de carrera local
 
 ```powershell
@@ -103,6 +111,8 @@ uv run --locked python -m f1forecast panel --port 8070 --replay .local/replay-st
 ```
 
 Abre [http://127.0.0.1:8070/](http://127.0.0.1:8070/) y elige **Repetición** o **Directo**. El servidor escucha solo en el PC. Si ya hay un panel abierto, detenlo antes de lanzar otro en el mismo puerto.
+
+La mesa incluye mapas de Interlagos, Las Vegas, Lusail y Yas Marina. Usa geometría de OpenStreetMap con [atribución y licencia ODbL](AUDIT.md#trazados-usados-openstreetmap-odbl-10). Se puede girar, ampliar y alternar entre órbita 3D y vista cenital; en equipos sin WebGL queda la vista 2D. La extrusión es gráfica, no altimetría ni GPS de autos.
 
 Para Catar, inicia `watch` en una consola cuando se abra la sesión Race, unos minutos antes de la salida. Abre el panel en otra consola:
 

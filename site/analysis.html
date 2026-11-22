@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <meta name="description" content="Evaluación cronológica, calibración, entrenamiento y exploración de datos del pronóstico de podios de Fórmula 1.">
+  <title>Laboratorio de pronóstico · Podio probable</title>
+  <link rel="stylesheet" href="./styles.css">
+  <link rel="stylesheet" href="./analysis.css">
+  <script src="./vendor/plotly-basic.min.js" defer></script>
+  <script src="./analysis.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#evaluacion">Saltar a la evaluación</a>
+  <header class="masthead">
+    <div class="shell masthead-inner lab-masthead">
+      <a class="wordmark" href="./"><span class="wordmark-mark" aria-hidden="true"></span>Podio<span>probable</span></a>
+      <nav aria-label="Secciones del laboratorio">
+        <a href="#evaluacion">Evaluación</a><a href="#entrenamiento">Rustuna</a><a href="#datos">Datos</a><a href="#protocolo">Protocolo</a>
+      </nav>
+      <a href="./" class="lab-back">← Inicio</a>
+    </div>
+  </header>
+  <main class="shell lab">
+    <section class="panel lab-hero" aria-labelledby="lab-title">
+      <div class="lab-hero-copy">
+        <p class="eyebrow">Ingeniería de pronóstico / Informe técnico</p>
+        <h1 id="lab-title">Laboratorio de pronóstico<span>.</span></h1>
+        <p class="muted">Compara el modelo con su referencia. Revisa qué sabía al pronosticar y qué cambia al quitarle una variable.</p>
+      </div>
+      <dl class="lab-seal">
+        <div><dt>Modelo publicado</dt><dd id="lab-version">—</dd></div>
+        <div><dt>Límite exclusivo de entrenamiento</dt><dd id="lab-limit">—</dd></div>
+        <div><dt>Unidad de evaluación</dt><dd>Gran Premio</dd></div>
+      </dl>
+    </section>
+    <ol class="lab-periods" aria-label="Períodos del protocolo">
+      <li class="panel"><span class="micro">01 / Arranque</span><strong>2022</strong><span>Historia inicial de entrenamiento</span></li>
+      <li class="panel"><span class="micro">02 / Calibración</span><strong>2023</strong><span>Predicciones fuera de muestra internas</span></li>
+      <li class="panel"><span class="micro">03 / Selección</span><strong>2024–25</strong><span>Validación cronológica por GP</span></li>
+      <li class="panel held-out"><span class="micro">04 / Prueba final</span><strong>2026</strong><span>Rondas 01–20, sin reajuste</span></li>
+    </ol>
+    <p id="lab-status" class="panel lab-readout" role="status">Cargando el informe de evaluación…</p>
+    <noscript><p class="panel lab-readout">Activa JavaScript para ver las gráficas. <a href="https://github.com/Hibra999/F1-AwesomeMachinePredictor/tree/main/reports">Descargar informes</a>.</p></noscript>
+
+    <div id="lab-content" hidden>
+      <section id="evaluacion" class="lab-section" aria-labelledby="evaluation-title">
+        <div class="lab-section-heading">
+          <div><p class="eyebrow">01 / Rendimiento fuera de muestra</p><h2 id="evaluation-title">¿Cuánto acierta?</h2></div>
+          <p class="muted">El Brier de podio pesa igual a cada Gran Premio. La referencia usa solo información disponible en ese corte.</p>
+        </div>
+        <div class="panel lab-control-bar">
+          <label>Período<select id="eval-period"><option value="walk_forward">Validación 2024–25</option><option value="final">Final 2026 · rondas 01–20</option></select></label>
+          <label>Corte<select id="eval-horizon"><option value="fp1">Antes de Libres 1</option><option value="pre_race" selected>Antes de la salida · T−30</option><option value="race">Durante la carrera</option></select></label>
+          <label>Métrica del gráfico<select id="eval-metric"><option value="brier">Brier de podio</option><option value="winner_log_loss">Log loss del ganador</option><option value="winner_hit">Acierto de ganador</option><option value="ordered_hit">Podio exacto</option><option value="podium_ece">Error de calibración del podio</option></select></label>
+        </div>
+        <dl id="eval-kpis" class="lab-kpis" aria-label="Resumen de resultados" aria-live="polite"></dl>
+        <div class="lab-grid">
+          <figure class="panel lab-card" aria-labelledby="scores-title">
+            <figcaption><h3 id="scores-title">Resultados por candidato</h3><p id="scores-caption" class="muted"></p></figcaption>
+            <div id="scores-plot" class="lab-plot" role="img" aria-label="Comparación de la métrica seleccionada entre modelos"></div>
+          </figure>
+          <figure class="panel lab-card" aria-labelledby="calibration-title">
+            <figcaption class="lab-card-heading">
+              <div><h3 id="calibration-title">Calibración</h3><p class="muted">Probabilidad media prevista frente a frecuencia observada.</p></div>
+              <label>Resultado<select id="calibration-target"><option value="podium">Podio</option><option value="winner">Victoria</option></select></label>
+            </figcaption>
+            <div id="calibration-plot" class="lab-plot" role="img" aria-label="Curvas de fiabilidad del modelo seleccionado y la referencia"></div>
+          </figure>
+          <figure class="panel lab-card" aria-labelledby="folds-title">
+            <figcaption><h3 id="folds-title">Ventanas cronológicas</h3><p class="muted">2024–25 por semestre. La calibración previa acumula GP; los cortes finales de 2026 no se reciclan.</p></figcaption>
+            <div id="folds-plot" class="lab-plot" role="img" aria-label="Cantidad de GP de calibración previa y prueba por semestre"></div>
+          </figure>
+          <figure id="reference-coverage" class="panel lab-card" aria-labelledby="reference-title">
+            <figcaption><h3 id="reference-title">Cobertura de la referencia</h3><p class="muted">Fuente disponible por GP. Clasificación o forma no sustituyen una parrilla oficial fechada.</p></figcaption>
+            <div id="reference-plot" class="lab-plot" role="img" aria-label="Cantidad de GP por fuente utilizada para la referencia"></div>
+          </figure>
+          <figure id="race-segments" class="panel lab-card" aria-labelledby="segments-title" hidden>
+            <figcaption><h3 id="segments-title">Rendimiento por tercio de carrera</h3><p id="segments-caption" class="muted"></p></figcaption>
+            <div id="segments-plot" class="lab-plot" role="img" aria-label="Métrica seleccionada por tercio de carrera"></div>
+          </figure>
+        </div>
+        <details class="panel lab-detail" open>
+          <summary>Métricas exactas y cobertura</summary>
+          <p id="eval-coverage" class="muted"></p>
+          <div class="lab-table-scroll" role="region" aria-label="Tabla de métricas de evaluación" tabindex="0">
+            <table class="lab-table">
+              <thead><tr><th scope="col">Candidato</th><th scope="col">Brier podio</th><th scope="col">Log loss ganador</th><th scope="col">Acierto ganador</th><th scope="col">Podio exacto</th><th scope="col">Tres miembros MAP</th><th scope="col">ECE podio</th><th scope="col">ECE ganador</th></tr></thead>
+              <tbody id="eval-table"></tbody>
+            </table>
+          </div>
+        </details>
+      </section>
+
+      <section id="entrenamiento" class="lab-section" aria-labelledby="training-title">
+        <div class="lab-section-heading">
+          <div><p class="eyebrow">02 / Aprendizaje y búsqueda</p><h2 id="training-title">Dentro del entrenamiento</h2></div>
+          <p id="training-context" class="muted"></p>
+        </div>
+        <dl id="training-kpis" class="lab-kpis" aria-label="Tiempos y presupuesto de entrenamiento"></dl>
+        <div class="lab-grid">
+          <figure class="panel lab-card" aria-labelledby="runtime-title">
+            <figcaption><h3 id="runtime-title">Tiempo de ajuste por familia</h3><p class="muted">Suma de ajustes pequeño y grande por horizonte. No incluye ablaciones ni el resto de la selección.</p></figcaption>
+            <div id="runtime-plot" class="lab-plot" role="img" aria-label="Segundos de ajuste por familia y horizonte en el entrenamiento original"></div>
+          </figure>
+          <figure class="panel lab-card" aria-labelledby="rustuna-comparison-title">
+            <figcaption><h3 id="rustuna-comparison-title">¿Ganó Rustuna en T−30?</h3><p id="rustuna-comparison-caption" class="muted"></p></figcaption>
+            <div id="rustuna-comparison-plot" class="lab-plot" role="img" aria-label="Brier de podio de la política original, el mejor preset observado y los candidatos Rustuna"></div>
+          </figure>
+        </div>
+        <div class="panel lab-card lab-trials">
+          <div class="lab-card-heading">
+            <div><p class="eyebrow">Rustuna / Registro de ensayos</p><h3>Hiperparámetros por ventana</h3><p id="trial-context" class="muted"></p></div>
+            <label>Ventana UTC<select id="trial-window"></select></label>
+          </div>
+          <div id="trials-plot" class="lab-plot" role="img" aria-label="Brier interno de cada ensayo y mejor resultado acumulado por familia"></div>
+          <div class="lab-table-scroll" role="region" aria-label="Mejores ensayos y tiempos por familia" tabindex="0">
+            <table class="lab-table">
+              <thead><tr><th scope="col">Familia</th><th scope="col">Ensayo ganador</th><th scope="col">Brier interno</th><th scope="col">Búsqueda</th><th scope="col">Mediana por ensayo</th><th scope="col">Hiperparámetros elegidos</th></tr></thead>
+              <tbody id="trial-table"></tbody>
+            </table>
+          </div>
+          <details class="lab-inline-detail">
+            <summary>Ver todos los ensayos de esta ventana</summary>
+            <div class="lab-table-scroll" role="region" aria-label="Registro de ensayos de esta ventana" tabindex="0">
+              <table class="lab-table"><thead><tr><th scope="col">Familia</th><th scope="col">Ensayo</th><th scope="col">Brier interno</th><th scope="col">Segundos</th><th scope="col">Hiperparámetros</th></tr></thead><tbody id="all-trial-rows"></tbody></table>
+            </div>
+          </details>
+        </div>
+        <div class="panel lab-card lab-trials">
+          <div class="lab-card-heading">
+            <div><p class="eyebrow">Rustuna / Sensibilidad T−30</p><h3>Variables de los modelos ajustados</h3><p id="tuned-importance-caption" class="muted"></p></div>
+            <label>Estimador<select id="tuned-family"><option value="lightgbm/rustuna">LightGBM</option><option value="ngboost/rustuna">NGBoost</option><option value="catboost/rustuna">CatBoost</option></select></label>
+          </div>
+          <div id="tuned-importance-plot" class="lab-plot lab-plot-rows" role="img" aria-label="Sensibilidad fuera de muestra de las variables del estimador ajustado"></div>
+          <details class="lab-inline-detail">
+            <summary>Ver todos los Δ y los GP con evidencia</summary>
+            <div class="lab-table-scroll" role="region" aria-label="Sensibilidad por variable del estimador ajustado" tabindex="0">
+              <table class="lab-table"><thead><tr><th scope="col">Variable</th><th scope="col">Δ Brier</th><th scope="col">GP con evidencia</th></tr></thead><tbody id="tuned-feature-table"></tbody></table>
+            </div>
+          </details>
+        </div>
+      </section>
+
+      <section id="datos" class="lab-section" aria-labelledby="eda-title">
+        <div class="lab-section-heading">
+          <div><p class="eyebrow">03 / Análisis exploratorio</p><h2 id="eda-title">Lo que el modelo pudo ver</h2><p id="eda-context" class="muted"></p></div>
+          <label>Corte de los datos<select id="eda-horizon"><option value="fp1">Antes de Libres 1</option><option value="pre_race" selected>Antes de la salida · T−30</option><option value="race">Durante la carrera</option></select></label>
+        </div>
+        <dl id="eda-kpis" class="lab-kpis" aria-label="Cobertura del corpus" aria-live="polite"></dl>
+        <div class="lab-grid">
+          <figure class="panel lab-card" aria-labelledby="years-title">
+            <figcaption><h3 id="years-title">Cobertura por año</h3><p class="muted">Cortes utilizados en el análisis exploratorio, no cantidad de pilotos.</p></figcaption>
+            <div id="years-plot" class="lab-plot" role="img" aria-label="Cantidad de cortes de entrenamiento por año"></div>
+          </figure>
+          <figure class="panel lab-card" aria-labelledby="entrants-title">
+            <figcaption><h3 id="entrants-title">Tamaño de la alineación</h3><p class="muted">Número de pilotos observados por corte.</p></figcaption>
+            <div id="entrants-plot" class="lab-plot" role="img" aria-label="Distribución de cortes por número de pilotos"></div>
+          </figure>
+          <figure class="panel lab-card" aria-labelledby="missing-title">
+            <figcaption><h3 id="missing-title">Valores faltantes</h3><p id="missing-caption" class="muted"></p></figcaption>
+            <div id="missing-plot" class="lab-plot lab-plot-rows" role="img" aria-label="Variables con mayor proporción de valores faltantes"></div>
+          </figure>
+          <figure class="panel lab-card" aria-labelledby="importance-title">
+            <figcaption class="lab-card-heading">
+              <div><h3 id="importance-title">Importancia fuera de muestra</h3><p id="importance-caption" class="muted"></p></div>
+              <label>Nivel<select id="importance-level"><option value="variable">Variable</option><option value="group">Grupo</option></select></label>
+            </figcaption>
+            <div id="importance-plot" class="lab-plot lab-plot-rows" role="img" aria-label="Cambio del Brier de podio al quitar una variable o un grupo"></div>
+          </figure>
+        </div>
+        <details class="panel lab-detail">
+          <summary>Ver todas las variables, faltantes y percentiles</summary>
+          <p class="muted">Los percentiles se calculan entre valores observados y conservan las unidades de la variable. «—» significa sin evidencia.</p>
+          <p id="importance-method" class="muted"></p>
+          <div class="lab-table-scroll" role="region" aria-label="Estadísticas por variable" tabindex="0">
+            <table class="lab-table"><thead><tr><th scope="col">Variable</th><th scope="col">Grupo</th><th scope="col">Faltantes</th><th scope="col">P10</th><th scope="col">Mediana</th><th scope="col">P90</th><th scope="col">Δ Brier</th><th scope="col">GP con evidencia</th></tr></thead><tbody id="feature-table"></tbody></table>
+          </div>
+        </details>
+      </section>
+
+      <section id="protocolo" class="panel lab-card lab-protocol" aria-labelledby="protocol-title">
+        <div>
+          <p class="eyebrow">04 / Trazabilidad</p><h2 id="protocol-title">Qué se puede concluir</h2>
+          <p>Un Brier o log loss menor indica mejor puntuación. El acierto del podio exacto exige los tres puestos en orden.</p>
+          <p>ECE mide la distancia media ponderada entre probabilidad y frecuencia observada por intervalo. La ablación mide dependencia del modelo, no causalidad.</p>
+          <p>La reconstrucción histórica no mide la latencia del directo. Ni Rustuna ni la EDA reabren 2026 para ajustar.</p>
+          <p class="lab-links"><a href="https://github.com/Hibra999/F1-AwesomeMachinePredictor/blob/main/PROTOCOL.md">Protocolo ↗</a><a href="https://github.com/Hibra999/F1-AwesomeMachinePredictor/tree/main/reports">Reportes y pruebas ↗</a><a href="./data/analysis.json">Datos agregados JSON</a></p>
+        </div>
+        <div>
+          <h3>Pruebas de fuga temporal</h3>
+          <p id="leakage-context" class="muted"></p>
+          <dl id="leakage-results" class="lab-leakage"></dl>
+        </div>
+      </section>
+    </div>
+    <footer class="site-footer"><div><strong>Podio probable</strong><a href="https://github.com/Hibra999/F1-AwesomeMachinePredictor">Proyecto y reproducción ↗</a></div><p>Proyecto no oficial. Esta vista contiene estadísticas agregadas, no señal en directo.</p></footer>
+  </main>
+</body>
+</html>
