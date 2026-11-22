@@ -9,6 +9,7 @@
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Crect width='48' height='48' rx='9' fill='%23101318'/%3E%3Cpath d='M14 33l9-18h6l-9 18zM25 33l9-18h4l-9 18z' fill='%23ff514a'/%3E%3C/svg%3E">
   <link rel="stylesheet" href="styles.css">
   <script src="vendor/plotly-basic.min.js" defer></script>
+  <script src="insights.js" defer></script>
   <script src="app.js" defer></script>
 </head>
 <body>
@@ -17,7 +18,7 @@
     <div class="shell masthead-inner">
       <a class="wordmark" href="#inicio"><span class="wordmark-mark" aria-hidden="true"></span>Podio<span>probable</span></a>
       <nav aria-label="Secciones del pronóstico">
-        <a href="#proyeccion">Proyección</a><a href="#pilotos">Pilotos</a><a href="./analysis.html">Análisis</a><a href="#metodo">Método</a>
+        <a href="#proyeccion">Pronóstico</a><a href="#pilotos">Pilotos</a><a href="#resultados">Resultados</a><a href="./analysis.html">Análisis</a>
       </nav>
       <span class="badge edition"><span aria-hidden="true"></span> Edición previa</span>
     </div>
@@ -99,6 +100,7 @@
           <p id="chart-note" class="muted" hidden>Gráfica no disponible. La tabla contiene todas las probabilidades.</p>
         </figure>
       </div>
+      <section id="probability-insights" class="insight-grid" aria-label="Distribución y cambios de probabilidad" hidden></section>
 
       <section id="pilotos" class="panel forecast-panel standings" aria-labelledby="ranking-title">
         <div class="section-heading">
@@ -136,6 +138,13 @@
         </dl>
       </section>
     </div>
+
+    <section id="resultados" class="results-section" aria-labelledby="recent-title">
+      <p class="eyebrow">Después de la bandera a cuadros</p>
+      <h2 id="recent-title">¿Acertamos los dos últimos podios?</h2>
+      <p class="muted">Compara el podio ordenado de la previa T−30 con la clasificación. Un piloto en otro puesto no es un acierto exacto.</p>
+      <div id="recent-cards" class="result-grid" aria-live="polite">Cargando los resultados…</div>
+    </section>
 
     <footer class="site-footer">
       <div><strong>Podio probable</strong><a href="https://github.com/Hibra999/F1-AwesomeMachinePredictor">Código y evaluación ↗</a></div>

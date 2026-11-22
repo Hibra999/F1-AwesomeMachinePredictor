@@ -9,6 +9,7 @@
   <link rel="stylesheet" href="./styles.css">
   <link rel="stylesheet" href="./analysis.css">
   <script src="./vendor/plotly-basic.min.js" defer></script>
+  <script src="./insights.js" defer></script>
   <script src="./analysis.js" defer></script>
 </head>
 <body>
@@ -17,7 +18,7 @@
     <div class="shell masthead-inner lab-masthead">
       <a class="wordmark" href="./"><span class="wordmark-mark" aria-hidden="true"></span>Podio<span>probable</span></a>
       <nav aria-label="Secciones del laboratorio">
-        <a href="#evaluacion">Evaluación</a><a href="#entrenamiento">Rustuna</a><a href="#datos">Datos</a><a href="#protocolo">Protocolo</a>
+        <a href="#resultados">Dos últimos GP</a><a href="#evaluacion">Evaluación</a><a href="#entrenamiento">Rustuna</a><a href="#datos">Datos</a>
       </nav>
       <a href="./" class="lab-back">← Inicio</a>
     </div>
@@ -43,6 +44,13 @@
     </ol>
     <p id="lab-status" class="panel lab-readout" role="status">Cargando el informe de evaluación…</p>
     <noscript><p class="panel lab-readout">Activa JavaScript para ver las gráficas. <a href="https://github.com/Hibra999/F1-AwesomeMachinePredictor/tree/main/reports">Descargar informes</a>.</p></noscript>
+
+    <section id="resultados" class="results-section" aria-labelledby="recent-title">
+      <p class="eyebrow">Pronóstico frente a clasificación</p>
+      <h2 id="recent-title">¿Acertamos los dos últimos podios?</h2>
+      <p class="muted">El veredicto exige el piloto en el puesto previsto. Estas dos carreras no sustituyen la evaluación por período.</p>
+      <div id="recent-cards" class="result-grid" aria-live="polite">Cargando los resultados…</div>
+    </section>
 
     <div id="lab-content" hidden>
       <section id="evaluacion" class="lab-section" aria-labelledby="evaluation-title">

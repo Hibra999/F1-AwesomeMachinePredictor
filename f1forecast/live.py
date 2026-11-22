@@ -116,7 +116,7 @@ class _RaceFeed:
         self.roster = {}
         self.ranks = {}
         self.laps = {}
-        self.in_pit = {}
+        self.driver_flags = {}
         self.weather = {}
         self.penalties = set()
 
@@ -215,12 +215,16 @@ class _RaceFeed:
                 if rank != self.ranks.get(number):
                     rank_changed = True
                     self.ranks[number] = rank
-            in_pit = patch.get("InPit")
-            if type(in_pit) is bool:
-                if (entry and not initial and self.status == "Started" and in_pit
-                        and self.in_pit.get(number) is False):
-                    emit("pit", driver=entry["id"])
-                self.in_pit[number] = in_pit
+            flags = self.driver_flags.setdefault(number, {})
+            unavailable = any(flags.values())
+            if (entry and not initial and self.status == "Started" and patch.get("InPit") is True
+                    and flags.get("InPit") is False):
+                emit("pit", driver=entry["id"])
+            for flag in ("InPit", "Stopped", "Retired"):
+                if type(patch.get(flag)) is bool:
+                    flags[flag] = patch[flag]
+            if entry and any(flags.values()) != unavailable:
+                emit("driver_status", driver=entry["id"], unavailable=not unavailable)
             if (lap := _integer(patch.get("NumberOfLaps"))) is None or lap <= self.laps.get(number, 0):
                 continue
             if self.status not in _COUNTING:
@@ -228,7 +232,8 @@ class _RaceFeed:
             self.laps[number] = lap
             if entry and not initial:
                 seconds = _lap_seconds(_mapping(patch.get("LastLapTime")).get("Value"))
-                emit("lap", driver=entry["id"], lap=lap, seconds=seconds, stint=None, tyre_age=None)
+                emit("lap", driver=entry["id"], lap=lap, seconds=seconds, stint=None, tyre_age=None,
+                     crossed_at=None if any(flags.values()) else source_at)
                 had_crossing = True
 
         if initial:

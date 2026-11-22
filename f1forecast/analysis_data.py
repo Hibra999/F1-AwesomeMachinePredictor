@@ -5,6 +5,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 ANALYSIS_JSON = "data/analysis.json"
+RECENT_JSON = "data/recent-podiums.json"
 HORIZONS = ("fp1", "pre_race", "race")
 
 
@@ -57,7 +58,9 @@ def analysis_data(root=ROOT):
 
 
 if __name__ == "__main__":
-    path = ROOT / "site" / ANALYSIS_JSON
-    path.write_text(json.dumps(analysis_data(), ensure_ascii=False, allow_nan=False, separators=(",", ":")) + "\n",
-                    encoding="utf-8", newline="\n")
-    print(ANALYSIS_JSON)
+    for target, data in ((ANALYSIS_JSON, analysis_data()), (RECENT_JSON, _read(ROOT, "recent-podiums"))):
+        (ROOT / "site" / target).write_text(
+            json.dumps(data, ensure_ascii=False, allow_nan=False, separators=(",", ":")) + "\n",
+            encoding="utf-8", newline="\n",
+        )
+        print(target)

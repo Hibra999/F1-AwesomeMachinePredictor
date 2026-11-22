@@ -126,6 +126,7 @@ function renderRanking() {
   ui["ranking-body"].replaceChildren(...sortedDrivers(view.cut.drivers, view.metric).map((d, index) => {
     const row = element("tr");
     row.dataset.driver = d.id;
+    row.style.setProperty("--car", raceInsights.teamColor(d.team));
     const name = element("th");
     name.scope = "row";
     const driver = element("div", undefined, "table-driver");
@@ -167,7 +168,7 @@ async function drawChart(drivers) {
       margin: { t: 10, r: 12, b: 35, l: 46 },
       font: { color: color("muted"), family: color("mono"), size: 12 },
       hoverlabel: { bgcolor: color("panel-raised"), font: { color: color("fg") } },
-      xaxis: { tickformat: ".0%", rangemode: "tozero", gridcolor: color("line"), zeroline: false, fixedrange: true },
+      xaxis: { range: [0, 1], dtick: .25, tickformat: ".0%", gridcolor: color("line"), zeroline: false, fixedrange: true },
       yaxis: { fixedrange: true },
     }, { responsive: true, displayModeBar: false });
   } catch {
@@ -214,6 +215,7 @@ function renderForecast(doc, cut) {
   renderRanking();
   renderTiming();
   for (const id of ["forecast", "favorite", "cut-note", "see-forecast"]) ui[id].hidden = false;
+  raceInsights.showChances(cut, cut.horizon === "pre_race" ? doc.predictions.find((p) => p.horizon === "fp1") : null);
   void drawChart(cut.drivers);
 }
 

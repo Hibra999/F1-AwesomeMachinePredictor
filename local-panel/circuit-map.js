@@ -1,6 +1,10 @@
 "use strict";
 
 const circuitMap = (() => {
+  if (typeof module === "object" && module.exports) {
+    module.exports = { project, pointAtLap };
+    return;
+  }
   const el = (id) => document.getElementById(`circuit-${id}`);
   const panel = el("panel");
   const stage = el("stage");
@@ -9,6 +13,26 @@ const circuitMap = (() => {
   const dialog = el("dialog");
   const expand = el("expand");
   const home = panel.parentNode;
+  const makeSvg = (tag) => document.createElementNS("http://www.w3.org/2000/svg", tag);
+  const overlay = makeSvg("svg");
+  overlay.classList.add("circuit-marks");
+  overlay.setAttribute("aria-hidden", "true");
+  stage.append(overlay);
+  const finish = makeSvg("g");
+  finish.classList.add("circuit-finish");
+  const gate = makeSvg("line");
+  gate.setAttribute("y1", "-6");
+  gate.setAttribute("y2", "6");
+  const arrow = makeSvg("polygon");
+  arrow.setAttribute("points", "4,-3 10,0 4,3");
+  finish.append(gate, arrow);
+  stage.after(el("mode"));
+  const picker = document.createElement("label");
+  picker.className = "circuit-picker";
+  picker.append("Piloto en el mapa ");
+  const select = document.createElement("select");
+  picker.append(select);
+  el("status").before(picker);
   const aliases = [
     ["interlagos", /-(?:2026-20|interlagos|sao-paulo|brazil|brazilian|brasil|jose-carlos-pace)-/],
     ["las-vegas", /-(?:2026-21|las-vegas)-/],
@@ -19,7 +43,10 @@ const circuitMap = (() => {
   const camera = { ...defaultCamera };
   let tracks;
   let track;
-  let currentEvent;
+  let prediction;
+  let selected;
+  let onPick;
+  let marks = [];
   let key;
   let graphics;
   let graphicsTried = false;
@@ -53,10 +80,26 @@ const circuitMap = (() => {
     const cos = Math.cos(cy * Math.PI / 180);
     const scale = Math.max((Math.max(...lon) - Math.min(...lon)) * cos, Math.max(...lat) - Math.min(...lat)) / 2;
     if (!scale) throw new Error("Eje local degenerado");
-    return {
-      ...properties,
-      points: coords.map(([x, y]) => [(x - cx) * cos / scale, (y - cy) / scale]),
-    };
+    const points = coords.map(([x, y]) => [(x - cx) * cos / scale, (y - cy) / scale]);
+    const distances = [0];
+    for (let i = 1; i < points.length; i++) {
+      distances.push(distances[i - 1] + Math.hypot(points[i][0] - points[i - 1][0], points[i][1] - points[i - 1][1]));
+    }
+    const [segment, part] = properties.timing_line ?? [];
+    if (!Number.isInteger(segment) || segment < 0 || segment >= points.length - 1
+        || !Number.isFinite(part) || part < 0 || part > 1 || ![1, -1].includes(properties.direction)) {
+      throw new Error("Línea de meta o sentido no válidos");
+    }
+    const origin = distances[segment] + part * (distances[segment + 1] - distances[segment]);
+    return { ...properties, points, distances, origin };
+  }
+
+  function pointAtLap({ points, distances, origin, direction }, fraction) {
+    const length = distances.at(-1);
+    const target = ((origin + direction * (fraction % 1) * length) % length + length) % length;
+    const i = distances.findIndex((distance) => distance > target);
+    const t = (target - distances[i - 1]) / (distances[i] - distances[i - 1]);
+    return points[i].map((value, axis) => points[i - 1][axis] + t * (value - points[i - 1][axis]));
   }
 
   function makeGraphics() {
@@ -81,9 +124,11 @@ const circuitMap = (() => {
       `],
       [gl.FRAGMENT_SHADER, `
         precision mediump float;
+        uniform vec3 trackColor;
+        uniform vec3 edgeColor;
         varying float tint;
         void main() {
-          gl_FragColor = vec4(mix(vec3(.065, .24, .26), vec3(.62, .98, .85), tint), 1.0);
+          gl_FragColor = vec4(mix(edgeColor, trackColor, tint), 1.0);
         }
       `],
     ]) {
@@ -96,6 +141,10 @@ const circuitMap = (() => {
     gl.linkProgram(program);
     if (!gl.getProgramParameter(program, gl.LINK_STATUS)) return null;
     gl.useProgram(program);
+    const style = getComputedStyle(canvas);
+    for (const [name, color] of [["trackColor", style.color], ["edgeColor", style.borderTopColor]]) {
+      gl.uniform3fv(gl.getUniformLocation(program, name), color.match(/\d+(\.\d+)?/g).slice(0, 3).map((v) => Number(v) / 255));
+    }
     const buffer = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
     for (const [name, size, offset] of [["point", 3, 0], ["tone", 1, 12]]) {
@@ -134,10 +183,96 @@ const circuitMap = (() => {
     graphics.count = mesh.length / 4;
   }
 
+  function syncMarks() {
+    const fractions = prediction?.race_context?.markers;
+    const roster = prediction?.drivers ?? [];
+    const entries = Object.entries((track && fractions) || {})
+      .filter(([id, value]) => /^[A-Z]{3}$/.test(id) && Number.isFinite(value) && value >= 0 && value <= 1)
+      .sort(([a], [b]) => a.localeCompare(b));
+    picker.hidden = entries.length === 0;
+    const options = [new Option("Elegir piloto", ""), ...entries.map(([id, fraction]) =>
+      new Option(`${id} · ${Math.floor(fraction % 1 * 100)} % de vuelta`, id))];
+    select.replaceChildren(...options);
+    select.value = entries.some(([id]) => id === selected) ? selected : "";
+    select.options[0].disabled = true;
+    overlay.replaceChildren(finish);
+    marks = entries.map(([id, value]) => {
+      const group = makeSvg("g");
+      group.dataset.driver = id;
+      group.style.setProperty("--car", `var(--driver-${id}, var(--mint))`);
+      const active = id === selected;
+      group.classList.toggle("selected", active);
+      const leader = makeSvg("line");
+      const dot = makeSvg("circle");
+      dot.setAttribute("r", active ? "5" : "3.5");
+      const tag = makeSvg("text");
+      tag.textContent = id;
+      const title = makeSvg("title");
+      title.textContent = `${id} · posición estimada`;
+      group.append(title, leader, dot, tag);
+      overlay.append(group);
+      return { group, leader, tag, point: pointAtLap(track, value), active };
+    });
+    const active = marks.find((mark) => mark.active);
+    if (active) {
+      overlay.append(active.group);
+      marks = [active, ...marks.filter((mark) => mark !== active)];
+    }
+    overlay.toggleAttribute("hidden", !track);
+    const missing = roster.filter(({ id }) => !Object.hasOwn(fractions ?? {}, id)).map(({ id }) => id);
+    const note = entries.length
+      ? `${entries.length} de ${roster.length} pilotos · color del equipo. Posición estimada por pasos por meta; no es GPS. Meta y sentido: flecha dorada.`
+      : "Sin posiciones estimables en este corte.";
+    const absent = entries.length && missing.length && missing.length <= 6 ? ` Sin cruce reciente utilizable: ${missing.join(", ")}.`
+      : selected && !select.value ? ` ${selected}: sin posición.` : "";
+    el("status").textContent = track ? `${note}${absent}${graphics ? "" : " WebGL no disponible."}` : "";
+  }
+
+  function drawMarks(width, height, orbit) {
+    const scale = Math.min(width, height) * camera.zoom * (orbit ? .36 : .4);
+    const c = orbit ? Math.cos(camera.azimuth) : 1;
+    const s = orbit ? Math.sin(camera.azimuth) : 0;
+    const tilt = orbit ? Math.sin(camera.elevation) : 1;
+    const pixel = ([x, y]) => [width / 2 + scale * (x * c - y * s), height / 2 - scale * (x * s + y * c) * tilt];
+    const [fx, fy] = pixel(pointAtLap(track, 0));
+    const [tx, ty] = pixel(pointAtLap(track, .0002));
+    finish.setAttribute("transform", `translate(${fx},${fy}) rotate(${Math.atan2(ty - fy, tx - fx) * 180 / Math.PI})`);
+    const pixels = marks.map(({ point }) => pixel(point));
+    const labels = [];
+    marks.forEach(({ group, tag, leader }, index) => {
+      const [x, y] = pixels[index];
+      group.setAttribute("transform", `translate(${x},${y})`);
+      // Keep each dot on its true anchor. Move only the code when cars bunch up.
+      let slot;
+      if (x >= 0 && x <= width && y >= 0 && y <= height) {
+        for (const dy of [-11, 12, -27, 28, -43, 44, -59, 60]) {
+          for (const dx of [0, 25, -25, 50, -50]) {
+            const lx = x + dx, ly = y + dy;
+            if (lx < 14 || lx > width - 14 || ly < 8 || ly > height - 8
+                || labels.some(([a, b]) => Math.abs(lx - a) < 28 && Math.abs(ly - b) < 15)
+                || pixels.some(([a, b]) => Math.abs(lx - a) < 15 && Math.abs(ly - b) < 9)) continue;
+            labels.push([lx, ly]);
+            slot = [dx, dy];
+            break;
+          }
+          if (slot) break;
+        }
+      }
+      tag.style.display = leader.style.display = slot ? "" : "none";
+      if (!slot) return;
+      const [dx, dy] = slot;
+      tag.setAttribute("x", dx);
+      tag.setAttribute("y", dy);
+      leader.setAttribute("x2", dx);
+      leader.setAttribute("y2", dy);
+    });
+  }
+
   function draw() {
     const { clientWidth: width, clientHeight: height } = stage;
     if (!track || !width || !height) return;
     const ratio = width / height;
+    drawMarks(width, height, !canvas.hidden);
     if (canvas.hidden) {
       const radius = 1.25 / camera.zoom;
       const x = radius * Math.max(1, ratio);
@@ -162,14 +297,14 @@ const circuitMap = (() => {
     const orbit = Boolean(track && graphics && prefer3d);
     panel.dataset.view = !track ? "unavailable" : orbit ? "3d" : "2d";
     canvas.hidden = !orbit;
-    svg.hidden = !track || orbit;
+    svg.toggleAttribute("hidden", !track || orbit);
     el("mode").hidden = !track;
     el("mode").textContent = orbit ? "Extrusión gráfica · sin altimetría" : "Vista cenital · norte arriba";
     el("orbit").disabled = !graphics;
     el("orbit").setAttribute("aria-pressed", String(orbit));
     el("top").setAttribute("aria-pressed", String(Boolean(track && !orbit)));
     el("turn").hidden = !orbit;
-    el("status").textContent = `Trazado de referencia; sin posiciones de autos.${track && !graphics ? " WebGL no disponible." : ""}`;
+    syncMarks();
     draw();
   }
 
@@ -196,14 +331,19 @@ const circuitMap = (() => {
     showView();
   }
 
-  function render(event, label) {
+  function render(event, label, nextPrediction, selectedId, onSelect) {
     const cut = el("cut");
     const cutText = label ?? "Sin corte";
+    const changed = prediction !== nextPrediction || selected !== selectedId || cut.textContent !== cutText;
     if (cut.textContent !== cutText) cut.textContent = cutText;
-    if (currentEvent === event) return;
-    currentEvent = event;
+    prediction = nextPrediction;
+    selected = selectedId;
+    onPick = onSelect;
     const next = event ? circuitKey(event) : null;
-    if (key === next) return;
+    if (key === next) {
+      if (changed && track) { syncMarks(); draw(); }
+      return;
+    }
     key = next;
     if (!next) {
       setTrack(null, "No hay trazado local verificado para este GP.");
@@ -219,7 +359,7 @@ const circuitMap = (() => {
     });
     void tracks.then((index) => {
       if (key !== next) return;
-      if (!index) key = null;
+      if (!index) key = undefined;
       setTrack(index?.get(next), index ? "No hay trazado local verificado para este GP." : "No se pudo cargar el trazado local.");
     });
   }
@@ -229,6 +369,11 @@ const circuitMap = (() => {
     draw();
   }
 
+  select.addEventListener("change", () => onPick?.(select.value));
+  overlay.addEventListener("click", (event) => {
+    const id = event.target.closest("[data-driver]")?.dataset.driver;
+    if (id) onPick?.(id);
+  });
   el("orbit").addEventListener("click", () => { prefer3d = true; showView(); });
   el("top").addEventListener("click", () => { prefer3d = false; showView(); });
   el("turn").addEventListener("click", () => { camera.azimuth += Math.PI / 8; draw(); });

@@ -7,8 +7,8 @@ Probabilidades de los tres puestos de la clasificación oficial del GP principal
 ## Entrega
 
 - **Catar 2026:** [22 pilotos, cuatro probabilidades y corte UTC](site/data/upcoming.json). Corte congelado `2026-11-22 04:22:54.481 UTC`, antes de FP1; el roster es el último fechado de clasificación en Las Vegas, provisional para Catar. Incluye a Rafael Câmara en Haas, no a Esteban Ocon. MAP: Verstappen → Antonelli → Norris, **0,9322%** conjunto. [Horario del GP](https://www.formula1.com/en/latest/article/formula-1-qatar-airways-qatar-grand-prix-2026.3XJyoYSnpJEcuZovstTdcG): FP1 **27 nov 13:30 UTC**; T−30 **29 nov 15:30 UTC**; carrera **29 nov 16:00 UTC**. El corte T−30 no ha ocurrido; arrancar el comando armado que se indica abajo.
-- **GitHub Pages:** muestra la última proyección previa publicada y el análisis agregado. No sirve archivos de carrera, el mapa local ni señal en directo.
-- **São Paulo 2026:** repetición local de 71 vueltas y dos cortes previos reconstruidos. Hasta la vuelta 36, el replay parcial coincide exactamente con los primeros 38 cortes de la carrera completa. La gráfica y el ranking se limitan al corte elegido.
+- **GitHub Pages:** muestra la última previa publicada, el análisis agregado y los [dos últimos podios](https://hibra999.github.io/F1-AwesomeMachinePredictor/#resultados). Compara la terna T−30 puesto por puesto; distingue una emisión real de un backtest, una clasificación provisional de una final y un acierto exacto de un piloto correcto en otro puesto. No sirve cronometraje, posiciones ni archivos de carrera.
+- **São Paulo 2026:** repetición local con 71 vueltas y dos previas reconstruidas. Muestra los pilotos ubicables, el progreso y las salidas de SC y VSC hasta cada corte. El prefijo hasta la vuelta 36 contiene 38 cortes; no usa los eventos posteriores.
 - **Las Vegas 2026:** cronometraje anónimo por SignalR Core verificado durante `SessionStatus=Started`. La mesa local mostró la vuelta 36 con 22 pilotos y un archivo de 1 s de antigüedad. Al desconectar el navegador en la vuelta 37, conservó el corte y la tabla e indicó que no podía actualizar. No se rellenan huecos. El antiguo Gist público no se usa ni se actualiza.
 
 ## Resultados
@@ -69,7 +69,7 @@ El [estudio agregado](reports/analysis-inspection.json) resume tamaños de aline
 - [FastF1](https://docs.fastf1.dev/api_reference/livetiming.html) cubre cronometraje histórico moderno, pero la prueba directa del archivo de 2025 sin cuenta devolvió 401; [documentación de acceso](https://docs.fastf1.dev/api_reference/accounts_auth.html) indica suscripción para la mayoría de los datos. `--no-auth` del CLI instalado falló pasando `None` a `signalrcore`; una suscripción anónima legítima al hub documentado, sin opción de token, recibió señal real. Captura de 74 s en Las Vegas: 804 mensajes, retraso observado 0,66–2,29 s por reloj de paquete incluido Heartbeat. No se garantiza que el subconjunto sin cuenta se mantenga, ni que funcione en todas las sesiones. El repositorio no solicita cuenta ni pago.
 - [OpenF1](https://openf1.org/): histórico nominal desde 2023 sin clave para uso personal (3 req/s, 30/min), alrededor de 3 s de retraso anunciado para el servicio en vivo de pago. En la sesión activa, `position?session_key=latest` **y** una consulta a laps de Abu Dhabi 2025 devolvieron 401: el servidor restringe acceso global al histórico durante la sesión. Acceso positivo fuera de esa ventana no medido en esta ejecución; no se usa OpenF1 en directo.
 - Archivo histórico **sí verificado sin cuenta**: [TracingInsights](https://github.com/TracingInsights/2026), SHA por temporada en `archive.py`. Las exportaciones corrigen relojes al procesar sesiones, no preservan latencia exacta. El backtest de carrera es causal **sobre ese reloj reconstruido**, no evidencia de lo que un operador habría recibido en el milisegundo original. Se excluyen `pos`, lap time oficial corregido, borrados, edad de neumático no demostrada y vueltas sintéticas.
-- [Términos Jolpica](https://github.com/jolpica/jolpica-f1/blob/main/TERMS.md): no comercial, CC BY-NC-SA 4.0. [Derechos Formula 1](https://www.formula1.com/en/information/guidelines.4EOKE9RRqevL4niTK9kWyt): no se reproducen bloques de tiempos, resultados, telemetría ni imágenes oficiales. Solo código, pesos, métricas estadísticas y probabilidades derivadas. `.local/` y credenciales de `gh` quedan fuera del repositorio. No se afirma permiso comercial ni afiliación.
+- [Términos Jolpica](https://github.com/jolpica/jolpica-f1/blob/main/TERMS.md): no comercial, CC BY-NC-SA 4.0. [Derechos Formula 1](https://www.formula1.com/en/information/guidelines.4EOKE9RRqevL4niTK9kWyt): no se redistribuyen tablas completas, tiempos, coordenadas de autos ni imágenes oficiales. La retrospectiva cita los tres puestos comparados y enlaza la clasificación. `.local/` y credenciales de `gh` quedan fuera del repositorio. No se afirma permiso comercial ni afiliación.
 
 ## Windows · PowerShell
 
@@ -110,9 +110,11 @@ uv run --locked python -m f1forecast replay --gp 2026-20 --through-lap 36 --out 
 uv run --locked python -m f1forecast panel --port 8070 --replay .local/replay-stop.json
 ```
 
-Abre [http://127.0.0.1:8070/](http://127.0.0.1:8070/) y elige **Repetición** o **Directo**. El servidor escucha solo en el PC. Si ya hay un panel abierto, detenlo antes de lanzar otro en el mismo puerto.
+Abre [http://127.0.0.1:8070/](http://127.0.0.1:8070/). Si falta el archivo de directo o la sesión terminó, se abre la repetición en pausa a mitad de carrera. **Inicio** retrocede a la primera previa; una repetición parcial abre en su último corte. **Resultados** lleva a una vista separada para no revelar el desenlace mientras reproduces. El servidor escucha solo en el PC.
 
-La mesa incluye mapas de Interlagos, Las Vegas, Lusail y Yas Marina. Usa geometría de OpenStreetMap con [atribución y licencia ODbL](AUDIT.md#trazados-usados-openstreetmap-odbl-10). Se puede girar, ampliar y alternar entre órbita 3D y vista cenital; en equipos sin WebGL queda la vista 2D. La extrusión es gráfica, no altimetría ni GPS de autos.
+Elige un piloto en el mapa, la tabla o la gráfica. En las cuatro pistas, los puntos avanzan en el sentido de carrera sobre el eje de [OpenStreetMap, ODbL](AUDIT.md#trazados-usados-openstreetmap-odbl-10). Representan el progreso **estimado** por último cruce y ritmo observado, no GPS. Sin evidencia reciente no se extrapola otra vuelta. Mapa, pastel y tabla usan el mismo color por equipo. Sin WebGL funciona la vista 2D; la extrusión 3D no mide elevación.
+
+**SC** cuenta despliegues físicos; **VSC**, períodos virtuales. Empezar a recibir señal tarde da un mínimo (`≥`); «Sin dato» no significa cero. Los cortes antiguos que no guardaron posiciones se conservan sin inventarlas. El pastel reparte un solo puesto entre pilotos (100 %). El cambio de P(podio) entre cortes se expresa en puntos porcentuales, no en puestos ganados.
 
 Para Catar, inicia `watch` en una consola cuando se abra la sesión Race, unos minutos antes de la salida. Abre el panel en otra consola:
 
@@ -129,6 +131,9 @@ No necesitas credenciales de GitHub. El HTML consulta el archivo local cada 3 s 
 uv run --locked python -m f1forecast schedule --gp 2026-22
 # Armar antes del 29 nov 2026 a las 15:30 UTC y mantener Windows despierto.
 uv run --locked python -m f1forecast forecast --gp 2026-22 --horizon pre_race --wait --out site/data/upcoming.json
+# Después de un GP terminado, actualizar la retrospectiva local y su copia estática.
+uv run --locked python -m f1forecast.recent_results --refresh
+python -m f1forecast.analysis_data
 python -m f1forecast.pages
 ```
 

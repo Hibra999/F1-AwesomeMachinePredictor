@@ -7,7 +7,9 @@
   <title>Mesa de carrera · Podio probable</title>
   <link rel="stylesheet" href="/styles.css">
   <link rel="stylesheet" href="/race.css">
+  <link rel="stylesheet" href="/map.css">
   <script src="/vendor/plotly-basic.min.js" defer></script>
+  <script src="/insights.js" defer></script>
   <script src="/circuit-map.js" defer></script>
   <script src="/app.js" defer></script>
 </head>
@@ -16,14 +18,14 @@
   <header class="masthead">
     <div class="shell local-masthead">
       <div class="wordmark"><span class="wordmark-mark" aria-hidden="true"></span>Podio<span>probable</span> <span class="badge">Mesa local</span></div>
-      <nav aria-label="Mesa local"><a href="./analysis.html">Análisis técnico</a></nav>
+      <nav aria-label="Mesa local"><a href="#circuit-panel">Mapa</a><a href="#timeline-panel">Cronología</a><a href="./analysis.html#resultados">Resultados</a><a href="./analysis.html">Análisis</a></nav>
       <p id="live-status" role="status">Esperando datos…</p>
     </div>
   </header>
   <main id="race-desk" class="shell">
     <section class="race-header" aria-labelledby="event-name">
       <div>
-        <p class="eyebrow">Mesa de carrera / Predicción</p>
+        <p class="eyebrow">Mesa de carrera / Cronometraje y pronóstico</p>
         <h1 id="event-name">Mesa de carrera</h1>
         <div class="race-badges">
           <span id="mode" class="badge">Directo</span>
@@ -32,14 +34,19 @@
         </div>
       </div>
       <div class="race-controls">
-        <p class="micro">Corte mostrado</p>
-        <p id="race-lap">—</p>
+        <p class="micro">Consultar sesión</p>
         <label for="mode-select">Modo de consulta</label>
         <select id="mode-select">
           <option value="live">Directo</option>
           <option value="replay">Repetición</option>
         </select>
       </div>
+    </section>
+    <section id="race-facts" class="panel race-facts" aria-label="Distancia y neutralizaciones hasta el corte" hidden>
+      <div class="lap-fact"><span class="micro">Vuelta del líder</span><strong id="race-lap">—</strong><progress id="lap-progress" aria-label="Distancia completada" hidden></progress></div>
+      <div><span class="micro">Safety car · SC</span><strong id="race-sc">—</strong><span class="fact-caption">Salidas a pista</span></div>
+      <div><span class="micro">Virtual · VSC</span><strong id="race-vsc">—</strong><span class="fact-caption">Períodos virtuales</span></div>
+      <p id="fact-note" class="fact-caption"></p>
     </section>
 
     <div id="notice" class="panel race-notice" role="status" hidden>
@@ -70,12 +77,13 @@
           <button id="circuit-reset" class="button" type="button">Centrar</button>
           <button id="circuit-expand" class="button" type="button" aria-expanded="false" aria-controls="circuit-stage">Ampliar mapa</button>
         </div>
-        <p id="circuit-status" class="muted chart-note">Trazado de referencia; sin posiciones de autos.</p>
+        <p id="circuit-status" class="muted chart-note">Esperando cronometraje para ubicar a los pilotos.</p>
         <p id="circuit-credit" class="muted chart-note" hidden><a href="https://www.openstreetmap.org/copyright">© colaboradores de OpenStreetMap</a> · <a href="https://opendatacommons.org/licenses/odbl/1-0/">ODbL 1.0</a> · <a id="circuit-source">Trazado fuente</a></p>
       </section>
       <section id="timing-tower" class="panel timing-tower" aria-labelledby="ranking-title">
         <p class="eyebrow">02 / Torre de probabilidades</p>
-        <h2 id="ranking-title">Pilotos</h2>
+        <h2 id="ranking-title">¿Quién llega al podio?</h2>
+        <p class="muted chart-note">Ordenado por probabilidad, no por posición en pista. Elige un piloto para seguirlo.</p>
         <div class="table-scroll">
           <table id="ranking" aria-label="Clasificación por probabilidades">
             <thead>
@@ -103,6 +111,7 @@
         </div>
         <input id="timeline" type="range" min="0" max="0" value="0" step="1">
         <div class="race-transport">
+          <button id="first-cut" class="button" type="button">Inicio</button>
           <button id="previous" class="button" type="button">Anterior</button>
           <button id="play" class="button primary" type="button">Reproducir</button>
           <button id="pause" class="button" type="button">Pausar</button>
@@ -132,6 +141,7 @@
         <p>Probabilidad de esos tres pilotos en ese orden: <strong id="joint-probability"></strong></p>
       </section>
     </div>
+    <section id="probability-insights" class="insight-grid" aria-label="Distribución y cambios de probabilidad" hidden></section>
     <dialog id="circuit-dialog" aria-labelledby="circuit-title"></dialog>
 
     <dl id="publication" class="panel race-metadata" hidden>

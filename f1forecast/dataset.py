@@ -145,7 +145,7 @@ def load_corpus(path):
     return joblib.load(path)
 
 
-def snapshots(row, records, *, pre_fp1_cutoff=None, through=None):
+def snapshots(row, records, *, pre_fp1_cutoff=None, through=None, race_context=None):
     gp = row["gp"]
     events = row["events"]
     fp1 = gp["fp1"] - FP1_LEAD if pre_fp1_cutoff is None else pre_fp1_cutoff
@@ -157,7 +157,7 @@ def snapshots(row, records, *, pre_fp1_cutoff=None, through=None):
                 yield snap
     if through is not None and through < gp["race"]:
         return
-    state = RaceState(gp, history_at(records, gp["race"], gp["id"]))
+    state = RaceState(gp, history_at(records, gp["race"], gp["id"]), race_context=race_context)
     yield from race_snapshots(state, events, through if through is not None else float("inf"))
 
 

@@ -155,8 +155,115 @@ def history_at(records, cutoff: float, gp_id: str | None = None) -> History:
     return hist
 
 
+class RaceContext:
+    """Local display only. Never use these values as model inputs."""
+
+    def __init__(self, total_laps=None, *, prior=None):
+        prior = prior or {}
+        self.total_laps = prior.get("total_laps") or total_laps
+        self.phase = None
+        self.start = None
+        self.track = None
+        self.joined_late = False
+        self.track_known = prior.get("safety_cars") is not None
+        self.resuming = self.track_known
+        self.partial = True
+        self.counts = {"4": prior.get("safety_cars") or 0, "6": prior.get("virtual_safety_cars") or 0}
+        self.episode = None
+        self.crossings = {}
+        self.unavailable = set()
+        self.last_at = float("-inf")
+
+    def apply(self, e):
+        if e.get("session") != "Race":
+            return
+        at, kind = e["at"], e["kind"]
+        self.last_at = at
+        source_at = e.get("source_at")
+        if source_at is not None and (source_at > at or self.start is not None and source_at < self.start):
+            return
+        if kind == "session":
+            if type(total := e.get("total_laps")) is int and total > 0:
+                self.total_laps = total
+            phase = e.get("status")
+            if e.get("initial"):
+                self.joined_late = self.resuming or phase != "Inactive" or (e.get("current_lap") or 0) > 1
+            if phase != self.phase:
+                if phase == "Started":
+                    # A Started subscription snapshot is not the start signal.
+                    if self.phase in {None, "Inactive"} and not self.joined_late:
+                        self.start = at if source_at is None else source_at
+                        self.track_known = self.track in {"1", "2"}
+                        self.partial = not self.track_known
+                elif phase != "Finished":
+                    self.crossings.clear()
+                    self.episode = None
+                self.phase = phase
+        elif kind == "track":
+            self.track = status = str(e["status"])
+            if self.phase != "Started" or status not in {"1", "2", "4", "5", "6", "7"}:
+                return
+            self.track_known = True
+            if self.start is not None and self.start in (at, source_at):
+                self.partial = False
+            # An active car on reconnect may be the last deployment counted before the gap.
+            if status in self.counts and status != self.episode and not (self.resuming and self.counts[status]):
+                self.counts[status] += 1
+            if status == "5":
+                self.crossings.clear()
+            if status != "2":  # A sector yellow is not a new deployment or a confirmed restart.
+                self.resuming = False
+                self.episode = "6" if status == "7" else status
+        elif kind == "driver_status":
+            driver = e["driver"]
+            if e["unavailable"]:
+                self.unavailable.add(driver)
+                self.crossings.pop(driver, None)
+            else:
+                self.unavailable.discard(driver)
+        elif kind == "pit":
+            self.crossings.pop(e["driver"], None)
+        elif kind == "lap" and self.phase in {"Started", "Finished"} and self.track != "5":
+            driver, lap = e["driver"], e["lap"]
+            # Live source timestamp for position; receipt time remains the publication cutoff.
+            crossed = e.get("crossed_at", at)
+            last = self.crossings.get(driver)
+            if (driver in self.unavailable or crossed is None or not isfinite(crossed) or crossed > at
+                    or self.start is not None and crossed < self.start):
+                self.crossings.pop(driver, None)
+                return
+            if last and (lap <= last[0] or crossed <= last[1]):
+                return
+            seconds = e.get("seconds")
+            if seconds is None and "crossed_at" in e and last and lap == last[0] + 1:
+                seconds = crossed - last[1]
+            # Started includes formation; a missing first lap or archive pit interval is not a pace.
+            pace = seconds if seconds is not None and 45 <= seconds <= 240 else None
+            if self.phase == "Finished" or self.total_laps is not None and lap >= self.total_laps:
+                pace = None
+            self.crossings[driver] = (lap, crossed, pace)
+
+    def snapshot(self, cutoff, drivers):
+        if cutoff < self.last_at:
+            raise ValueError("race context cannot look backwards")
+        markers = {}
+        for driver in drivers:
+            if last := self.crossings.get(driver):
+                _, crossed, pace = last
+                age = cutoff - crossed
+                if age == 0:
+                    markers[driver] = 0.0
+                elif pace and 0 < age < pace:
+                    # Never wrap a silent car through a crossing that was not observed.
+                    markers[driver] = min(0.99999, round(age / pace, 5))
+        return {"total_laps": self.total_laps, "safety_cars": self.counts["4"] if self.track_known else None,
+                "virtual_safety_cars": self.counts["6"] if self.track_known else None,
+                "partial": self.partial, "markers": markers}
+
+
 class RaceState:
-    def __init__(self, gp: dict, history: History):
+    def __init__(self, gp: dict, history: History, *, race_context=None):
+        self.race_context = race_context
         self.gp = gp
         self.history = history
         self.roster = {d["id"]: d for d in history.roster}
@@ -189,6 +296,10 @@ class RaceState:
             raise ValueError(f"out-of-order or invalid receipt time: {at}")
         self.last_at = at
         kind, d = e["kind"], e.get("driver")
+        if self.race_context is not None:
+            self.race_context.apply(e)
+        if kind == "driver_status":
+            return  # Local map signal, not a model feature or a lap cut.
         sources = e["source"]
         for item in sources if isinstance(sources, list) else (sources,):
             self.sources.add(item["url"] if isinstance(item, dict) else item)

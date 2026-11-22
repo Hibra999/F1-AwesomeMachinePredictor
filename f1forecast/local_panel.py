@@ -4,7 +4,7 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 
 
-from .analysis_data import ANALYSIS_JSON
+from .analysis_data import ANALYSIS_JSON, RECENT_JSON
 
 
 def serve_panel(*, port: int, live: Path, replay: Path):
@@ -16,12 +16,15 @@ def serve_panel(*, port: int, live: Path, replay: Path):
         "/index.html": (panel / "index.html", "text/html; charset=utf-8"),
         "/app.js": (panel / "app.js", "text/javascript; charset=utf-8"),
         "/race.css": (panel / "styles.css", "text/css; charset=utf-8"),
+        "/map.css": (panel / "map.css", "text/css; charset=utf-8"),
         "/circuit-map.js": (panel / "circuit-map.js", "text/javascript; charset=utf-8"),
         "/circuits.json": (panel / "circuits.json", "application/json"),
         "/styles.css": (site / "styles.css", "text/css; charset=utf-8"),
         "/analysis.html": (site / "analysis.html", "text/html; charset=utf-8"),
         "/analysis.css": (site / "analysis.css", "text/css; charset=utf-8"),
         "/analysis.js": (site / "analysis.js", "text/javascript; charset=utf-8"),
+        "/insights.js": (site / "insights.js", "text/javascript; charset=utf-8"),
+        f"/{RECENT_JSON}": (site / RECENT_JSON, "application/json"),
         f"/{ANALYSIS_JSON}": (site / ANALYSIS_JSON, "application/json"),
         "/vendor/plotly-basic.min.js": (site / "vendor/plotly-basic.min.js", "text/javascript; charset=utf-8"),
         "/data/live.json": (live, "application/json"),

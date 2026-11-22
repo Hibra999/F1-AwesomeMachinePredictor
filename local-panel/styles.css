@@ -23,7 +23,16 @@
 .race-header h1 { margin-block: 0 .5rem; font-size: clamp(1.6rem, 3.8vw, 2.85rem); line-height: 1; letter-spacing: -.06em; }
 .race-controls { min-width: min(100%, 12rem); border-inline-start: 1px solid var(--line); padding-inline-start: .85rem; }
 .race-controls label, .race-row label:not(#checkpoint) { display: block; margin-top: .3rem; color: var(--muted); font-size: .78rem; }
-#race-lap { font: bold 1.3rem var(--mono); }
+.race-facts { display: grid; grid-template-columns: minmax(0, 1.2fr) repeat(2, minmax(0, 1fr)); gap: .45rem 1rem; margin: 0 0 .85rem; padding: .8rem clamp(.7rem, 2vw, 1.4rem); }
+.race-facts > div { display: grid; align-content: start; gap: .15rem; min-width: 0; }
+.race-facts > div:not(:first-child) { border-left: 1px solid var(--line); padding-left: 1rem; }
+.race-facts strong { font: 750 clamp(1.1rem, 2.5vw, 1.9rem)/1.25 var(--mono); }
+.lap-fact strong { color: var(--mint); }
+.fact-caption { color: var(--muted); font-size: .75rem; }
+#fact-note { grid-column: 1 / -1; }
+#lap-progress { height: .36rem; width: min(100%, 15rem); border: 0; border-radius: .3rem; accent-color: var(--mint); }
+#lap-progress::-webkit-progress-bar { background: var(--line); border-radius: .3rem; }
+#lap-progress::-webkit-progress-value { background: var(--mint); border-radius: .3rem; }
 .race-grid {
   display: grid;
   grid-template-columns: minmax(19rem, .95fr) minmax(22rem, 1.75fr) minmax(14rem, .8fr);
@@ -65,6 +74,10 @@
 #ranking td:first-child { color: var(--muted); }
 #ranking button { min-height: 2.35rem; padding: .2rem .32rem; border-color: transparent; color: var(--muted); background: transparent; }
 #ranking th[aria-sort="descending"] button { color: var(--accent); border-color: var(--line); background: var(--panel-raised); }
+#ranking .driver-pick { display: block; min-height: 1.8rem; text-align: start; padding: 0 .2rem; font: 700 .88rem/1.25 system-ui, sans-serif; color: var(--fg); }
+#ranking .driver-pick[aria-pressed="true"] { color: var(--accent); }
+#ranking tr:has(.driver-pick[aria-pressed="true"]) { background: color-mix(in srgb, var(--accent) 8%, var(--panel)); }
+#ranking td:first-child { border-inline-start: 3px solid var(--car); }
 .driver-team { display: block; color: var(--muted); font-weight: normal; line-height: 1.25; }
 #chart { width: 100%; height: 320px; }
 #chart-empty { margin-top: .65rem; font-size: .85rem; }
@@ -83,12 +96,7 @@
   overflow: hidden;
   border: 1px solid var(--line);
   border-radius: .36rem;
-  background:
-    linear-gradient(#8adad014 1px, transparent 1px),
-    linear-gradient(90deg, #8adad014 1px, transparent 1px),
-    radial-gradient(ellipse at center, #1a3033, #0b151a 76%);
-  background-position: center;
-  background-size: 1.65rem 1.65rem, 1.65rem 1.65rem, auto;
+  background: var(--bg);
 }
 .circuit-stage canvas, .circuit-stage svg { position: absolute; inset: 0; width: 100%; height: 100%; }
 .circuit-stage canvas { cursor: grab; touch-action: none; }
@@ -134,7 +142,7 @@
 @media (max-width: 49rem) {
   .race-grid {
     grid-template-columns: minmax(0, 1fr);
-    grid-template-areas: "map" "tower" "timeline" "chart" "podium";
+    grid-template-areas: "map" "timeline" "podium" "chart" "tower";
   }
   .table-scroll { max-height: 22rem; }
   #ranking thead { position: sticky; top: 0; z-index: 1; background: var(--panel); }
@@ -146,6 +154,9 @@
   .race-grid .panel, .race-notice, #publication { padding: .7rem; }
   .race-badges { gap: .35rem; }
   .race-controls { border: 0; padding: 0; }
+  .race-facts { gap: .5rem; }
+  .race-facts > div:not(:first-child) { padding-left: .5rem; }
+  .race-facts .micro { font-size: .65rem; }
   #ranking { font-size: .73rem; }
   #ranking th, #ranking td { padding-inline: .1rem; }
   #ranking button { padding-inline: .22rem; }

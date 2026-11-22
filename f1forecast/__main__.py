@@ -7,7 +7,7 @@ from time import sleep
 
 from .dataset import (FINAL_LAST_ROUND, FINAL_YEAR, TRAIN_YEARS, document_events, examples,
                       load_corpus, prepare, records_for, snapshots)
-from .engine import RaceState, asof, history_at, ordered, utc
+from .engine import RaceContext, RaceState, asof, history_at, ordered, utc
 from .leakage import verify_leakage
 from .pages import SITE, UPCOMING, verify_forecast
 from .publication import append_cut, event_card, new_feed, now, prediction, read_file, write_file
@@ -18,6 +18,9 @@ from .training import evaluate, sealed_model, train
 SOURCE_RECORDING = "TracingInsights / FastF1: reloj histórico reconstruido, no recepción en directo. Resultados: Jolpica-F1 / FIA."
 SOURCE_LIVE = "Live Timing SignalR Core sin cuenta; hora UTC de recepción en el PC. Pronósticos conservados en local."
 SOURCE_FORECAST = "FIA y calendario oficial; forma y ritmo de cronometraje anterior (TracingInsights/FastF1). Resultados: Jolpica-F1 / FIA."
+# Weekend timetable, not the last intended LapCount in the retrospective archive.
+REPLAY_TIMETABLES = {"2026-20": (71, "https://www.formula1.com/en/latest/article/"
+                                 "formula-1-msc-cruises-grande-premio-de-sao-paulo-2026.3nFWRAkowAY3uUyvw6O0eJ")}
 
 
 def paths(work):
@@ -101,6 +104,12 @@ def freeze(args, work, bundle, records):
                       "entrants": len(cut["drivers"]), "method": cut["method"]}, ensure_ascii=False))
 
 
+def _local_cut(bundle, snap, context, published=None):
+    cut = prediction(bundle, snap, published=published)
+    cut["race_context"] = context.snapshot(snap.cutoff, snap.ids)
+    return cut
+
+
 def replay(args, bundle, data, records):
     row = row_for(args.gp, data)
     if not row["recorded_laps"]:
@@ -111,10 +120,12 @@ def replay(args, bundle, data, records):
                       default=None)
         if through is None:
             raise ValueError("requested lap crossing was not recorded")
-    feed = new_feed(row["gp"], "replay", SOURCE_RECORDING, row["recorded_laps"])
-    feed["evidence_urls"] = [row["source"]]
-    for snap in snapshots(row, records, through=through):
-        append_cut(feed, prediction(bundle, snap))
+    planned, timetable = REPLAY_TIMETABLES.get(args.gp, (row["gp"].get("scheduled_laps"), None))
+    context = RaceContext(planned)
+    feed = new_feed(row["gp"], "replay", SOURCE_RECORDING, planned)
+    feed["evidence_urls"] = [row["source"]] + ([timetable] if timetable else [])
+    for snap in snapshots(row, records, through=through, race_context=context):
+        append_cut(feed, _local_cut(bundle, snap, context))
     feed["complete"] = through is None
     if not feed["predictions"]:
         raise ValueError("no reconstructed predictions to publish")
@@ -138,7 +149,10 @@ def watch(args, work, bundle, records):
             raise ValueError("cannot replace another GP or mode's frozen cuts")
         feed = saved
     published_laps = {p["lap"] for p in feed["predictions"] if p["lap"] is not None}
-    state = RaceState(gp, history_at(records, now(), gp["id"]))
+    prior = next((p["race_context"] for p in reversed(feed["predictions"])
+                  if p["horizon"] == "race" and p.get("race_context")), None)
+    context = RaceContext(gp.get("scheduled_laps"), prior=prior)
+    state = RaceState(gp, history_at(records, now(), gp["id"]), race_context=context)
     docs = get_documents(gp, work, as_of=min(now(), gp["race"]))
     for e in ordered([*document_events(docs), *_read_events(args.events)], now()):
         state.apply(e)
@@ -151,7 +165,6 @@ def watch(args, work, bundle, records):
         for e in batch:
             state.apply(e)
             if e.get("total_laps"):
-                feed["event"]["scheduled_laps"] = int(e["total_laps"])
                 gp["scheduled_laps"] = int(e["total_laps"])
         lap = state.last_lap
         phase = next((e["status"] for e in batch if e["kind"] == "session"), None)
@@ -159,13 +172,13 @@ def watch(args, work, bundle, records):
         if not initial and lap > previous and lap not in published_laps:
             snap = state.snapshot("race", at, lap=lap)
             if snap is not None:
-                append_cut(feed, prediction(bundle, snap, published=now()))
+                append_cut(feed, _local_cut(bundle, snap, context, published=now()))
                 published_laps.add(lap)
                 _publish(feed, args.out)
                 lag = next((at - e["source_at"] for e in batch if e.get("source_at") is not None), None)
                 print(f"Live lap {lap} · cutoff {utc(at)} · packet lag {lag}", flush=True)
         finish_seen |= phase == "Finished"
-        distance = feed["event"]["scheduled_laps"]
+        distance = context.total_laps
         if phase in {"Finalised", "Ends"} or (finish_seen and distance is not None and lap >= distance):
             if not initial and published_laps:
                 feed["complete"] = True

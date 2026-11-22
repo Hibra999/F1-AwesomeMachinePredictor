@@ -36,7 +36,7 @@ const pct = number({ style: "percent", maximumFractionDigits: 2 });
 const signed = number({ signDisplay: "exceptZero", maximumFractionDigits: 6 });
 const theme = getComputedStyle(document.querySelector(".lab"));
 const token = (name) => theme.getPropertyValue(`--${name}`).trim();
-const colors = { fg: token("fg"), muted: token("muted"), line: token("line"), accent: token("accent"), mint: token("mint"), gold: token("gold"), blue: token("lab-blue") };
+const colors = { fg: token("fg"), muted: token("muted"), line: token("line"), accent: token("accent"), mint: token("mint"), gold: token("gold"), blue: token("lilac") };
 const familyColors = { lightgbm: colors.blue, ngboost: colors.mint, catboost: colors.accent };
 let report;
 
@@ -138,7 +138,7 @@ function renderEvaluation() {
   plot("scores-plot", [bars(ranked.map(([, v]) => v[metric]), ranked.map(([id]) => models[id] ?? id),
     ranked.map(([id]) => id === block.selected ? colors.mint : id === "reference" ? colors.gold : colors.blue), "Resultado", {
       orientation: "h", customdata: ranked.map(([, v]) => metricText(metric, v[metric])), hovertemplate: "%{y}<br>%{customdata}<extra></extra>",
-    })], { xaxis: { rangemode: "tozero", tickformat: pctMetrics.has(metric) ? ".0%" : undefined }, yaxis: { autorange: "reversed", showgrid: false }, margin: { l: 121, b: 35 } });
+    })], { xaxis: pctMetrics.has(metric) ? { range: [0, 1], dtick: .25, tickformat: ".0%" } : { rangemode: "tozero" }, yaxis: { autorange: "reversed", showgrid: false }, margin: { l: 121, b: 35 } });
   renderCalibration(block);
 
   const folds = report.evaluation.walk_forward[horizon].folds;
@@ -158,7 +158,7 @@ function renderEvaluation() {
     plot("segments-plot", [
       bars(labels, thirds.map((k) => reference.segments[k][metric]), colors.gold, "Referencia"),
       bars(labels, thirds.map((k) => selected.segments[k][metric]), colors.mint, name),
-    ], { barmode: "group", showlegend: true, yaxis: { rangemode: "tozero", tickformat: pctMetrics.has(metric) ? ".0%" : undefined }, margin: { b: 64 } });
+    ], { barmode: "group", showlegend: true, yaxis: pctMetrics.has(metric) ? { range: [0, 1], dtick: .25, tickformat: ".0%" } : { rangemode: "tozero" }, margin: { b: 64 } });
   } else {
     plot("reference-plot", [bars(sources.map(([k]) => k), sources.map(([, count]) => count), colors.blue, "Fuente")],
       { yaxis: { range: [0, coverage.gps * 1.12], title: { text: "GP" } } });

@@ -25,7 +25,7 @@ flowchart TD
 ## Key Directories
 
 - `f1forecast/` owns ingestion, training and forecasts. `site/data/upcoming.json` is the only forecast feed on GitHub Pages. `local-panel/` holds the loopback dashboard, licensed circuit geometry and a derived São Paulo replay.
-- `reports/` holds evaluation and inspection aggregates. `python -m f1forecast.analysis_data` exports them for the shared analysis page. Keep raw timing, classifications, datasets and model bundles in ignored `.local/`.
+- `reports/` holds evaluation aggregates and sourced recent podium comparisons. `python -m f1forecast.analysis_data` exports them for Pages and localhost. Keep raw timing, full classifications, datasets and weights in ignored `.local/`.
 
 ## Delivery
 
@@ -53,6 +53,7 @@ For Rustuna use `train --trials 8` in a separate work directory with training da
 - Python uses four spaces and `snake_case`. Use `YYYY-RR` calendar rounds and uppercase driver codes. Pass history into `RaceState` and the model bundle into prediction functions explicitly.
 - `RaceState.apply()` rejects invalid or decreasing UTC timestamps. Apply all events sharing a timestamp before emitting a lap snapshot. Use receipt time for live cuts; archive clocks do not prove live latency. Preserve `FEATURES` order: sealed learners select columns by index.
 - Freeze each `(horizon, lap)` once. `publication.append_cut()` rejects duplicates; `publication.write_file()` replaces JSON atomically. Reconstructed cuts have `origin: backtest` and `published_utc: null`.
+- Local cuts may carry `race_context`: estimated track markers and observed SC/VSC counts through that cutoff. It is not a model input. Keep completed race results in the retrospective, outside the replay timeline.
 - SignalR callbacks use a locked queue. Browser code uses two spaces, `camelCase`, `async`/`await` and a shared `view` object. Keep UI text in Spanish.
 
 ## Important Files

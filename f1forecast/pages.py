@@ -4,14 +4,15 @@ import json
 from datetime import datetime, timedelta
 from math import isclose
 from pathlib import Path
+from urllib.parse import urlsplit
 
-from .analysis_data import ANALYSIS_JSON, analysis_data
+from .analysis_data import ANALYSIS_JSON, RECENT_JSON, analysis_data
 
 SITE = Path(__file__).resolve().parents[1] / "site"
 UPCOMING = SITE / "data" / "upcoming.json"
 FILES = {
     "index.html", "styles.css", "app.js", "data/upcoming.json",
-    "analysis.html", "analysis.css", "analysis.js", ANALYSIS_JSON,
+    "analysis.html", "analysis.css", "analysis.js", "insights.js", ANALYSIS_JSON, RECENT_JSON,
     "vendor/plotly-basic.min.js", "vendor/plotly.LICENSE.txt",
 }
 POSITIONS = ("first", "second", "third")
@@ -41,7 +42,7 @@ def verify_forecast(document):
     for cut in document["predictions"]:
         horizon = cut["horizon"]
         if (cut["origin"] != "published" or cut["lap"] is not None or horizon in seen
-                or horizon not in {"fp1", "pre_race"}):
+                or horizon not in {"fp1", "pre_race"} or "race_context" in cut):
             raise ValueError("Pages cannot contain reconstructed, live or duplicate cuts")
         seen.add(horizon)
         at, issued = _time(cut["cutoff_utc"]), _time(cut["published_utc"])
@@ -72,6 +73,32 @@ def verify_site(root=SITE):
     verify_forecast(json.loads((root / "data" / "upcoming.json").read_text(encoding="utf-8")))
     if json.loads((root / ANALYSIS_JSON).read_text(encoding="utf-8")) != analysis_data(root.parent):
         raise ValueError("public analysis does not match the tracked aggregate reports")
+    recent = json.loads((root / RECENT_JSON).read_text(encoding="utf-8"))
+    if recent != json.loads((root.parent / "reports" / "recent-podiums.json").read_text(encoding="utf-8")):
+        raise ValueError("public podium comparisons do not match the tracked report")
+    if set(recent) != {"races", "pending", "as_of_utc"} or len(recent["races"]) != 2:
+        raise ValueError("expected a retrospective of two recent races")
+    _time(recent["as_of_utc"])
+    public_fields = {"gp", "name", "date", "official", "forecast", "source_url", "result_url", "forecast_urls",
+                     "status", "cutoff_utc", "origin", "model", "published_utc", "names"}
+    for race in [*recent["races"], *recent["pending"]]:
+        if set(race) != public_fields or race["status"] not in {"final", "provisional", "pending"}:
+            raise ValueError("unexpected data in the public podium comparison")
+        for podium in (race["official"], race["forecast"]):
+            if podium is not None and (len(podium) != 3 or len(set(podium)) != 3
+                    or not all(isinstance(code, str) and len(code) == 3 and code.isalpha() and code.isupper() for code in podium)):
+                raise ValueError("invalid retrospective podium")
+        if race["status"] == "final" and not race["official"]:
+            raise ValueError("a final result requires an official podium")
+        if (race["forecast"] is not None and race["origin"] not in {"published", "backtest"}
+                or (race["origin"] == "published") != (race["published_utc"] is not None)
+                or not set(race["names"]) <= set((race["forecast"] or []) + (race["official"] or []))
+                or not all(isinstance(name, str) for name in race["names"].values())):
+            raise ValueError("inconsistent retrospective forecast provenance or driver names")
+        for url in [race["source_url"], *race["forecast_urls"], *([race["result_url"]] if race["result_url"] else [])]:
+            parts = urlsplit(url)
+            if parts.scheme != "https" or not parts.hostname or parts.username or parts.password:
+                raise ValueError("podium evidence must be a public HTTPS URL")
 
 
 if __name__ == "__main__":

@@ -1,0 +1,33 @@
+.circuit-stage {
+  background-color: var(--bg);
+  background-image: linear-gradient(var(--panel-raised) 1px, transparent 1px),
+    linear-gradient(90deg, var(--panel-raised) 1px, transparent 1px);
+  background-size: 1.65rem 1.65rem;
+}
+#circuit-line { stroke: var(--muted); }
+#circuit-3d { color: var(--muted); border-color: var(--line); }
+#circuit-mode { position: static; padding: 0; margin: -.2rem 0 .5rem; background: none; }
+.circuit-marks { pointer-events: none; }
+.circuit-finish { fill: var(--gold); stroke: var(--bg); stroke-width: 1px; }
+.circuit-finish line { stroke: var(--gold); stroke-width: 2px; }
+.circuit-marks [data-driver] { color: var(--car); cursor: pointer; }
+.circuit-marks .selected { color: var(--accent); }
+.circuit-marks circle { pointer-events: all; fill: var(--car); stroke: var(--bg); stroke-width: 1.5px; }
+.circuit-marks .selected circle { stroke: var(--accent); stroke-width: 2.5px; }
+.circuit-marks [data-driver] line { stroke: currentColor; stroke-opacity: .55; }
+.circuit-marks text {
+  pointer-events: all;
+  pointer-events: bounding-box;
+  text-anchor: middle;
+  dominant-baseline: central;
+  font: 700 11px var(--mono);
+  paint-order: stroke;
+  fill: var(--fg);
+  stroke: var(--bg);
+  stroke-width: 3.5px;
+  stroke-linejoin: round;
+}
+.circuit-marks .selected text { fill: var(--accent); }
+.circuit-picker { display: flex; gap: .5rem; align-items: center; margin-top: .55rem; color: var(--muted); font-size: .8rem; }
+.circuit-picker select { min-height: 2rem; padding: .12rem .35rem; font-family: var(--mono); }
+#circuit-dialog .circuit-stage { height: clamp(14rem, 64dvh, 70rem); }

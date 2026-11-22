@@ -6,7 +6,7 @@
     {
       "type": "Feature",
       "id": "interlagos",
-      "properties": {"name":"Interlagos","osm":"relation/6781071","version":6,"coordinates_sha256":"70d7c2edfe813a5de4155c66e4d465bcbb934b635ec63fd5ff395db05eaa05be"},
+      "properties": {"name":"Interlagos","osm":"relation/6781071","version":6,"coordinates_sha256":"70d7c2edfe813a5de4155c66e4d465bcbb934b635ec63fd5ff395db05eaa05be","timing_line":[1,0],"direction":1},
       "geometry": { "type": "LineString", "coordinates": [
         [-46.7004188,-23.7021917], [-46.7001274,-23.7032239], [-46.6999799,-23.7037466], [-46.6999433,-23.7038761], [-46.6993724,-23.705905], [-46.6993279,-23.7060148],
         [-46.6992974,-23.7060795], [-46.6992585,-23.7061458], [-46.6992058,-23.7062252], [-46.6991505,-23.7062925], [-46.6991037,-23.7063339], [-46.6990467,-23.7063777],
@@ -63,7 +63,7 @@
     {
       "type": "Feature",
       "id": "las-vegas",
-      "properties": {"name":"Las Vegas Strip Circuit","osm":"relation/16696508","version":24,"coordinates_sha256":"d0ba680cb8640c4a0d7b6059033f6fe63b8cb9587b1294fa15b3b6a3d07e1a0d"},
+      "properties": {"name":"Las Vegas Strip Circuit","osm":"relation/16696508","version":24,"coordinates_sha256":"d0ba680cb8640c4a0d7b6059033f6fe63b8cb9587b1294fa15b3b6a3d07e1a0d","timing_line":[227,0],"direction":1},
       "geometry": { "type": "LineString", "coordinates": [
         [-115.1618816,36.1092838], [-115.1604566,36.1105837], [-115.160364,36.1107004], [-115.1603395,36.110795], [-115.1603463,36.1108742], [-115.1604157,36.1109842],
         [-115.1605274,36.1110678], [-115.1606445,36.1111163], [-115.1607862,36.1111515], [-115.1609986,36.1111757], [-115.1612056,36.1111669], [-115.1613881,36.1111251],
@@ -109,7 +109,7 @@
     {
       "type": "Feature",
       "id": "lusail",
-      "properties": {"name":"Lusail International Circuit","osm":"relation/21297662","version":4,"coordinates_sha256":"23ebea64dd3ad5650dfe3313afb435785bf75cd376d68619046021ac8f67a56c"},
+      "properties": {"name":"Lusail International Circuit","osm":"relation/21297662","version":4,"coordinates_sha256":"23ebea64dd3ad5650dfe3313afb435785bf75cd376d68619046021ac8f67a56c","timing_line":[266,0.49958],"direction":1},
       "geometry": { "type": "LineString", "coordinates": [
         [51.4479661,25.4919501], [51.447612,25.4925402], [51.4475757,25.4926048], [51.4475488,25.4926731], [51.4475317,25.4927439], [51.4475248,25.4928161],
         [51.4475281,25.4928885], [51.4475416,25.49296], [51.4475651,25.4930293], [51.4475942,25.4930884], [51.4476305,25.4931441], [51.4476737,25.4931957],
@@ -163,7 +163,7 @@
     {
       "type": "Feature",
       "id": "yas-marina",
-      "properties": {"name":"Yas Marina Circuit","osm":"relation/19882715","version":2,"coordinates_sha256":"2f761458ad2618956b08a28921cf2a249461670b35baac936a28f93ba6a9ee9e"},
+      "properties": {"name":"Yas Marina Circuit","osm":"relation/19882715","version":2,"coordinates_sha256":"2f761458ad2618956b08a28921cf2a249461670b35baac936a28f93ba6a9ee9e","timing_line":[49,0],"direction":1},
       "geometry": { "type": "LineString", "coordinates": [
         [54.6064803,24.4675896], [54.606476,24.4676537], [54.6064687,24.4676856], [54.6064549,24.4677248], [54.60644,24.4677573], [54.6064139,24.4678009],
         [54.6063952,24.4678252], [54.6063825,24.4678391], [54.6063628,24.4678537], [54.6063229,24.4678721], [54.6063004,24.4678809], [54.6062745,24.4678905],

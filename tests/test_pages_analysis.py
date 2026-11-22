@@ -5,10 +5,16 @@ from tempfile import TemporaryDirectory
 import unittest
 
 from f1forecast.analysis_data import ANALYSIS_JSON, ROOT
-from f1forecast.pages import verify_site
+from f1forecast.pages import UPCOMING, verify_forecast, verify_site
 
 
 class PagesAnalysisTest(unittest.TestCase):
+    def test_local_timing_markers_cannot_ride_inside_a_public_precut(self):
+        document = json.loads(UPCOMING.read_text(encoding="utf-8"))
+        document["predictions"][0]["race_context"] = {"markers": {"VER": 0.42}}
+        with self.assertRaisesRegex(ValueError, "Pages cannot contain"):
+            verify_forecast(document)
+
     def test_analysis_cannot_publish_data_outside_the_aggregate_export(self):
         with TemporaryDirectory() as directory:
             root = Path(directory)
