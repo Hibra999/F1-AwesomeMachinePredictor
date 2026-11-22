@@ -1,0 +1,10 @@
+# Enmienda previa al cálculo: qué reloj define T−30
+
+El [prerregistro original](https://github.com/Hibra999/F1-AwesomeMachinePredictor/commit/08bb74be0e867dbd86738269fdef1504292adb26) fijó el objetivo, los candidatos y la regla de decisión. Al contrastar horarios para obtener los boletines TAF, **antes de calcular puntuaciones del experimento**, aparecieron dos discrepancias materiales:
+
+- **São Paulo 2024:** el corpus situaba la salida a las 17:00 UTC. [La FIA y F1 anunciaron el cambio](https://www.formula1.com/en/latest/article/new-start-times-confirmed-for-rescheduled-sao-paulo-grand-prix-qualifying.4QL3ZTmlRbGtZgbfjphH8U) la víspera: 12:30 local, **15:30 UTC**. El corte nominal, 16:30 UTC, no era una previa. El corte correcto es **15:00 UTC**.
+- **Las Vegas 2024:** sábado 23 a las 22:00 locales es **domingo 24 a las 06:00 UTC**, según el [programa FIA](https://www.fia.com/sites/default/files/2024-officialmediakit_booklet-digital-11.15.24.pdf). El corpus fechaba la salida un día antes. El corte correcto es el **24 a las 05:30 UTC**.
+
+**Regla de calidad:** contrastar todos los GP de 2022–25 con el [calendario de FastF1](https://github.com/theOehrly/f1schedule/tree/e50468712d66daaaf8d637551798c8ce70891e82). Tomar una revisión anterior tanto al corte nominal como al reconstruido; identificar por evento y fecha, no solo por ronda, pues una cancelación puede renumerar las rondas. Convertir la hora local con el desplazamiento de la revisión o la zona IANA del circuito. La fecha del commit evidencia la versión del archivo, no mide su recepción en un PC.
+
+Se recalculan **los cuatro candidatos y sus controles en el mismo reloj**, con la misma fuente previa y sin eventos de la sesión Race del GP objetivo. Se verifica la disponibilidad de etiquetas y boletines con ese reloj. No se puntúan cortes contaminados ni se rellena un GP sin horario verificable. No cambian variables, regularización, métricas, intervalo ni umbral. Se conservan los informes originales como evidencia histórica; sus cifras nominales no son una validación independiente a T−30 corregido. No se reabre 2026.
