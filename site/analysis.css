@@ -42,6 +42,7 @@
 .lab-card { padding: clamp(.8rem, 2.4vw, 1.25rem); }
 .lab-card h3 { margin: 0 0 .26rem; font-size: 1.17rem; line-height: 1.2; letter-spacing: -.025em; }
 .lab-card .muted { font-size: .83rem; }
+#sanciones > p:not(.eyebrow) { margin-top: .65rem; }
 .lab-card-heading { display: flex; justify-content: space-between; align-items: start; flex-wrap: wrap; gap: .5rem .9rem; }
 .lab-card-heading > div { flex: 1 1 16rem; min-width: 0; }
 .lab-card-heading select { min-height: 2.35rem; }
@@ -76,7 +77,7 @@
 }
 
 @media (max-width: 38rem) {
-  .lab-masthead nav { justify-content: space-between; gap: .5rem; }
+  .lab-masthead nav { flex-wrap: wrap; justify-content: flex-start; gap: .5rem .85rem; }
   .lab-seal { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .lab-periods, .lab-kpis, .lab-control-bar { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .lab-control-bar > :last-child { grid-column: 1 / -1; }

@@ -69,7 +69,7 @@ El ranking acertó un podio exacto más que Elo, pero perdió en ambas métricas
 
 El piloto meteorológico recuperó 11 boletines emitidos para tres aeropuertos de EE. UU.; seis cubrieron carreras de validación. Solo uno mencionaba lluvia a la salida y ninguno apareció en el entrenamiento de esas ventanas. No se pudo estimar el efecto de la lluvia; la puntuación prácticamente idéntica no demuestra que el clima sea irrelevante. No se reentrenó el modelo publicado ni se usaron resultados de 2026 para este contraste.
 
-[Gráfico e intervalos](https://hibra999.github.io/F1-AwesomeMachinePredictor/analysis.html#ranking) · [Cuatro artículos, cuatro repositorios y auditoría de datos FIA/NOAA](reports/metodos-y-datos.md). La siguiente comparación con fundamento es separar ritmo de clasificación y coste de salir retrasado usando parrillas con revisión y fecha de publicación.
+[Gráfico e intervalos](https://hibra999.github.io/F1-AwesomeMachinePredictor/analysis.html#ranking) · [Cuatro artículos, cuatro repositorios y auditoría de datos FIA/NOAA](reports/metodos-y-datos.md). El contraste posterior de sanciones separa el puesto en clasificación del coste de salir retrasado.
 
 Para reproducir desde la raíz después de `prepare` (2022–25):
 
@@ -94,7 +94,7 @@ El primer comando se ejecuta solo si falta el clon. El estudio fija la historia 
 | CatBoost de puestos + dos señales | 3,183 | 0,07400 | 1,611 |
 | Elo, control probabilístico | — | 0,06606 | 1,272 |
 
-ΔMAE con las dos señales frente a CatBoost base: **+0,005 puestos** (IC 95 % pareado por GP: −0,016 a +0,025). ΔBrier frente a Elo: **+0,00794** (IC: +0,00095 a +0,01474). No cumple la regla de mejora; queda como diagnóstico, no sustituye al modelo de podio. Un error medio de tres puestos no significa tres errores de podio. Próximos contrastes: coste de la penalización de parrilla con boletín FIA fechado; ritmos largos separados por compuesto y edad observados; riesgo de abandono del constructor según carreras anteriores. Ninguna de esas mejoras se da por demostrada.
+ΔMAE con las dos señales frente a CatBoost base: **+0,005 puestos** (IC 95 % pareado por GP: −0,016 a +0,025). ΔBrier frente a Elo: **+0,00794** (IC: +0,00095 a +0,01474). No cumple la regla de mejora; queda como diagnóstico, no sustituye al modelo de podio. Un error medio de tres puestos no significa tres errores de podio.
 
 ```powershell
 # Tras preparar el corpus 2022–25 y el clon f1schedule de arriba:
@@ -103,6 +103,32 @@ uv run --locked python -m f1forecast.driver_performance --work .local --gp 2025-
 ```
 
 El segundo comando separa la previsión histórica por piloto de `evaluation_only`. Para probar CatBoost experimental en un GP futuro, ejecuta `uv run --locked python -m f1forecast.driver_performance --work .local --gp 2026-22` **a T−30**; no emite fuera de la ventana ni con una lista de inscritos de otro GP. Se puede añadir `--events entradas.jsonl` con `gp_id`, `at` UTC de recepción, `source`, `kind` y campos del evento. Su historial de ajuste y forma termina en 2025; los eventos conocidos del fin de semana pueden entrar en la instantánea. No escribe en Pages.
+
+### Sanciones de parrilla antes de la salida
+
+[Resultados en Pages](https://hibra999.github.io/F1-AwesomeMachinePredictor/analysis.html#sanciones) · [Mismo panel en localhost](http://127.0.0.1:8070/analysis.html#sanciones) · [Prerregistro sellado](https://github.com/Hibra999/F1-AwesomeMachinePredictor/blob/a57ee7f33fdb89251015616f5421bf2f80383693/reports/prerregistro-sanciones.md) · [Fuentes y límites](reports/fuentes-sanciones.md) · [Resultados por GP](reports/grid-penalties.json).
+
+Solo entra una pérdida numérica cuando coinciden una resolución FIA aplicable y la parrilla anunciada en una revisión anterior a T−30. El control y el candidato usan los mismos pilotos, reloj y temperatura. Un GP sin evidencia conserva la previsión original y su peso en la evaluación. Si Elo ya conocía la parrilla, no se descuenta nada por segunda vez.
+
+Ejemplo: en [Bélgica 2024](https://www.fia.com/documents/championships/fia-formula-one-world-championship-14/season/season-2024-2043/event/Belgian%20Grand%20Prix), la [revisión del sábado](https://en.wikipedia.org/w/index.php?oldid=1237028245) mostraba a Verstappen de 1.º a 11.º. Zhou recibió una sanción nominal de tres puestos, pero pasó de 20.º a 19.º: **ninguna pérdida neta**. Una orden de salir desde boxes no equivale a salir 20.º.
+
+**Resultado:** 75 puestos netos documentados en 22 casos piloto-GP y 15 carreras. El ajuste cambió 20 fuerzas en 13 GP: en un caso Elo ya conocía la parrilla y en otro faltaba el piloto entre los previstos. Se excluyeron 35 órdenes de salida desde boxes. Se identificó la revisión de posiciones en los 48 GP; la revisión disciplinaria fue completa en 45 y parcial para pilotos concretos en tres. No es un censo de sanciones arrastradas de GP anteriores.
+
+| T−30, 48 GP de 2024–25 | Brier de podio ↓ | Log loss ganador ↓ | Ganadores | Podios exactos |
+|---|---:|---:|---:|---:|
+| Elo | 0,06606 | 1,27239 | 26/48 | 6/48 |
+| Elo con descuento por sanción | 0,06502 | 1,26858 | 25/48 | 7/48 |
+
+ΔBrier **−0,00104** (IC 95 % pareado por GP: **−0,00294 a +0,00050**). El intervalo incluye cero: **se conserva Elo**, sin evaluar 2026 para decidir. Entre los 20 casos ajustados y etiquetados, el error absoluto del puesto medio subió de **1,97 a 2,62 puestos**, dando el mismo peso a cada uno de sus 13 GP. Inyectar información posterior al corte no movió ninguna probabilidad conjunta en los 48 GP (`Δ máx.=0`; `atol=1e-12`). La siguiente señal pendiente es el ritmo de tanda condicionado al compuesto y a la edad observada del neumático.
+
+```powershell
+# Desde la raíz, después de prepare (desarrollo 2022–25) y del clon de f1schedule indicado arriba:
+uv run --locked python -m f1forecast.grid_penalties --work .local
+uv run --locked python -m f1forecast.grid_penalties --work .local --offline --out .local/sanciones-repro.json
+uv run --locked python -m f1forecast diagnostico
+```
+
+Los enlaces permanentes identifican el texto de los colaboradores de Wikipedia en inglés ([CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/)); cada resolución remite a la FIA. Las parrillas completas y las cachés no se publican. Los resultados oficiales de carrera son etiquetas, nunca la fuente del puesto de salida.
 
 ### Datos e importancia fuera de muestra
 

@@ -20,6 +20,12 @@ class PagesAnalysisTest(unittest.TestCase):
             root = Path(directory)
             copytree(ROOT / "site", root / "site")
             copytree(ROOT / "reports", root / "reports")
+            # Future source reports may contain per-driver evidence; Pages exports only named aggregates.
+            source = root / "reports" / "grid-penalties.json"
+            penalties = json.loads(source.read_text(encoding="utf-8"))
+            penalties["coverage"]["driver_evidence"] = [{"document": "non-public timing sheet"}]
+            penalties["metrics"]["sanctions"]["by_driver"] = {"example": 0.1}
+            source.write_text(json.dumps(penalties), encoding="utf-8")
             verify_site(root / "site")
 
             path = root / "site" / ANALYSIS_JSON

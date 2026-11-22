@@ -342,6 +342,26 @@ function renderEda() {
   renderImportance(horizon, data);
 }
 
+function renderPenalties() {
+  const { coverage: c, metrics: arms, contrasts, decision } = report.grid_penalties;
+  const [lo, hi] = contrasts.brier.ci95;
+  set("penalty-decision", decision + (lo <= 0 && hi >= 0 ? " El intervalo del Brier incluye cero: no hay una mejora demostrada." : ""));
+  set("penalty-coverage", `Verificamos ${c.places_lost} puestos netos perdidos por ${c.affected_drivers} pilotos-GP. Excluimos ${c.pit_excluded} órdenes de salir desde boxes. Revisión disciplinaria: ${c.fia_reviewed_gps} GP completos y ${c.fia_partial_gps} parciales. El ajuste cambió la fuerza de ${c.rows_changed} de ${c.predicted_drivers} inscritos, en ${c.changed_gps} GP.`);
+  plot("penalty-plot", [bars(["Validados", "Con posición", "Con sanción", "Con pérdida neta"],
+    [c.gps, c.witness_gps, c.decision_gps, c.affected_gps], colors.blue, "GP")],
+    { yaxis: { title: { text: "Grandes Premios" }, rangemode: "tozero" } });
+  const keys = ["brier", "winner_log_loss", "winner_hit", "ordered_hit", "map_members_hit"];
+  ui["penalty-table"].replaceChildren(...[["elo", "Elo"], ["sanctions", "Elo con sanciones"]].map(([key, label]) =>
+    row(label, [fmt(arms[key].gps, integer), ...keys.map((metric) => metricText(metric, arms[key][metric]))])));
+  set("penalty-interval", "Diferencia pareada (con sanciones menos Elo; un valor negativo mejora el resultado): " +
+    ["brier", "winner_log_loss"].map((key) => {
+      const { delta, ci95 } = contrasts[key];
+      return `${metrics[key]} ${fmt(delta, signed)} (IC 95 %: ${ci95.map((n) => fmt(n, signed)).join(" a ")})`;
+    }).join("; ") + ".");
+  const finish = report.grid_penalties.finish_mae;
+  set("penalty-finish", finish.gps ? `Puesto medio de los sancionados: error absoluto de ${fmt(finish.mae.elo, short)} puestos con Elo y ${fmt(finish.mae.sanctions, short)} con el descuento. Solo los ${finish.matched_drivers} pilotos-GP ajustados con resultado conocido, promediados en ${finish.gps} GP. No representa a toda la parrilla.` : "Sin pilotos ajustados con resultado conocido; no se puede medir su error de puesto.");
+}
+
 function renderProtocol() {
   const leakage = report.leakage;
   set("leakage-context", `GP ${leakage.event}, semilla ${leakage.seed}, tolerancia absoluta ${leakage.absolute_tolerance.toExponential()}.`);
@@ -363,6 +383,7 @@ async function load() {
     ui["lab-content"].hidden = false;
     renderEvaluation();
     renderRankingStudy();
+    renderPenalties();
     renderDriverStudy();
     renderTraining();
     renderEda();

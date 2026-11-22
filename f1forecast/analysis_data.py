@@ -20,6 +20,7 @@ def analysis_data(root=ROOT):
     study = _read(root, "analysis-inspection")
     ranking = _read(root, "rank-study")
     drivers = _read(root, "driver-performance")
+    penalties = _read(root, "grid-penalties")
     if (walk["version"] != final["version"] or walk["model_sha256"] != final["model_sha256"]
             or tuning["released_model_unchanged"] != walk["version"]
             or tuning["training_corpus_sha256"] != walk["training_sha256"]
@@ -29,6 +30,11 @@ def analysis_data(root=ROOT):
             or ranking["promoted_to_production"] is not False
             or drivers["corpus_sha256"] != walk["training_sha256"] or drivers["clock_audit"] != ranking["clock_audit"]
             or drivers["scope"] != ranking["scope"] or drivers["promoted_to_production"] is not False
+            or penalties["corpus_sha256"] != walk["training_sha256"] or penalties["scope"] != ranking["scope"]
+            or penalties["clock_audit"] != ranking["clock_audit"]
+            or penalties["metrics"]["elo"]["gps"] != ranking["metrics"]["elo"]["gps"]
+            or abs(penalties["metrics"]["elo"]["brier"] - ranking["metrics"]["elo"]["brier"]) > 1e-12
+            or penalties["promoted_to_production"] is not False
             or study["eda"]["period"]["end_year"] != 2025):
         raise ValueError("analysis mixes incompatible seals or includes final data in tuning/EDA")
 
@@ -68,6 +74,19 @@ def analysis_data(root=ROOT):
             "decision": ranking["decision_primary_only"],
         },
         "driver_performance": {k: drivers[k] for k in ("metrics", "coverage", "contrasts", "decision")},
+        "grid_penalties": {
+            "coverage": {k: penalties["coverage"][k] for k in (
+                "gps", "witness_gps", "decision_gps", "affected_gps", "affected_drivers", "places_lost",
+                "pit_excluded", "predicted_drivers", "rows_changed", "changed_gps", "fia_reviewed_gps", "fia_partial_gps")},
+            "metrics": {arm: {k: penalties["metrics"][arm][k] for k in (
+                "gps", "brier", "winner_log_loss", "winner_hit", "ordered_hit", "map_members_hit")}
+                for arm in ("elo", "sanctions")},
+            "contrasts": {metric: {k: penalties["contrasts"][metric][k] for k in ("delta", "ci95")}
+                          for metric in ("brier", "winner_log_loss")},
+            "finish_mae": {k: penalties["sanctioned_finish_mae"][k] for k in ("gps", "matched_drivers")} |
+                          {"mae": {a: penalties["sanctioned_finish_mae"]["mae"][a] for a in ("elo", "sanctions")}},
+            "decision": penalties["decision"],
+        },
         "eda": study["eda"],
         "leakage": _read(root, "leakage"),
     }
@@ -104,8 +123,25 @@ def print_diagnosis():
     print(f"Puesto final T-30: MAE {metrics['reference']['mae']:.3f} referencia; {metrics['base']['mae']:.3f} "
           f"CatBoost base; {metrics['extended']['mae']:.3f} con compañero y tandas FP1. "
           f"{coverage['matched']}/{coverage['predicted']} previstos con etiqueta. Decisión: {study['decision']}.")
-    print("Próximas pruebas: coste por sanción entre clasificación y parrilla FIA; ritmo de tanda por compuesto y edad; "
-          "riesgo de abandono por equipo basado en salidas previas. Exigir fuente fechada y mejora por GP.")
+    penalties = report["grid_penalties"]
+    c = penalties["coverage"]
+    print(f"Sanciones T−30, validación pareada 2024–25: {c['gps']} GP, incluidos los que carecen de evidencia. "
+          f"Posición numerada en {c['witness_gps']} GP; sanción FIA en {c['decision_gps']}. "
+          f"Revisión disciplinaria: {c['fia_reviewed_gps']} GP completos y {c['fia_partial_gps']} parciales.")
+    print(f"  {c['places_lost']} puestos netos perdidos (no nominales) por {c['affected_drivers']} pilotos-GP "
+          f"en {c['affected_gps']} GP; {c['pit_excluded']} órdenes de salir desde boxes excluidas. "
+          f"Ajuste en {c['changed_gps']} GP, {c['rows_changed']}/{c['predicted_drivers']} pilotos-GP. Sin prueba no se ajusta.")
+    for key, label in (("brier", "Brier podio"), ("winner_log_loss", "Log loss ganador")):
+        contrast = penalties["contrasts"][key]
+        lo, hi = contrast["ci95"]
+        print(f"  {label}: Elo {penalties['metrics']['elo'][key]:.5f}; con sanciones "
+              f"{penalties['metrics']['sanctions'][key]:.5f}; Δ {contrast['delta']:+.5f} (IC 95 % {lo:+.5f}, {hi:+.5f}).")
+    finish = penalties["finish_mae"]
+    if finish["gps"]:
+        print(f"  Error de puesto medio en los sancionados con ajuste y etiqueta: {finish['mae']['elo']:.2f} Elo "
+              f"y {finish['mae']['sanctions']:.2f} con sanciones ({finish['matched_drivers']} pilotos-GP; {finish['gps']} GP).")
+    print(f"  {penalties['decision']} Sin selección con 2026 ni cambios en producción.")
+    print("Próxima prueba: ritmo de tanda por compuesto y edad del neumático. Exigir fuente fechada y mejora por GP.")
 
 
 if __name__ == "__main__":

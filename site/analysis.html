@@ -18,7 +18,7 @@
     <div class="shell masthead-inner lab-masthead">
       <a class="wordmark" href="./"><span class="wordmark-mark" aria-hidden="true"></span>Podio<span>probable</span></a>
       <nav aria-label="Secciones del laboratorio">
-        <a href="#resultados">Dos últimos GP</a><a href="#evaluacion">Evaluación</a><a href="#pilotos">Pilotos</a><a href="#ranking">Ranking T−30</a><a href="#entrenamiento">Rustuna</a><a href="#datos">Datos</a>
+        <a href="#resultados">Dos últimos GP</a><a href="#evaluacion">Evaluación</a><a href="#pilotos">Pilotos</a><a href="#ranking">Ranking T−30</a><a href="#sanciones">Sanciones</a><a href="#entrenamiento">Rustuna</a><a href="#datos">Datos</a>
       </nav>
       <a href="./" class="lab-back">← Inicio</a>
     </div>
@@ -109,6 +109,26 @@
         <div id="ranking-plot" class="lab-plot" role="img" aria-label="Diferencia de Brier con intervalo pareado del 95 %. A la izquierda de cero mejora el candidato."></div>
         <p id="ranking-interval" class="muted"></p>
         <p class="lab-links"><a href="https://github.com/Hibra999/F1-AwesomeMachinePredictor/blob/main/reports/metodos-y-datos.md">Artículos, repositorios y fuentes ↗</a><a href="https://github.com/Hibra999/F1-AwesomeMachinePredictor/blob/main/reports/prerregistro-ranking-t30.md">Prerregistro ↗</a><a href="https://github.com/Hibra999/F1-AwesomeMachinePredictor/blob/main/reports/enmienda-reloj-t30.md">Corrección de horarios ↗</a></p>
+      </section>
+
+      <section id="sanciones" class="lab-section panel lab-card" aria-labelledby="penalty-title">
+        <p class="eyebrow">Parrilla / Validación cronológica pareada 2024–25</p>
+        <h2 id="penalty-title">¿Mejora Elo al descontar los puestos perdidos por sanción?</h2>
+        <p id="penalty-decision" class="lab-readout"></p>
+        <p>Comparamos el puesto en clasificación con la parrilla anunciada, no con la salida observada. Cruzamos la decisión publicada por la FIA con la revisión de Wikipedia disponible 30 minutos antes de la salida programada. Una sanción de diez puestos no implica perder diez puestos netos.</p>
+        <p class="muted">Una salida desde boxes no es un puesto numerado. Una descalificación o una orden de salir al fondo tampoco fija, por sí sola, un número. No atribuimos una sanción propia a quien solo cambia de puesto por otro piloto o recibe una decisión sin acción. Sin prueba suficiente, no ajustamos Elo: no significa que observamos una pérdida de cero.</p>
+        <p id="penalty-coverage"></p>
+        <div id="penalty-plot" class="lab-plot" role="img" aria-label="Cobertura de las pruebas de parrilla y de sanción, en Grandes Premios"></div>
+        <div class="lab-table-scroll" role="region" aria-label="Resultados de ambos métodos sobre los mismos GP" tabindex="0">
+          <table class="lab-table">
+            <thead><tr><th scope="col">Método</th><th scope="col">GP</th><th scope="col">Brier podio</th><th scope="col">Log loss ganador</th><th scope="col">Acierto ganador</th><th scope="col">Podio exacto</th><th scope="col">Tres miembros MAP</th></tr></thead>
+            <tbody id="penalty-table"></tbody>
+          </table>
+        </div>
+        <p id="penalty-interval" class="muted"></p>
+        <p id="penalty-finish" class="muted"></p>
+        <p class="muted">Estudio retrospectivo. No usamos 2026 para elegir el ajuste ni cambiamos el pronóstico publicado. Próxima prueba: ritmo de tanda por compuesto y edad del neumático.</p>
+        <p class="lab-links"><a href="https://github.com/Hibra999/F1-AwesomeMachinePredictor/blob/main/reports/prerregistro-sanciones.md">Prerregistro ↗</a><a href="https://github.com/Hibra999/F1-AwesomeMachinePredictor/blob/main/reports/fuentes-sanciones.md">Fuentes y cobertura ↗</a><a href="https://github.com/Hibra999/F1-AwesomeMachinePredictor/blob/main/reports/grid-penalties.json">Informe por GP ↗</a></p>
       </section>
 
       <section id="pilotos" class="lab-section panel lab-card" aria-labelledby="driver-study-title">
