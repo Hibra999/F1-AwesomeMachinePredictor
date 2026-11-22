@@ -18,7 +18,7 @@
     <div class="shell masthead-inner lab-masthead">
       <a class="wordmark" href="./"><span class="wordmark-mark" aria-hidden="true"></span>Podio<span>probable</span></a>
       <nav aria-label="Secciones del laboratorio">
-        <a href="#resultados">Dos últimos GP</a><a href="#evaluacion">Evaluación</a><a href="#entrenamiento">Rustuna</a><a href="#datos">Datos</a>
+        <a href="#resultados">Dos últimos GP</a><a href="#evaluacion">Evaluación</a><a href="#ranking">Ranking T−30</a><a href="#entrenamiento">Rustuna</a><a href="#datos">Datos</a>
       </nav>
       <a href="./" class="lab-back">← Inicio</a>
     </div>
@@ -56,7 +56,7 @@
       <section id="evaluacion" class="lab-section" aria-labelledby="evaluation-title">
         <div class="lab-section-heading">
           <div><p class="eyebrow">01 / Rendimiento fuera de muestra</p><h2 id="evaluation-title">¿Cuánto acierta?</h2></div>
-          <p class="muted">El Brier de podio pesa igual a cada Gran Premio. La referencia usa solo información disponible en ese corte.</p>
+          <p class="muted">Cada GP pesa igual. El informe sellado conserva dos horarios T−30 erróneos de 2024. <a href="#ranking">Ver la comparación corregida.</a></p>
         </div>
         <div class="panel lab-control-bar">
           <label>Período<select id="eval-period"><option value="walk_forward">Validación 2024–25</option><option value="final">Final 2026 · rondas 01–20</option></select></label>
@@ -99,6 +99,16 @@
             </table>
           </div>
         </details>
+      </section>
+
+      <section id="ranking" class="lab-section panel lab-card" aria-labelledby="ranking-study-title">
+        <p class="eyebrow">Experimento T−30 / Validación 2024–25</p>
+        <h2 id="ranking-study-title">¿Mejora aprender el orden del podio?</h2>
+        <p id="ranking-decision"></p>
+        <p id="ranking-context" class="muted"></p>
+        <div id="ranking-plot" class="lab-plot" role="img" aria-label="Diferencia de Brier con intervalo pareado del 95 %. A la izquierda de cero mejora el candidato."></div>
+        <p id="ranking-interval" class="muted"></p>
+        <p class="lab-links"><a href="https://github.com/Hibra999/F1-AwesomeMachinePredictor/blob/main/reports/metodos-y-datos.md">Artículos, repositorios y fuentes ↗</a><a href="https://github.com/Hibra999/F1-AwesomeMachinePredictor/blob/main/reports/prerregistro-ranking-t30.md">Prerregistro ↗</a><a href="https://github.com/Hibra999/F1-AwesomeMachinePredictor/blob/main/reports/enmienda-reloj-t30.md">Corrección de horarios ↗</a></p>
       </section>
 
       <section id="entrenamiento" class="lab-section" aria-labelledby="training-title">

@@ -24,7 +24,7 @@ flowchart TD
 
 ## Key Directories
 
-- `f1forecast/` owns ingestion, training and forecasts. `site/data/upcoming.json` is the only forecast feed on GitHub Pages. `local-panel/` holds the loopback dashboard, licensed circuit geometry and a derived São Paulo replay.
+- `f1forecast/` owns ingestion, training and forecasts. `site/data/upcoming.json` is the only forecast feed on GitHub Pages. `local-panel/` holds the loopback dashboard, licensed circuit geometry, issued Las Vegas forecasts and a reconstructed São Paulo replay.
 - `reports/` holds evaluation aggregates and sourced recent podium comparisons. `python -m f1forecast.analysis_data` exports them for Pages and localhost. Keep raw timing, full classifications, datasets and weights in ignored `.local/`.
 
 ## Delivery
@@ -42,7 +42,7 @@ uv run --locked python -m f1forecast panel --port 8070
 uv run --locked python -m http.server 8071 --bind 127.0.0.1 --directory site
 ```
 
-Open `http://127.0.0.1:8070/` and select **Repetición** to check the shipped replay without model weights. Both endpoints serve the same `analysis.html` and aggregate JSON; port 8071 previews Pages.
+`http://127.0.0.1:8070/` opens the current or last captured race, including after the finish. Backtests require an explicit choice (`/#backtest`). Both endpoints serve the same `analysis.html` and aggregate JSON; port 8071 previews Pages.
 
 For a fresh model run, start with `uv run --locked python -m f1forecast --work .local/repro prepare`. Keep the same prefix and run `train`, `prepare --period final`, then `evaluate`. Put `--work` **before** each subcommand. Preparation downloads source data; evaluation verifies the sealed model without refitting.
 

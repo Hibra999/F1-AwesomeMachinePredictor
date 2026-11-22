@@ -18,10 +18,14 @@ def analysis_data(root=ROOT):
     final = _read(root, "final-2026")
     tuning = _read(root, "rustuna-t30")
     study = _read(root, "analysis-inspection")
+    ranking = _read(root, "rank-study")
     if (walk["version"] != final["version"] or walk["model_sha256"] != final["model_sha256"]
             or tuning["released_model_unchanged"] != walk["version"]
             or tuning["training_corpus_sha256"] != walk["training_sha256"]
             or tuning["final_2026_opened_by_experiment"] is not False
+            or ranking["corpus_sha256"] != walk["training_sha256"]
+            or ranking["scope"] != "retrospective_validation_only_T-30"
+            or ranking["promoted_to_production"] is not False
             or study["eda"]["period"]["end_year"] != 2025):
         raise ValueError("analysis mixes incompatible seals or includes final data in tuning/EDA")
 
@@ -52,6 +56,14 @@ def analysis_data(root=ROOT):
         "model": {k: walk[k] for k in ("version", "fit_utc", "train_max_time_exclusive", "wall_seconds", "model_seconds")},
         "evaluation": evaluation,
         "rustuna": {"summary": tuning, "cycles": cycles, "importance": study["rustuna_importance"]},
+        "ranking": {
+            "metrics": {name: {k: values[k] for k in ("gps", "brier", "winner_log_loss")} for name, values in ranking["metrics"].items()},
+            "brier_contrasts": {key: ranking["contrasts"][key]["brier"] for key in ("rank_pl_minus_elo", "rank_pl_taf_minus_rank_pl")},
+            "taf": {**{key: ranking["taf"][key] for key in ("usable", "wet")},
+                    "any_wet_train": any(fold["train_taf"]["wet"] for fold in ranking["folds"])},
+            "corrected_clocks": sum(v["status"] == "corrected" for v in ranking["clock_audit"].values()),
+            "decision": ranking["decision_primary_only"],
+        },
         "eda": study["eda"],
         "leakage": _read(root, "leakage"),
     }

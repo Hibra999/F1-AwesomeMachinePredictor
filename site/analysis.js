@@ -172,6 +172,25 @@ function renderEvaluation() {
   }));
 }
 
+function renderRankingStudy() {
+  const { metrics, brier_contrasts: pairs, taf, corrected_clocks: clocks, decision } = report.ranking;
+  const verdict = decision === "sombra" ? "El ranking pasa a prueba en sombra; aún se publica Elo." : "Se conserva Elo.";
+  set("ranking-decision", `${verdict} Brier de podio en ${metrics.elo.gps} GP: ${fmt(metrics.elo.brier, score)} con Elo y ${fmt(metrics.rank_pl.brier, score)} con el ranking.`);
+  set("ranking-context", `Se corrigieron ${clocks} horarios antes de medir. Hubo boletín de aeropuerto en ${taf.usable} GP y aviso de lluvia en ${taf.wet}.`
+    + (taf.any_wet_train ? "" : " Sin avisos en entrenamiento no se pudo estimar su efecto."));
+  const comparisons = [pairs.rank_pl_minus_elo, pairs.rank_pl_taf_minus_rank_pl];
+  const labels = ["Ranking − Elo", "Con TAF − sin TAF"];
+  const delta = comparisons.map((p) => p.delta);
+  plot("ranking-plot", [{
+    type: "scatter", mode: "markers", x: delta, y: labels, marker: { color: colors.mint, size: 10 },
+    error_x: { type: "data", symmetric: false, arrayminus: comparisons.map((p) => p.delta - p.ci95[0]),
+      array: comparisons.map((p) => p.ci95[1] - p.delta), color: colors.mint },
+    hovertemplate: "%{y}: %{x:.5f}<extra></extra>",
+  }], { xaxis: { title: { text: "Δ Brier · menor es mejor" }, zeroline: true, zerolinecolor: colors.gold, tickformat: ".3f" },
+    yaxis: { type: "category", autorange: "reversed" }, height: 185 });
+  set("ranking-interval", comparisons.map((p, i) => `${labels[i]}: ${fmt(p.delta, signed)} (IC 95 %: ${fmt(p.ci95[0], signed)} a ${fmt(p.ci95[1], signed)})`).join(" · "));
+}
+
 const paramsText = (params) => Object.entries(params).map(([k, v]) => `${k}=${fmt(v)}`).join(" · ");
 
 function renderTrials() {
@@ -325,6 +344,7 @@ async function load() {
     set("lab-limit", `${report.model.train_max_time_exclusive.slice(0, 10)} UTC`);
     ui["lab-content"].hidden = false;
     renderEvaluation();
+    renderRankingStudy();
     renderTraining();
     renderEda();
     renderProtocol();

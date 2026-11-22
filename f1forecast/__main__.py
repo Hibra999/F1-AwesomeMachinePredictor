@@ -10,7 +10,7 @@ from .dataset import (FINAL_LAST_ROUND, FINAL_YEAR, TRAIN_YEARS, document_events
 from .engine import RaceContext, RaceState, asof, history_at, ordered, utc
 from .leakage import verify_leakage
 from .pages import SITE, UPCOMING, verify_forecast
-from .publication import append_cut, event_card, new_feed, now, prediction, read_file, write_file
+from .publication import append_cut, event_card, new_feed, now, pre_race_events, prediction, read_file, write_file
 from .results import get_documents, get_schedule
 from .training import evaluate, sealed_model, train
 
@@ -80,6 +80,8 @@ def freeze(args, work, bundle, records):
     when = now() if args.horizon == "fp1" else pre
     docs = get_documents(gp, work, as_of=when, refresh=True)
     events = list(document_events(docs)) + _read_events(args.events)
+    if args.horizon == "pre_race":
+        events = pre_race_events(events, args.gp, when)
     snap = asof(gp, records, events, args.horizon, when)
     if snap is None:
         raise ValueError("no dated or provisional roster available at the cutoff")
@@ -217,7 +219,7 @@ def parser():
     proof.add_argument("--gp", required=True)
     panel = commands.add_parser("panel", help="serve the live and replay dashboard on loopback only")
     panel.add_argument("--port", type=int, default=8070)
-    panel.add_argument("--live", type=Path, help="local JSON written by watch (default: WORK/live.json)")
+    panel.add_argument("--live", type=Path, help="watch output (default: WORK/live.json, or the bundled Las Vegas capture)")
     panel.add_argument("--replay", type=Path, help="local JSON written by replay (default: bundled São Paulo)")
     card = commands.add_parser("schedule")
     card.add_argument("--gp", required=True)
@@ -236,8 +238,7 @@ def main(argv=None):
     if args.cmd == "panel":
         from .local_panel import serve_panel
 
-        serve_panel(port=args.port, live=args.live or work / "live.json",
-                    replay=args.replay or SITE.parent / "local-panel" / "sao-paulo-2026.json")
+        serve_panel(port=args.port, work=work, live=args.live, replay=args.replay)
         return
     if args.cmd == "schedule":
         print(json.dumps(event_card(lookup(args.gp, work)), ensure_ascii=False))

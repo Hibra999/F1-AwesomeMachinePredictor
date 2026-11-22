@@ -7,7 +7,7 @@ from pathlib import Path
 from .analysis_data import ANALYSIS_JSON, RECENT_JSON
 
 
-def serve_panel(*, port: int, live: Path, replay: Path):
+def serve_panel(*, port: int, work: Path, live: Path | None, replay: Path | None):
     root = Path(__file__).resolve().parent.parent
     panel = root / "local-panel"
     site = root / "site"
@@ -27,8 +27,8 @@ def serve_panel(*, port: int, live: Path, replay: Path):
         f"/{RECENT_JSON}": (site / RECENT_JSON, "application/json"),
         f"/{ANALYSIS_JSON}": (site / ANALYSIS_JSON, "application/json"),
         "/vendor/plotly-basic.min.js": (site / "vendor/plotly-basic.min.js", "text/javascript; charset=utf-8"),
-        "/data/live.json": (live, "application/json"),
-        "/data/replay.json": (replay, "application/json"),
+        "/data/live.json": (live or work / "live.json", "application/json"),
+        "/data/replay.json": (replay or panel / "sao-paulo-2026.json", "application/json"),
     }
 
     class Handler(BaseHTTPRequestHandler):
@@ -54,6 +54,8 @@ def serve_panel(*, port: int, live: Path, replay: Path):
                 self.send_error(404)
                 return
             path, content_type = route
+            if self.path == "/data/live.json" and live is None and not path.exists():
+                path = panel / "las-vegas-2026.json"
             try:
                 content = path.read_bytes()
             except (FileNotFoundError, IsADirectoryError, NotADirectoryError, PermissionError):

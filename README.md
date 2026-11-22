@@ -9,7 +9,7 @@ Probabilidades de los tres puestos de la clasificación oficial del GP principal
 - **Catar 2026:** [22 pilotos, cuatro probabilidades y corte UTC](site/data/upcoming.json). Corte congelado `2026-11-22 04:22:54.481 UTC`, antes de FP1; el roster es el último fechado de clasificación en Las Vegas, provisional para Catar. Incluye a Rafael Câmara en Haas, no a Esteban Ocon. MAP: Verstappen → Antonelli → Norris, **0,9322%** conjunto. [Horario del GP](https://www.formula1.com/en/latest/article/formula-1-qatar-airways-qatar-grand-prix-2026.3XJyoYSnpJEcuZovstTdcG): FP1 **27 nov 13:30 UTC**; T−30 **29 nov 15:30 UTC**; carrera **29 nov 16:00 UTC**. El corte T−30 no ha ocurrido; arrancar el comando armado que se indica abajo.
 - **GitHub Pages:** muestra la última previa publicada, el análisis agregado y los [dos últimos podios](https://hibra999.github.io/F1-AwesomeMachinePredictor/#resultados). Compara la terna T−30 puesto por puesto; distingue una emisión real de un backtest, una clasificación provisional de una final y un acierto exacto de un piloto correcto en otro puesto. No sirve cronometraje, posiciones ni archivos de carrera.
 - **São Paulo 2026:** repetición local con 71 vueltas y dos previas reconstruidas. Muestra los pilotos ubicables, el progreso y las salidas de SC y VSC hasta cada corte. El prefijo hasta la vuelta 36 contiene 38 cortes; no usa los eventos posteriores.
-- **Las Vegas 2026:** cronometraje anónimo por SignalR Core verificado durante `SessionStatus=Started`. La mesa local mostró la vuelta 36 con 22 pilotos y un archivo de 1 s de antigüedad. Al desconectar el navegador en la vuelta 37, conservó el corte y la tabla e indicó que no podía actualizar. No se rellenan huecos. El antiguo Gist público no se usa ni se actualiza.
+- **Las Vegas 2026:** es la carrera que abre el panel local. Conserva 25 cortes publicados durante el GP, hasta la vuelta 50/50 (`2026-11-22 05:31:27 UTC`). Indica **Directo finalizado**: no simula actividad ni rellena las vueltas sin señal. La captura incluida solo contiene probabilidades propias; no contiene paquetes crudos, GPS ni la clasificación oficial.
 
 ## Resultados
 
@@ -22,6 +22,8 @@ El [laboratorio](https://hibra999.github.io/F1-AwesomeMachinePredictor/analysis.
 | Pre-FP1 | Promedio LGBM/NGB/Cat | 48 | 0,08341 / 0,08592 | 20 | 0,08772 / 0,09237 | 1,900 / 1,985 | 4,08% | 25,0% / 0,0% |
 | T−30 | Elo + señal pre-carrera | 48 | 0,06764 / 0,07141 | 20 | 0,06729 / 0,07020 | 1,156 / 1,116 | 2,43% | 65,0% / 10,0% |
 | Vueltas | Promedio LGBM/NGB/Cat | 40 | 0,04542 / 0,04878 | 20 | 0,04426 / 0,05034 | 1,082 / 1,169 | 2,16% | 67,2% / 14,5% |
+
+Estos son los números del informe sellado, con sus horarios originales. Dos GP de 2024 no tenían un T−30 válido en ese reloj. La [comparación posterior con horarios corregidos](reports/rank-study.json) no reescribe el informe ni la selección publicada.
 
 El Elo final T−30 pierde en log loss de ganador. El ensamble en carrera pierde en acierto de podio ordenado frente a posiciones (14,5% vs 21,7% en el período final), aunque gana en Brier. El ensamble aprendido se calibró con pesos en el simplex y resultados internos OOS; no se eligió en ningún horizonte. Capacidad y temperatura ajustadas dentro de las ventanas; imputación NGBoost fit solo en train. Cada GP de test conserva todos sus pilotos y vueltas; train de carrera usa vueltas 1, 2 y múltiplos de 5 con ponderación por GP. Los resultados sin versión FIA suficiente se usan **solo como rótulos**, con embargo operativo de 14 días; no como variables, ni se afirma que ese embargo pruebe la historia de apelaciones.
 
@@ -48,6 +50,33 @@ El Elo final T−30 pierde en log loss de ganador. El ensamble en carrera pierde
 | CatBoost | 0,06915 | 0,06783 | 0,07127 |
 
 Brier de podio en los mismos 48 GP de 2024–25; menor es mejor. Se conserva **Elo (0,06764)**. La búsqueda tomó 39,09 s y el entrenamiento completo 112,51 s en Windows CPU con rueda nativa Rustuna. [Informe y huellas del experimento](reports/rustuna-t30.json). El laboratorio muestra los 168 ensayos, sus parámetros, tiempos y mejores valores por ventana.
+
+### Contraste T−30 con relojes verificados
+
+**Se conserva Elo.** En la [comparación corregida](reports/rank-study.json), los mismos 48 GP de 2024–25 dieron:
+
+| Método | Brier de podio ↓ | Log loss ganador ↓ | Ganador | Podio en orden |
+|---|---:|---:|---:|---:|
+| Referencia disponible al corte | 0,06983 | 1,359 | 24/48 | 5/48 |
+| Elo y referencia | **0,06606** | **1,272** | **26/48** | 6/48 |
+| Ranking Plackett–Luce aprendido | 0,06808 | 1,372 | 24/48 | 7/48 |
+| Ranking + previsión TAF | 0,06808 | 1,372 | 24/48 | 7/48 |
+
+El ranking acertó un podio exacto más que Elo, pero perdió en ambas métricas de probabilidad. ΔBrier frente a Elo: **+0,00202** (IC 95 % pareado por GP: **−0,00148 a +0,00560**). No pasó el [criterio registrado antes del ensayo](reports/prerregistro-ranking-t30.md). Se contrastaron **92 horarios** con revisiones anteriores al corte: São Paulo 2024 adelantó la salida 90 minutos; Las Vegas 2024 correspondía al día siguiente en UTC. Los cuatro métodos usan los mismos relojes corregidos y excluyen la sesión Race del GP objetivo. [Enmienda publicada antes de puntuar](reports/enmienda-reloj-t30.md). Un evento de salida ya observado impide emitir una previa T−30.
+
+El piloto meteorológico recuperó 11 boletines emitidos para tres aeropuertos de EE. UU.; seis cubrieron carreras de validación. Solo uno mencionaba lluvia a la salida y ninguno apareció en el entrenamiento de esas ventanas. No se pudo estimar el efecto de la lluvia; la puntuación prácticamente idéntica no demuestra que el clima sea irrelevante. No se reentrenó el modelo publicado ni se usaron resultados de 2026 para este contraste.
+
+[Gráfico e intervalos](https://hibra999.github.io/F1-AwesomeMachinePredictor/analysis.html#ranking) · [Cuatro artículos, cuatro repositorios y auditoría de datos FIA/NOAA](reports/metodos-y-datos.md). La siguiente comparación con fundamento es separar ritmo de clasificación y coste de salir retrasado usando parrillas con revisión y fecha de publicación.
+
+Para reproducir desde la raíz después de `prepare` (2022–25):
+
+```powershell
+git clone https://github.com/theOehrly/f1schedule.git .local/f1schedule
+uv run --locked python -m f1forecast.rank_study --work .local
+uv run --locked python -m f1forecast.rank_study --work .local --offline
+```
+
+El primer comando se ejecuta solo si falta el clon. El estudio fija la historia del calendario hasta `e50468712d66daaaf8d637551798c8ce70891e82`. La primera ejecución descarga los boletines; la segunda usa la caché. Un archivo meteorológico ausente o dañado no cuenta como tiempo seco: la puntuación se detiene. El informe incluye fechas de emisión y disponibilidad, SHA de calendarios y huellas de boletines; los datos crudos quedan en `.local/`.
 
 ### Datos e importancia fuera de muestra
 
@@ -101,7 +130,7 @@ Para regenerar la vista estática desde los informes versionados, basta `python 
 ### Mesa de carrera local
 
 ```powershell
-# Panel y replay incluido; no hacen falta pesos para ver el replay incluido.
+# Mesa local: última captura real y backtest opcional; no requiere pesos.
 uv run --locked python -m f1forecast panel --port 8070
 
 # Opcional: regenerar replay con el modelo sellado o materializar el prefijo causal.
@@ -110,7 +139,9 @@ uv run --locked python -m f1forecast replay --gp 2026-20 --through-lap 36 --out 
 uv run --locked python -m f1forecast panel --port 8070 --replay .local/replay-stop.json
 ```
 
-Abre [http://127.0.0.1:8070/](http://127.0.0.1:8070/). Si falta el archivo de directo o la sesión terminó, se abre la repetición en pausa a mitad de carrera. **Inicio** retrocede a la primera previa; una repetición parcial abre en su último corte. **Resultados** lleva a una vista separada para no revelar el desenlace mientras reproduces. El servidor escucha solo en el PC.
+Abre [la carrera actual](http://127.0.0.1:8070/). La mesa lee `.local/live.json`; en una instalación limpia muestra la captura real incluida de Las Vegas. Si se crea el archivo de directo más tarde, el panel lo detecta sin reiniciarse. Con `--live` explícito la mesa espera ese archivo; no lo sustituye por otra carrera. **Reproducir** recorre solamente los cortes disponibles.
+
+Para ver una reconstrucción, usa **Sesión que quieres ver → Backtest** o abre [el backtest de São Paulo](http://127.0.0.1:8070/#backtest). Una repetición completa abre en pausa a mitad de carrera y **Inicio** retrocede a la primera previa. Una repetición parcial abre en su último corte. **Resultados** lleva a una vista separada para no revelar el desenlace. El servidor escucha solo en este PC.
 
 Elige un piloto en el mapa, la tabla o la gráfica. En las cuatro pistas, los puntos avanzan en el sentido de carrera sobre el eje de [OpenStreetMap, ODbL](AUDIT.md#trazados-usados-openstreetmap-odbl-10). Representan el progreso **estimado** por último cruce y ritmo observado, no GPS. Sin evidencia reciente no se extrapola otra vuelta. Mapa, pastel y tabla usan el mismo color por equipo. Sin WebGL funciona la vista 2D; la extrusión 3D no mide elevación.
 

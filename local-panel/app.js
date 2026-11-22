@@ -1,7 +1,7 @@
 "use strict";
 
 const ui = Object.fromEntries(Array.from(document.querySelectorAll("[id]"), (node) => [node.id, node]));
-const modes = { live: "Directo", replay: "Repetición" };
+const modes = { live: "Carrera actual", replay: "Backtest" };
 const origins = { published: "Predicción publicada", backtest: "Reconstrucción histórica (backtest)" };
 const horizons = { fp1: "Antes de Libres 1", pre_race: "Antes de la carrera", race: "Durante la carrera" };
 const horizonOrder = Object.keys(horizons);
@@ -114,6 +114,9 @@ async function loadEntry(mode) {
     const revision = await response.text();
     if (entry.revision !== revision) {
       const doc = decodeDocument(JSON.parse(revision), mode);
+      if (mode === "live" && entry.doc && timeNumber(doc.updated_utc) < timeNumber(entry.doc.updated_utc)) {
+        throw new Error("El archivo recibido es anterior al último corte guardado.");
+      }
       entry.doc = doc;
       entry.revision = revision;
       if (view.mode === mode) syncView(doc);
@@ -140,7 +143,8 @@ function renderHealth() {
   if (doc) text(ui.freshness, `Edad del documento · ${age < 60 ? `${age} s` : `${Math.floor(age / 60)} min`}`);
   ui.freshness.dataset.state = warning ? "warning" : "ok";
   show(ui.freshness, Boolean(doc));
-  const message = error ? `${error}${doc ? " Se conserva la última revisión válida." : ""}`
+  const message = error ? `${error}${doc ? " Se conserva la última revisión válida."
+    : view.mode === "live" ? " Puedes elegir el backtest en el selector de sesión." : ""}`
     : !doc ? "Cargando las predicciones…" : !doc.predictions.length ? "Aún no hay cortes de predicción." : "";
   text(ui["notice-text"], message);
   show(ui.notice, Boolean(message));
@@ -200,7 +204,8 @@ function renderTimeline(prediction, count) {
   const label = checkpoint(prediction);
   text(ui.checkpoint, label);
   text(ui["checkpoint-count"], `Corte ${view.cursor + 1} de ${count}`);
-  text(ui["playback-status"], view.player !== null ? "En reproducción" : view.follow ? "Siguiendo actualizaciones" : "En pausa");
+  text(ui["playback-status"], view.player !== null ? "En reproducción" : !view.follow ? "En pausa"
+    : view.doc.complete ? "Último corte recibido" : "Siguiendo actualizaciones");
   ui.timeline.max = count - 1;
   ui.timeline.value = view.cursor;
   ui.timeline.setAttribute("aria-valuetext", `${label}, ${dateLabel(prediction.cutoff_utc)}`);
@@ -209,8 +214,8 @@ function renderTimeline(prediction, count) {
   ui.previous.disabled = view.cursor === 0;
   ui.next.disabled = view.cursor === count - 1;
   ui.play.disabled = count < 2 || view.player !== null;
-  ui.pause.disabled = view.player === null && !view.follow;
-  show(ui.follow, view.mode === "live");
+  ui.pause.disabled = view.player === null && (!view.follow || view.doc.complete);
+  show(ui.follow, view.mode === "live" && !view.doc.complete);
   ui.follow.setAttribute("aria-pressed", String(view.follow));
   renderDate(ui.cutoff, prediction.cutoff_utc);
   renderDate(ui.published, prediction.published_utc, prediction.origin === "backtest" ? "No aplica" : "No registrada");
@@ -375,7 +380,7 @@ function renderCut() {
 function render() {
   const doc = view.doc;
   text(ui["event-name"], doc?.event.name ?? "Mesa de carrera");
-  text(ui.mode, modes[view.mode]);
+  text(ui.mode, view.mode === "live" && doc?.complete ? "Captura del directo" : modes[view.mode]);
   show(ui.publication, Boolean(doc));
   if (doc) {
     text(ui.source, doc.source);
@@ -396,7 +401,11 @@ function play() {
   renderCut();
 }
 
-ui["mode-select"].addEventListener("change", (event) => selectMode(event.target.value));
+ui["mode-select"].addEventListener("change", (event) => {
+  const mode = event.target.value;
+  history.replaceState(null, "", mode === "replay" ? "#backtest" : location.pathname);
+  selectMode(mode);
+});
 ui.retry.addEventListener("click", () => void loadEntry(view.mode));
 ui.timeline.addEventListener("input", (event) => stepTo(Number(event.target.value)));
 ui["first-cut"].addEventListener("click", () => stepTo(0));
@@ -425,11 +434,7 @@ for (const button of sortButtons) {
   });
 }
 
-void loadEntry("live").then(() => {
-  if (view.mode !== null) return;
-  const live = entries.live.doc;
-  selectMode(live && !live.complete ? "live" : "replay");
-});
+selectMode(location.hash === "#backtest" ? "replay" : "live");
 window.setInterval(() => {
   if (view.mode) renderHealth();
   if (view.mode === "live") void loadEntry("live");

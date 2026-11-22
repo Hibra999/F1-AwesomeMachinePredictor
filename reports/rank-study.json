@@ -1,0 +1,1216 @@
+{
+  "scope": "retrospective_validation_only_T-30",
+  "features": [
+    "reference",
+    "driver_elo",
+    "team_elo",
+    "driver_form",
+    "team_form",
+    "qual_gap",
+    "practice_gap"
+  ],
+  "ridge": 0.05,
+  "taf_feature": "wet_at_start_from_pre_cut_TAF × train_standardized_reference; dry/unknown=0",
+  "bootstrap": {
+    "unit": "GP",
+    "paired": true,
+    "draws": 10000,
+    "seed": 55293,
+    "ci": "percentile_95"
+  },
+  "folds": [
+    {
+      "start": "2024-01-01T00:00:00.000Z",
+      "until_exclusive": "2024-07-01T00:00:00.000Z",
+      "label_deadline_exclusive": "2024-01-01T00:00:00.000Z",
+      "latest_train_label": "2023-12-03T06:00:00.000Z",
+      "train_gps": 44,
+      "fit_prefix_lengths": {
+        "3": 44
+      },
+      "inner_oos_gps": 22,
+      "latest_calibration_label": "2023-12-03T06:00:00.000Z",
+      "test_gp_ids": [
+        "2024-01",
+        "2024-02",
+        "2024-03",
+        "2024-04",
+        "2024-05",
+        "2024-06",
+        "2024-07",
+        "2024-08",
+        "2024-09",
+        "2024-10",
+        "2024-11"
+      ],
+      "temperatures": {
+        "rank_pl": 1.0,
+        "rank_pl_taf": 1.0,
+        "elo": 0.75,
+        "reference": 0.75
+      },
+      "train_taf": {
+        "wet": 0,
+        "dry": 5,
+        "unknown": 39,
+        "usable": 5,
+        "gps": 44,
+        "minutes_before_cut_min": 10.0,
+        "minutes_before_cut_max": 100.0
+      },
+      "test_taf": {
+        "wet": 0,
+        "dry": 1,
+        "unknown": 10,
+        "usable": 1,
+        "gps": 11,
+        "minutes_before_cut_min": 130.0,
+        "minutes_before_cut_max": 130.0
+      },
+      "metrics": {
+        "rank_pl": {
+          "gps": 11,
+          "brier": 0.06677695452067536,
+          "winner_log_loss": 1.2648535497181497,
+          "winner_hit": 0.6363636363636364,
+          "ordered_hit": 0.2727272727272727,
+          "map_members_hit": 0.45454545454545453
+        },
+        "rank_pl_taf": {
+          "gps": 11,
+          "brier": 0.06677695452067536,
+          "winner_log_loss": 1.2648535497181497,
+          "winner_hit": 0.6363636363636364,
+          "ordered_hit": 0.2727272727272727,
+          "map_members_hit": 0.45454545454545453
+        },
+        "elo": {
+          "gps": 11,
+          "brier": 0.06665279247124913,
+          "winner_log_loss": 1.24910276126567,
+          "winner_hit": 0.5454545454545454,
+          "ordered_hit": 0.09090909090909091,
+          "map_members_hit": 0.36363636363636365
+        },
+        "reference": {
+          "gps": 11,
+          "brier": 0.07394066174070878,
+          "winner_log_loss": 1.480572025926807,
+          "winner_hit": 0.45454545454545453,
+          "ordered_hit": 0.09090909090909091,
+          "map_members_hit": 0.2727272727272727
+        }
+      }
+    },
+    {
+      "start": "2024-07-01T00:00:00.000Z",
+      "until_exclusive": "2025-01-01T00:00:00.000Z",
+      "label_deadline_exclusive": "2024-07-01T00:00:00.000Z",
+      "latest_train_label": "2024-06-23T18:00:00.000Z",
+      "train_gps": 53,
+      "fit_prefix_lengths": {
+        "3": 53
+      },
+      "inner_oos_gps": 31,
+      "latest_calibration_label": "2024-06-23T18:00:00.000Z",
+      "test_gp_ids": [
+        "2024-12",
+        "2024-13",
+        "2024-14",
+        "2024-15",
+        "2024-16",
+        "2024-17",
+        "2024-18",
+        "2024-19",
+        "2024-20",
+        "2024-21",
+        "2024-22",
+        "2024-23",
+        "2024-24"
+      ],
+      "temperatures": {
+        "rank_pl": 1.0,
+        "rank_pl_taf": 1.0,
+        "elo": 0.75,
+        "reference": 0.75
+      },
+      "train_taf": {
+        "wet": 0,
+        "dry": 6,
+        "unknown": 47,
+        "usable": 6,
+        "gps": 53,
+        "minutes_before_cut_min": 10.0,
+        "minutes_before_cut_max": 130.0
+      },
+      "test_taf": {
+        "wet": 0,
+        "dry": 2,
+        "unknown": 11,
+        "usable": 2,
+        "gps": 13,
+        "minutes_before_cut_min": 10.0,
+        "minutes_before_cut_max": 54.0
+      },
+      "metrics": {
+        "rank_pl": {
+          "gps": 13,
+          "brier": 0.08508106614868739,
+          "winner_log_loss": 1.8703967204091336,
+          "winner_hit": 0.23076923076923078,
+          "ordered_hit": 0.0,
+          "map_members_hit": 0.07692307692307693
+        },
+        "rank_pl_taf": {
+          "gps": 13,
+          "brier": 0.08508106614866653,
+          "winner_log_loss": 1.8703967204091048,
+          "winner_hit": 0.23076923076923078,
+          "ordered_hit": 0.0,
+          "map_members_hit": 0.07692307692307693
+        },
+        "elo": {
+          "gps": 13,
+          "brier": 0.08295581458006884,
+          "winner_log_loss": 1.8417669931116714,
+          "winner_hit": 0.23076923076923078,
+          "ordered_hit": 0.0,
+          "map_members_hit": 0.15384615384615385
+        },
+        "reference": {
+          "gps": 13,
+          "brier": 0.08800044762532816,
+          "winner_log_loss": 2.0277022959180795,
+          "winner_hit": 0.15384615384615385,
+          "ordered_hit": 0.0,
+          "map_members_hit": 0.07692307692307693
+        }
+      }
+    },
+    {
+      "start": "2025-01-01T00:00:00.000Z",
+      "until_exclusive": "2025-07-01T00:00:00.000Z",
+      "label_deadline_exclusive": "2025-01-01T00:00:00.000Z",
+      "latest_train_label": "2024-12-22T13:00:00.000Z",
+      "train_gps": 68,
+      "fit_prefix_lengths": {
+        "3": 68
+      },
+      "inner_oos_gps": 46,
+      "latest_calibration_label": "2024-12-22T13:00:00.000Z",
+      "test_gp_ids": [
+        "2025-01",
+        "2025-02",
+        "2025-03",
+        "2025-04",
+        "2025-05",
+        "2025-06",
+        "2025-07",
+        "2025-08",
+        "2025-09",
+        "2025-10",
+        "2025-11"
+      ],
+      "temperatures": {
+        "rank_pl": 1.0,
+        "rank_pl_taf": 1.0,
+        "elo": 0.75,
+        "reference": 0.75
+      },
+      "train_taf": {
+        "wet": 0,
+        "dry": 8,
+        "unknown": 60,
+        "usable": 8,
+        "gps": 68,
+        "minutes_before_cut_min": 10.0,
+        "minutes_before_cut_max": 130.0
+      },
+      "test_taf": {
+        "wet": 0,
+        "dry": 1,
+        "unknown": 10,
+        "usable": 1,
+        "gps": 11,
+        "minutes_before_cut_min": 130.0,
+        "minutes_before_cut_max": 130.0
+      },
+      "metrics": {
+        "rank_pl": {
+          "gps": 11,
+          "brier": 0.04737109115988554,
+          "winner_log_loss": 1.1938339434078742,
+          "winner_hit": 0.6363636363636364,
+          "ordered_hit": 0.2727272727272727,
+          "map_members_hit": 0.5454545454545454
+        },
+        "rank_pl_taf": {
+          "gps": 11,
+          "brier": 0.04737109115988555,
+          "winner_log_loss": 1.193833943407874,
+          "winner_hit": 0.6363636363636364,
+          "ordered_hit": 0.2727272727272727,
+          "map_members_hit": 0.5454545454545454
+        },
+        "elo": {
+          "gps": 11,
+          "brier": 0.04625324498625456,
+          "winner_log_loss": 0.9582669988956561,
+          "winner_hit": 0.7272727272727273,
+          "ordered_hit": 0.18181818181818182,
+          "map_members_hit": 0.36363636363636365
+        },
+        "reference": {
+          "gps": 11,
+          "brier": 0.0487709823403885,
+          "winner_log_loss": 0.8811074379451214,
+          "winner_hit": 0.7272727272727273,
+          "ordered_hit": 0.18181818181818182,
+          "map_members_hit": 0.36363636363636365
+        }
+      }
+    },
+    {
+      "start": "2025-07-01T00:00:00.000Z",
+      "until_exclusive": "2026-01-01T00:00:00.000Z",
+      "label_deadline_exclusive": "2025-07-01T00:00:00.000Z",
+      "latest_train_label": "2025-06-29T18:00:00.000Z",
+      "train_gps": 78,
+      "fit_prefix_lengths": {
+        "3": 78
+      },
+      "inner_oos_gps": 56,
+      "latest_calibration_label": "2025-06-29T18:00:00.000Z",
+      "test_gp_ids": [
+        "2025-12",
+        "2025-13",
+        "2025-14",
+        "2025-15",
+        "2025-16",
+        "2025-17",
+        "2025-18",
+        "2025-19",
+        "2025-20",
+        "2025-21",
+        "2025-22",
+        "2025-23",
+        "2025-24"
+      ],
+      "temperatures": {
+        "rank_pl": 1.0,
+        "rank_pl_taf": 1.0,
+        "elo": 0.75,
+        "reference": 0.75
+      },
+      "train_taf": {
+        "wet": 0,
+        "dry": 9,
+        "unknown": 69,
+        "usable": 9,
+        "gps": 78,
+        "minutes_before_cut_min": 10.0,
+        "minutes_before_cut_max": 130.0
+      },
+      "test_taf": {
+        "wet": 1,
+        "dry": 1,
+        "unknown": 11,
+        "usable": 2,
+        "gps": 13,
+        "minutes_before_cut_min": 59.0,
+        "minutes_before_cut_max": 70.0
+      },
+      "metrics": {
+        "rank_pl": {
+          "gps": 13,
+          "brier": 0.06970306672615786,
+          "winner_log_loss": 1.1148114665682918,
+          "winner_hit": 0.5384615384615384,
+          "ordered_hit": 0.07692307692307693,
+          "map_members_hit": 0.3076923076923077
+        },
+        "rank_pl_taf": {
+          "gps": 13,
+          "brier": 0.06970306672615786,
+          "winner_log_loss": 1.1148114665682918,
+          "winner_hit": 0.5384615384615384,
+          "ordered_hit": 0.07692307692307693,
+          "map_members_hit": 0.3076923076923077
+        },
+        "elo": {
+          "gps": 13,
+          "brier": 0.06540437242612583,
+          "winner_log_loss": 0.9885253421625586,
+          "winner_hit": 0.6923076923076923,
+          "ordered_hit": 0.23076923076923078,
+          "map_members_hit": 0.38461538461538464
+        },
+        "reference": {
+          "gps": 13,
+          "brier": 0.06599043615508518,
+          "winner_log_loss": 0.9905677744954785,
+          "winner_hit": 0.6923076923076923,
+          "ordered_hit": 0.15384615384615385,
+          "map_members_hit": 0.3076923076923077
+        }
+      }
+    }
+  ],
+  "metrics": {
+    "elo": {
+      "gps": 48,
+      "brier": 0.06605518423152233,
+      "winner_log_loss": 1.2723930775070746,
+      "winner_hit": 0.5416666666666666,
+      "ordered_hit": 0.125,
+      "map_members_hit": 0.3125
+    },
+    "reference": {
+      "gps": 48,
+      "brier": 0.06982728279244672,
+      "winner_log_loss": 1.3586663545409887,
+      "winner_hit": 0.5,
+      "ordered_hit": 0.10416666666666667,
+      "map_members_hit": 0.25
+    },
+    "rank_pl": {
+      "gps": 48,
+      "brier": 0.06807962978873246,
+      "winner_log_loss": 1.3719431011477663,
+      "winner_hit": 0.5,
+      "ordered_hit": 0.14583333333333334,
+      "map_members_hit": 0.3333333333333333
+    },
+    "rank_pl_taf": {
+      "gps": 48,
+      "brier": 0.06807962978872682,
+      "winner_log_loss": 1.3719431011477587,
+      "winner_hit": 0.5,
+      "ordered_hit": 0.14583333333333334,
+      "map_members_hit": 0.3333333333333333
+    }
+  },
+  "contrasts": {
+    "rank_pl_minus_elo": {
+      "brier": {
+        "delta": 0.0020244455572101445,
+        "ci95": [
+          -0.0014758039377988337,
+          0.005601452088300316
+        ]
+      },
+      "winner_log_loss": {
+        "delta": 0.09955002364069199,
+        "ci95": [
+          0.0025224397777643894,
+          0.19675248832256703
+        ]
+      },
+      "winner_hit": {
+        "delta": -0.041666666666666664,
+        "ci95": [
+          -0.125,
+          0.041666666666666664
+        ]
+      },
+      "ordered_hit": {
+        "delta": 0.020833333333333332,
+        "ci95": [
+          -0.10416666666666667,
+          0.14583333333333334
+        ]
+      },
+      "map_members_hit": {
+        "delta": 0.020833333333333332,
+        "ci95": [
+          -0.10416666666666667,
+          0.14583333333333334
+        ]
+      }
+    },
+    "rank_pl_minus_reference": {
+      "brier": {
+        "delta": -0.0017476530037142809,
+        "ci95": [
+          -0.008025066886977765,
+          0.004576917744000192
+        ]
+      },
+      "winner_log_loss": {
+        "delta": 0.013276746606777613,
+        "ci95": [
+          -0.1760378842418941,
+          0.19952713054593368
+        ]
+      },
+      "winner_hit": {
+        "delta": 0.0,
+        "ci95": [
+          -0.10416666666666667,
+          0.10416666666666667
+        ]
+      },
+      "ordered_hit": {
+        "delta": 0.041666666666666664,
+        "ci95": [
+          -0.08333333333333333,
+          0.16666666666666666
+        ]
+      },
+      "map_members_hit": {
+        "delta": 0.08333333333333333,
+        "ci95": [
+          -0.041666666666666664,
+          0.20833333333333334
+        ]
+      }
+    },
+    "rank_pl_taf_minus_elo": {
+      "brier": {
+        "delta": 0.0020244455572044997,
+        "ci95": [
+          -0.0014758039377651085,
+          0.00560145208828937
+        ]
+      },
+      "winner_log_loss": {
+        "delta": 0.09955002364068403,
+        "ci95": [
+          0.002522439777467941,
+          0.196752488323136
+        ]
+      },
+      "winner_hit": {
+        "delta": -0.041666666666666664,
+        "ci95": [
+          -0.125,
+          0.041666666666666664
+        ]
+      },
+      "ordered_hit": {
+        "delta": 0.020833333333333332,
+        "ci95": [
+          -0.10416666666666667,
+          0.14583333333333334
+        ]
+      },
+      "map_members_hit": {
+        "delta": 0.020833333333333332,
+        "ci95": [
+          -0.10416666666666667,
+          0.14583333333333334
+        ]
+      }
+    },
+    "rank_pl_taf_minus_reference": {
+      "brier": {
+        "delta": -0.001747653003719927,
+        "ci95": [
+          -0.008025066886987078,
+          0.004576917743989169
+        ]
+      },
+      "winner_log_loss": {
+        "delta": 0.01327674660676974,
+        "ci95": [
+          -0.1760378842422791,
+          0.19952713054643703
+        ]
+      },
+      "winner_hit": {
+        "delta": 0.0,
+        "ci95": [
+          -0.10416666666666667,
+          0.10416666666666667
+        ]
+      },
+      "ordered_hit": {
+        "delta": 0.041666666666666664,
+        "ci95": [
+          -0.08333333333333333,
+          0.16666666666666666
+        ]
+      },
+      "map_members_hit": {
+        "delta": 0.08333333333333333,
+        "ci95": [
+          -0.041666666666666664,
+          0.20833333333333334
+        ]
+      }
+    },
+    "rank_pl_taf_minus_rank_pl": {
+      "brier": {
+        "delta": -5.6450793114078595e-15,
+        "ci95": [
+          -5.323611198861563e-14,
+          4.0159329131826215e-14
+        ]
+      },
+      "winner_log_loss": {
+        "delta": -7.909182568136922e-15,
+        "ci95": [
+          -1.0326370834812248e-12,
+          9.548685048673305e-13
+        ]
+      },
+      "winner_hit": {
+        "delta": 0.0,
+        "ci95": [
+          0.0,
+          0.0
+        ]
+      },
+      "ordered_hit": {
+        "delta": 0.0,
+        "ci95": [
+          0.0,
+          0.0
+        ]
+      },
+      "map_members_hit": {
+        "delta": 0.0,
+        "ci95": [
+          0.0,
+          0.0
+        ]
+      }
+    }
+  },
+  "taf": {
+    "wet": 1,
+    "dry": 5,
+    "unknown": 42,
+    "usable": 6,
+    "gps": 48,
+    "minutes_before_cut_min": 10.0,
+    "minutes_before_cut_max": 130.0
+  },
+  "decision_primary_only": "conservar",
+  "promoted_to_production": false,
+  "corpus_sha256": "9157139d56f71add346b5eca9b63c33c9dfd7e26c6bdc323d988a0b741fcf023",
+  "clock_audit": {
+    "2022-01": {
+      "status": "confirmed",
+      "revision": "c71ff08b4c429812fb1ea071190da5c42b6e76ed",
+      "revision_utc": "2022-03-16T14:05:23.000Z"
+    },
+    "2022-02": {
+      "status": "confirmed",
+      "revision": "c71ff08b4c429812fb1ea071190da5c42b6e76ed",
+      "revision_utc": "2022-03-16T14:05:23.000Z"
+    },
+    "2022-03": {
+      "status": "confirmed",
+      "revision": "1ecdfd5f867b8d25d43894f0564d56abd79ebdff",
+      "revision_utc": "2022-03-29T16:33:27.000Z"
+    },
+    "2022-04": {
+      "status": "confirmed",
+      "revision": "01bc1cc197a8a2d3a9ddf6d2f61ca6f8c4d4370d",
+      "revision_utc": "2022-04-24T12:09:09.000Z"
+    },
+    "2022-05": {
+      "status": "confirmed",
+      "revision": "4d807e883e9a1b0d970489b5a7b62f0052d87586",
+      "revision_utc": "2022-04-24T15:46:55.000Z"
+    },
+    "2022-06": {
+      "status": "confirmed",
+      "revision": "4d807e883e9a1b0d970489b5a7b62f0052d87586",
+      "revision_utc": "2022-04-24T15:46:55.000Z"
+    },
+    "2022-07": {
+      "status": "confirmed",
+      "revision": "4d807e883e9a1b0d970489b5a7b62f0052d87586",
+      "revision_utc": "2022-04-24T15:46:55.000Z"
+    },
+    "2022-08": {
+      "status": "confirmed",
+      "revision": "4d807e883e9a1b0d970489b5a7b62f0052d87586",
+      "revision_utc": "2022-04-24T15:46:55.000Z"
+    },
+    "2022-09": {
+      "status": "confirmed",
+      "revision": "c99f66675e5327be2f20344a6c3c5a7ae2aff232",
+      "revision_utc": "2022-06-13T15:50:33.000Z"
+    },
+    "2022-10": {
+      "status": "confirmed",
+      "revision": "c99f66675e5327be2f20344a6c3c5a7ae2aff232",
+      "revision_utc": "2022-06-13T15:50:33.000Z"
+    },
+    "2022-11": {
+      "status": "confirmed",
+      "revision": "c99f66675e5327be2f20344a6c3c5a7ae2aff232",
+      "revision_utc": "2022-06-13T15:50:33.000Z"
+    },
+    "2022-12": {
+      "status": "confirmed",
+      "revision": "3980c23811fef770c6b715f8f73000bd6d37c997",
+      "revision_utc": "2022-07-18T13:17:29.000Z"
+    },
+    "2022-13": {
+      "status": "confirmed",
+      "revision": "3980c23811fef770c6b715f8f73000bd6d37c997",
+      "revision_utc": "2022-07-18T13:17:29.000Z"
+    },
+    "2022-14": {
+      "status": "confirmed",
+      "revision": "3980c23811fef770c6b715f8f73000bd6d37c997",
+      "revision_utc": "2022-07-18T13:17:29.000Z"
+    },
+    "2022-15": {
+      "status": "confirmed",
+      "revision": "3980c23811fef770c6b715f8f73000bd6d37c997",
+      "revision_utc": "2022-07-18T13:17:29.000Z"
+    },
+    "2022-16": {
+      "status": "confirmed",
+      "revision": "3980c23811fef770c6b715f8f73000bd6d37c997",
+      "revision_utc": "2022-07-18T13:17:29.000Z"
+    },
+    "2022-17": {
+      "status": "confirmed",
+      "revision": "3980c23811fef770c6b715f8f73000bd6d37c997",
+      "revision_utc": "2022-07-18T13:17:29.000Z"
+    },
+    "2022-18": {
+      "status": "confirmed",
+      "revision": "3980c23811fef770c6b715f8f73000bd6d37c997",
+      "revision_utc": "2022-07-18T13:17:29.000Z"
+    },
+    "2022-19": {
+      "status": "confirmed",
+      "revision": "3980c23811fef770c6b715f8f73000bd6d37c997",
+      "revision_utc": "2022-07-18T13:17:29.000Z"
+    },
+    "2022-20": {
+      "status": "confirmed",
+      "revision": "3980c23811fef770c6b715f8f73000bd6d37c997",
+      "revision_utc": "2022-07-18T13:17:29.000Z"
+    },
+    "2022-21": {
+      "status": "confirmed",
+      "revision": "3980c23811fef770c6b715f8f73000bd6d37c997",
+      "revision_utc": "2022-07-18T13:17:29.000Z"
+    },
+    "2022-22": {
+      "status": "confirmed",
+      "revision": "3980c23811fef770c6b715f8f73000bd6d37c997",
+      "revision_utc": "2022-07-18T13:17:29.000Z"
+    },
+    "2023-01": {
+      "status": "confirmed",
+      "revision": "16a18efaf241dc1faac1b354ddbc2c2da505e5bd",
+      "revision_utc": "2023-03-01T13:09:15.000Z"
+    },
+    "2023-02": {
+      "status": "confirmed",
+      "revision": "16a18efaf241dc1faac1b354ddbc2c2da505e5bd",
+      "revision_utc": "2023-03-01T13:09:15.000Z"
+    },
+    "2023-03": {
+      "status": "confirmed",
+      "revision": "16a18efaf241dc1faac1b354ddbc2c2da505e5bd",
+      "revision_utc": "2023-03-01T13:09:15.000Z"
+    },
+    "2023-04": {
+      "status": "confirmed",
+      "revision": "48a98e41b028a51582694f85ff999c5d8cb0b406",
+      "revision_utc": "2023-04-25T20:48:08.000Z"
+    },
+    "2023-05": {
+      "status": "confirmed",
+      "revision": "9f25ed549868291fa358286875edbe0bed6b7a62",
+      "revision_utc": "2023-05-04T09:52:17.000Z"
+    },
+    "2023-06": {
+      "status": "confirmed",
+      "revision": "9f25ed549868291fa358286875edbe0bed6b7a62",
+      "revision_utc": "2023-05-04T09:52:17.000Z"
+    },
+    "2023-07": {
+      "status": "confirmed",
+      "revision": "d0c22c1c8e7688eb2746d4e2312846a99befa0d3",
+      "revision_utc": "2023-05-31T16:43:36.000Z"
+    },
+    "2023-08": {
+      "status": "confirmed",
+      "revision": "4e1a4551ae3c112d72fc1197964c642a720f68c5",
+      "revision_utc": "2023-06-16T19:41:56.000Z"
+    },
+    "2023-09": {
+      "status": "confirmed",
+      "revision": "4e1a4551ae3c112d72fc1197964c642a720f68c5",
+      "revision_utc": "2023-06-16T19:41:56.000Z"
+    },
+    "2023-10": {
+      "status": "confirmed",
+      "revision": "4e1a4551ae3c112d72fc1197964c642a720f68c5",
+      "revision_utc": "2023-06-16T19:41:56.000Z"
+    },
+    "2023-11": {
+      "status": "confirmed",
+      "revision": "4e1a4551ae3c112d72fc1197964c642a720f68c5",
+      "revision_utc": "2023-06-16T19:41:56.000Z"
+    },
+    "2023-12": {
+      "status": "confirmed",
+      "revision": "74a731b6ddd0b667369bc2a337c505940ec9ce9b",
+      "revision_utc": "2023-07-29T13:09:57.000Z"
+    },
+    "2023-13": {
+      "status": "confirmed",
+      "revision": "74a731b6ddd0b667369bc2a337c505940ec9ce9b",
+      "revision_utc": "2023-07-29T13:09:57.000Z"
+    },
+    "2023-14": {
+      "status": "confirmed",
+      "revision": "74a731b6ddd0b667369bc2a337c505940ec9ce9b",
+      "revision_utc": "2023-07-29T13:09:57.000Z"
+    },
+    "2023-15": {
+      "status": "confirmed",
+      "revision": "74a731b6ddd0b667369bc2a337c505940ec9ce9b",
+      "revision_utc": "2023-07-29T13:09:57.000Z"
+    },
+    "2023-16": {
+      "status": "confirmed",
+      "revision": "74a731b6ddd0b667369bc2a337c505940ec9ce9b",
+      "revision_utc": "2023-07-29T13:09:57.000Z"
+    },
+    "2023-17": {
+      "status": "confirmed",
+      "revision": "3386398e13be4cc7fcc6344e81f21f22756dad3d",
+      "revision_utc": "2023-10-07T12:53:07.000Z"
+    },
+    "2023-18": {
+      "status": "confirmed",
+      "revision": "3386398e13be4cc7fcc6344e81f21f22756dad3d",
+      "revision_utc": "2023-10-07T12:53:07.000Z"
+    },
+    "2023-19": {
+      "status": "confirmed",
+      "revision": "3386398e13be4cc7fcc6344e81f21f22756dad3d",
+      "revision_utc": "2023-10-07T12:53:07.000Z"
+    },
+    "2023-20": {
+      "status": "confirmed",
+      "revision": "3386398e13be4cc7fcc6344e81f21f22756dad3d",
+      "revision_utc": "2023-10-07T12:53:07.000Z"
+    },
+    "2023-21": {
+      "status": "confirmed",
+      "revision": "61730b11267c7630339506f0ffc0ee4e08ab56b4",
+      "revision_utc": "2023-11-17T09:55:38.000Z"
+    },
+    "2023-22": {
+      "status": "confirmed",
+      "revision": "61730b11267c7630339506f0ffc0ee4e08ab56b4",
+      "revision_utc": "2023-11-17T09:55:38.000Z"
+    },
+    "2024-01": {
+      "status": "confirmed",
+      "revision": "dc59d4dd869fe8b9a5ac78ab03c8f64e7465ea28",
+      "revision_utc": "2024-03-01T08:47:45.000Z"
+    },
+    "2024-02": {
+      "status": "confirmed",
+      "revision": "dc59d4dd869fe8b9a5ac78ab03c8f64e7465ea28",
+      "revision_utc": "2024-03-01T08:47:45.000Z"
+    },
+    "2024-03": {
+      "status": "confirmed",
+      "revision": "9ffebe5e95518ffddc6fc2f64a52a52ae77d2f33",
+      "revision_utc": "2024-03-20T12:42:40.000Z"
+    },
+    "2024-04": {
+      "status": "confirmed",
+      "revision": "9ffebe5e95518ffddc6fc2f64a52a52ae77d2f33",
+      "revision_utc": "2024-03-20T12:42:40.000Z"
+    },
+    "2024-05": {
+      "status": "confirmed",
+      "revision": "4a983d2aa2ad82f45ab53c7ebae3b70c01138c66",
+      "revision_utc": "2024-04-16T17:06:16.000Z"
+    },
+    "2024-06": {
+      "status": "confirmed",
+      "revision": "9fc05f8a072ea4ddf842641060d06124e5c9ef15",
+      "revision_utc": "2024-04-24T09:35:14.000Z"
+    },
+    "2024-07": {
+      "status": "confirmed",
+      "revision": "6fb922dbe56c28ab5cd58bdc0abb7013e57cb56f",
+      "revision_utc": "2024-05-13T14:40:33.000Z"
+    },
+    "2024-08": {
+      "status": "confirmed",
+      "revision": "865bcdca5dc873eee860ab1df9baf7b1d623f5f7",
+      "revision_utc": "2024-05-22T17:34:01.000Z"
+    },
+    "2024-09": {
+      "status": "confirmed",
+      "revision": "865bcdca5dc873eee860ab1df9baf7b1d623f5f7",
+      "revision_utc": "2024-05-22T17:34:01.000Z"
+    },
+    "2024-10": {
+      "status": "confirmed",
+      "revision": "aa22927e2744ddc22de51ce6ada33e31c3fc71f8",
+      "revision_utc": "2024-06-13T09:05:22.000Z"
+    },
+    "2024-11": {
+      "status": "confirmed",
+      "revision": "aa22927e2744ddc22de51ce6ada33e31c3fc71f8",
+      "revision_utc": "2024-06-13T09:05:22.000Z"
+    },
+    "2024-12": {
+      "status": "confirmed",
+      "revision": "aa22927e2744ddc22de51ce6ada33e31c3fc71f8",
+      "revision_utc": "2024-06-13T09:05:22.000Z"
+    },
+    "2024-13": {
+      "status": "confirmed",
+      "revision": "aa22927e2744ddc22de51ce6ada33e31c3fc71f8",
+      "revision_utc": "2024-06-13T09:05:22.000Z"
+    },
+    "2024-14": {
+      "status": "confirmed",
+      "revision": "aa22927e2744ddc22de51ce6ada33e31c3fc71f8",
+      "revision_utc": "2024-06-13T09:05:22.000Z"
+    },
+    "2024-15": {
+      "status": "confirmed",
+      "revision": "aa22927e2744ddc22de51ce6ada33e31c3fc71f8",
+      "revision_utc": "2024-06-13T09:05:22.000Z"
+    },
+    "2024-16": {
+      "status": "confirmed",
+      "revision": "aa22927e2744ddc22de51ce6ada33e31c3fc71f8",
+      "revision_utc": "2024-06-13T09:05:22.000Z"
+    },
+    "2024-17": {
+      "status": "confirmed",
+      "revision": "aa22927e2744ddc22de51ce6ada33e31c3fc71f8",
+      "revision_utc": "2024-06-13T09:05:22.000Z"
+    },
+    "2024-18": {
+      "status": "confirmed",
+      "revision": "aa22927e2744ddc22de51ce6ada33e31c3fc71f8",
+      "revision_utc": "2024-06-13T09:05:22.000Z"
+    },
+    "2024-19": {
+      "status": "confirmed",
+      "revision": "22c28664187cabbe332f99772d9fb6aa8ffb2cd3",
+      "revision_utc": "2024-09-25T08:48:28.000Z"
+    },
+    "2024-20": {
+      "status": "confirmed",
+      "revision": "279f49a6507ee1b55478b5c7c610f910b7b918e7",
+      "revision_utc": "2024-10-27T14:56:47.000Z"
+    },
+    "2024-21": {
+      "status": "corrected",
+      "revision": "22dbe26db7467bd08ca6e6eac30f5fdbb1b7753f",
+      "revision_utc": "2024-11-02T22:38:59.000Z",
+      "original_race_utc": "2024-11-03T17:00:00.000Z",
+      "corrected_race_utc": "2024-11-03T15:30:00.000Z"
+    },
+    "2024-22": {
+      "status": "corrected",
+      "revision": "4c5a017c31dd3c6928a420f97108ee84f59c7466",
+      "revision_utc": "2024-11-18T13:18:36.000Z",
+      "original_race_utc": "2024-11-23T06:00:00.000Z",
+      "corrected_race_utc": "2024-11-24T06:00:00.000Z"
+    },
+    "2024-23": {
+      "status": "confirmed",
+      "revision": "4c5a017c31dd3c6928a420f97108ee84f59c7466",
+      "revision_utc": "2024-11-18T13:18:36.000Z"
+    },
+    "2024-24": {
+      "status": "confirmed",
+      "revision": "4c5a017c31dd3c6928a420f97108ee84f59c7466",
+      "revision_utc": "2024-11-18T13:18:36.000Z"
+    },
+    "2025-01": {
+      "status": "confirmed",
+      "revision": "6597ab0cc02f07f23f8bd14e0a7821bfff717f1a",
+      "revision_utc": "2025-02-12T15:17:17.000Z"
+    },
+    "2025-02": {
+      "status": "confirmed",
+      "revision": "6597ab0cc02f07f23f8bd14e0a7821bfff717f1a",
+      "revision_utc": "2025-02-12T15:17:17.000Z"
+    },
+    "2025-03": {
+      "status": "confirmed",
+      "revision": "6597ab0cc02f07f23f8bd14e0a7821bfff717f1a",
+      "revision_utc": "2025-02-12T15:17:17.000Z"
+    },
+    "2025-04": {
+      "status": "confirmed",
+      "revision": "6597ab0cc02f07f23f8bd14e0a7821bfff717f1a",
+      "revision_utc": "2025-02-12T15:17:17.000Z"
+    },
+    "2025-05": {
+      "status": "confirmed",
+      "revision": "6597ab0cc02f07f23f8bd14e0a7821bfff717f1a",
+      "revision_utc": "2025-02-12T15:17:17.000Z"
+    },
+    "2025-06": {
+      "status": "confirmed",
+      "revision": "6597ab0cc02f07f23f8bd14e0a7821bfff717f1a",
+      "revision_utc": "2025-02-12T15:17:17.000Z"
+    },
+    "2025-07": {
+      "status": "confirmed",
+      "revision": "6597ab0cc02f07f23f8bd14e0a7821bfff717f1a",
+      "revision_utc": "2025-02-12T15:17:17.000Z"
+    },
+    "2025-08": {
+      "status": "confirmed",
+      "revision": "6597ab0cc02f07f23f8bd14e0a7821bfff717f1a",
+      "revision_utc": "2025-02-12T15:17:17.000Z"
+    },
+    "2025-09": {
+      "status": "confirmed",
+      "revision": "6597ab0cc02f07f23f8bd14e0a7821bfff717f1a",
+      "revision_utc": "2025-02-12T15:17:17.000Z"
+    },
+    "2025-10": {
+      "status": "confirmed",
+      "revision": "6597ab0cc02f07f23f8bd14e0a7821bfff717f1a",
+      "revision_utc": "2025-02-12T15:17:17.000Z"
+    },
+    "2025-11": {
+      "status": "confirmed",
+      "revision": "6597ab0cc02f07f23f8bd14e0a7821bfff717f1a",
+      "revision_utc": "2025-02-12T15:17:17.000Z"
+    },
+    "2025-12": {
+      "status": "confirmed",
+      "revision": "6597ab0cc02f07f23f8bd14e0a7821bfff717f1a",
+      "revision_utc": "2025-02-12T15:17:17.000Z"
+    },
+    "2025-13": {
+      "status": "confirmed",
+      "revision": "6597ab0cc02f07f23f8bd14e0a7821bfff717f1a",
+      "revision_utc": "2025-02-12T15:17:17.000Z"
+    },
+    "2025-14": {
+      "status": "confirmed",
+      "revision": "6597ab0cc02f07f23f8bd14e0a7821bfff717f1a",
+      "revision_utc": "2025-02-12T15:17:17.000Z"
+    },
+    "2025-15": {
+      "status": "confirmed",
+      "revision": "6597ab0cc02f07f23f8bd14e0a7821bfff717f1a",
+      "revision_utc": "2025-02-12T15:17:17.000Z"
+    },
+    "2025-16": {
+      "status": "confirmed",
+      "revision": "6597ab0cc02f07f23f8bd14e0a7821bfff717f1a",
+      "revision_utc": "2025-02-12T15:17:17.000Z"
+    },
+    "2025-17": {
+      "status": "confirmed",
+      "revision": "6597ab0cc02f07f23f8bd14e0a7821bfff717f1a",
+      "revision_utc": "2025-02-12T15:17:17.000Z"
+    },
+    "2025-18": {
+      "status": "confirmed",
+      "revision": "d2497ff5c13a78e82f701dc8d428b1cfaba8b4e6",
+      "revision_utc": "2025-09-29T16:06:07.000Z"
+    },
+    "2025-19": {
+      "status": "confirmed",
+      "revision": "d2497ff5c13a78e82f701dc8d428b1cfaba8b4e6",
+      "revision_utc": "2025-09-29T16:06:07.000Z"
+    },
+    "2025-20": {
+      "status": "confirmed",
+      "revision": "d2497ff5c13a78e82f701dc8d428b1cfaba8b4e6",
+      "revision_utc": "2025-09-29T16:06:07.000Z"
+    },
+    "2025-21": {
+      "status": "confirmed",
+      "revision": "d2497ff5c13a78e82f701dc8d428b1cfaba8b4e6",
+      "revision_utc": "2025-09-29T16:06:07.000Z"
+    },
+    "2025-22": {
+      "status": "confirmed",
+      "revision": "d2497ff5c13a78e82f701dc8d428b1cfaba8b4e6",
+      "revision_utc": "2025-09-29T16:06:07.000Z"
+    },
+    "2025-23": {
+      "status": "confirmed",
+      "revision": "f866c5ea1998c478d973150a48bdda4990c37d92",
+      "revision_utc": "2025-11-24T16:06:21.000Z"
+    },
+    "2025-24": {
+      "status": "confirmed",
+      "revision": "f866c5ea1998c478d973150a48bdda4990c37d92",
+      "revision_utc": "2025-11-24T16:06:21.000Z"
+    }
+  },
+  "control_scope": "Sealed scoring and calibration reapplied to corrected pre-race clocks; not the original report.",
+  "taf_outside_pilot_gps": 81,
+  "taf_source": {
+    "2022-05": {
+      "wet": false,
+      "issued_utc": "2022-05-08T17:23:00+00:00",
+      "station": "KFLL",
+      "source": "https://mesonet.agron.iastate.edu/api/1/nwstext/202205081723-KMFL-FTUS42-TAFFLL",
+      "cutoff_utc": "2022-05-08T19:00:00+00:00",
+      "target_utc": "2022-05-08T19:30:00+00:00",
+      "schedule_source": "https://www.fia.com/sites/default/files/start_time_info_-_version_13_17.02.22.pdf",
+      "archive_sha256": "a1a3cff1e907a167c09850a4e0f5f699c64de8d68c88864f82370c75e978945b",
+      "available_utc": "2022-05-08T17:23:00+00:00",
+      "bulletin_sha256": "a2298ec35da11108498c257f5c1ad1a6a8599368d0cbc01b0f4e07e7fb7caa5c",
+      "issuer": "KMFL",
+      "reason": "issued_forecast"
+    },
+    "2022-19": {
+      "wet": false,
+      "issued_utc": "2022-10-23T17:44:00+00:00",
+      "station": "KAUS",
+      "source": "https://mesonet.agron.iastate.edu/api/1/nwstext/202210231744-KEWX-FTUS44-TAFAUS",
+      "cutoff_utc": "2022-10-23T18:30:00+00:00",
+      "target_utc": "2022-10-23T19:00:00+00:00",
+      "schedule_source": "https://www.fia.com/sites/default/files/start_time_info_-_version_13_17.02.22.pdf",
+      "archive_sha256": "6dc18cb40f5fa4c3b55c4585282a5ea33cfbeea42a0050653fea716581c98d9e",
+      "available_utc": "2022-10-23T17:44:00+00:00",
+      "bulletin_sha256": "0faa0dde23974fd58d0c37618d1cb89ce5f8833254106d8ffd1135b870b8bb0d",
+      "issuer": "KEWX",
+      "reason": "issued_forecast"
+    },
+    "2023-05": {
+      "wet": false,
+      "issued_utc": "2023-05-07T17:20:00+00:00",
+      "station": "KFLL",
+      "source": "https://mesonet.agron.iastate.edu/api/1/nwstext/202305071720-KMFL-FTUS42-TAFFLL",
+      "cutoff_utc": "2023-05-07T19:00:00+00:00",
+      "target_utc": "2023-05-07T19:30:00+00:00",
+      "schedule_source": "https://www.fia.com/sites/default/files/start_time_info_-_version_3_08.12.22.pdf",
+      "archive_sha256": "898d6d113294f8ab4380543a189d34119424d1c3ad338fb18d96bf9b5d68674a",
+      "available_utc": "2023-05-07T17:20:00+00:00",
+      "bulletin_sha256": "435bcb317513e09de176a392e29df860e56f4ccfa37013bd7f5f6d3b9f1eb3b0",
+      "issuer": "KMFL",
+      "reason": "issued_forecast"
+    },
+    "2023-18": {
+      "wet": false,
+      "issued_utc": "2023-10-22T17:20:00+00:00",
+      "station": "KAUS",
+      "source": "https://mesonet.agron.iastate.edu/api/1/nwstext/202310221720-KEWX-FTUS44-TAFAUS",
+      "cutoff_utc": "2023-10-22T18:30:00+00:00",
+      "target_utc": "2023-10-22T19:00:00+00:00",
+      "schedule_source": "https://www.fia.com/sites/default/files/start_time_info_-_version_3_08.12.22.pdf",
+      "archive_sha256": "165b02f8f43caa470aaf93090a89a1f2a5cecd140c823a1a965ae958d7aac1e6",
+      "available_utc": "2023-10-22T17:20:00+00:00",
+      "bulletin_sha256": "0045e28d8481227c93812d5deab497b66424e96c9c42e271353b5aaf3fd68f9e",
+      "issuer": "KEWX",
+      "reason": "issued_forecast"
+    },
+    "2023-21": {
+      "wet": false,
+      "issued_utc": "2023-11-19T05:20:00+00:00",
+      "station": "KLAS",
+      "source": "https://mesonet.agron.iastate.edu/api/1/nwstext/202311190520-KVEF-FTUS45-TAFLAS",
+      "cutoff_utc": "2023-11-19T05:30:00+00:00",
+      "target_utc": "2023-11-19T06:00:00+00:00",
+      "schedule_source": "https://www.fia.com/sites/default/files/start_time_info_-_version_3_08.12.22.pdf",
+      "archive_sha256": "1b20ba20390a78abb3e45ed5345458440c65a3c506fb65661cc2d08e16ae34e6",
+      "available_utc": "2023-11-19T05:20:00+00:00",
+      "bulletin_sha256": "e5db9255faddfd3c84c495e6dc4fe7e7dcb399a218b426873afae26034c2412c",
+      "issuer": "KVEF",
+      "reason": "issued_forecast"
+    },
+    "2024-06": {
+      "wet": false,
+      "issued_utc": "2024-05-05T17:20:00+00:00",
+      "station": "KFLL",
+      "source": "https://mesonet.agron.iastate.edu/api/1/nwstext/202405051720-KMFL-FTUS42-TAFFLL",
+      "cutoff_utc": "2024-05-05T19:30:00+00:00",
+      "target_utc": "2024-05-05T20:00:00+00:00",
+      "schedule_source": "https://www.fia.com/sites/default/files/start_time_info_-_version_1_16.01.24_1.pdf",
+      "archive_sha256": "d974127e6fa065cb4d686364dfbfaa62fbca020022f51bbd1cdf7896e8042433",
+      "available_utc": "2024-05-05T17:20:00+00:00",
+      "bulletin_sha256": "c60d46357a9cb2d961b20c4d0985f04b5d20408e85b01ea58ff5f00db7ccd790",
+      "issuer": "KMFL",
+      "reason": "issued_forecast"
+    },
+    "2024-19": {
+      "wet": false,
+      "issued_utc": "2024-10-20T17:36:00+00:00",
+      "station": "KAUS",
+      "source": "https://mesonet.agron.iastate.edu/api/1/nwstext/202410201736-KEWX-FTUS44-TAFAUS",
+      "cutoff_utc": "2024-10-20T18:30:00+00:00",
+      "target_utc": "2024-10-20T19:00:00+00:00",
+      "schedule_source": "https://www.fia.com/sites/default/files/start_time_info_-_version_1_16.01.24_1.pdf",
+      "archive_sha256": "db150fcd2179a2bb26c99a6f88b378c32939868bb6a0c8f529ffce31a3faf40f",
+      "available_utc": "2024-10-20T17:36:00+00:00",
+      "bulletin_sha256": "69279f87b8322ed8ec45e33404415bcd7e27521037283749f75fdba53bd54313",
+      "issuer": "KEWX",
+      "reason": "issued_forecast"
+    },
+    "2024-22": {
+      "wet": false,
+      "issued_utc": "2024-11-24T05:20:00+00:00",
+      "station": "KLAS",
+      "source": "https://mesonet.agron.iastate.edu/api/1/nwstext/202411240520-KVEF-FTUS45-TAFLAS",
+      "cutoff_utc": "2024-11-24T05:30:00+00:00",
+      "target_utc": "2024-11-24T06:00:00+00:00",
+      "schedule_source": "https://www.fia.com/sites/default/files/start_time_info_-_version_1_16.01.24_1.pdf",
+      "archive_sha256": "931a50ca677396d43a35847ad65d6c379b85d1d88b06bb00249253308b66abf3",
+      "available_utc": "2024-11-24T05:20:00+00:00",
+      "bulletin_sha256": "c13b2bf48efbec8c3704959f58a2332b8888ff644502d729d311a7e88555a584",
+      "issuer": "KVEF",
+      "reason": "issued_forecast"
+    },
+    "2025-06": {
+      "wet": false,
+      "issued_utc": "2025-05-04T17:20:00+00:00",
+      "station": "KFLL",
+      "source": "https://mesonet.agron.iastate.edu/api/1/nwstext/202505041720-KMFL-FTUS42-TAFFLL",
+      "cutoff_utc": "2025-05-04T19:30:00+00:00",
+      "target_utc": "2025-05-04T20:00:00+00:00",
+      "schedule_source": "https://www.formula1.com/en/latest/article/f1-announces-race-start-times-for-2025-season.490KLLD7T1AAM7wQl28tn6",
+      "archive_sha256": "70eff30cc5a09946ba1553372a188af5dad581f47b3ea9431c005283e0b1922a",
+      "available_utc": "2025-05-04T17:20:00+00:00",
+      "bulletin_sha256": "3efe065a7a418d42817190d832c906903d7f57b4824c51a5ed700b43ba59eab6",
+      "issuer": "KMFL",
+      "reason": "issued_forecast"
+    },
+    "2025-19": {
+      "wet": false,
+      "issued_utc": "2025-10-19T17:20:00+00:00",
+      "station": "KAUS",
+      "source": "https://mesonet.agron.iastate.edu/api/1/nwstext/202510191720-KEWX-FTUS44-TAFAUS",
+      "cutoff_utc": "2025-10-19T18:30:00+00:00",
+      "target_utc": "2025-10-19T19:00:00+00:00",
+      "schedule_source": "https://www.formula1.com/en/latest/article/f1-announces-race-start-times-for-2025-season.490KLLD7T1AAM7wQl28tn6",
+      "archive_sha256": "52b248da5cded71af9e52056cbcebc88ab0e2eb548b95fcaf1a427eb177c07c7",
+      "available_utc": "2025-10-19T17:20:00+00:00",
+      "bulletin_sha256": "9be7bc05bca2d01b84ad39cbb3283857a681fe6ba5aba6b81b8b349e2ebc3e26",
+      "issuer": "KEWX",
+      "reason": "issued_forecast"
+    },
+    "2025-22": {
+      "wet": true,
+      "issued_utc": "2025-11-23T02:31:00+00:00",
+      "station": "KLAS",
+      "source": "https://mesonet.agron.iastate.edu/api/1/nwstext/202511230231-KVEF-FTUS45-TAFLAS-AAA",
+      "cutoff_utc": "2025-11-23T03:30:00+00:00",
+      "target_utc": "2025-11-23T04:00:00+00:00",
+      "schedule_source": "https://www.formula1.com/en/latest/article/f1-announces-race-start-times-for-2025-season.490KLLD7T1AAM7wQl28tn6",
+      "archive_sha256": "15afca9b385b13c6d54cc8631ef90e344afb9b2fac48c30fa3cd44ce63f964c2",
+      "available_utc": "2025-11-23T02:31:00+00:00",
+      "bulletin_sha256": "acf2ed00c9d83ba20a0fda28cdc1734511dc460618f7f2f479e21dfb9459db62",
+      "issuer": "KVEF",
+      "reason": "issued_forecast"
+    }
+  }
+}

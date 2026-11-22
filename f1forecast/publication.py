@@ -28,6 +28,18 @@ def new_feed(gp, mode, source, distance=None):
             "complete": False, "predictions": []}
 
 
+def pre_race_events(events, gp_id, cutoff):
+    """A pre-race cut cannot use the race it forecasts, even with a wrong schedule."""
+    for event in events:
+        if event["at"] > cutoff:
+            continue
+        if event.get("session") == "Race":
+            if event["kind"] == "session" and event.get("status") == "Started":
+                raise ValueError(f"{gp_id}: observed Race start at or before T−30; check the advertised schedule")
+            continue
+        yield event
+
+
 def prediction(bundle, snap, published=None):
     mass = distribution(bundle, snap)
     x, top, top_p = summarize(mass, len(snap.drivers))
