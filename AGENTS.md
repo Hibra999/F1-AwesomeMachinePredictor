@@ -25,6 +25,10 @@ flowchart TD
 - `f1forecast/` owns data ingestion, model training and forecasting. `site/` is the deployable dashboard; `site/data/index.json` points to the upcoming forecast, archived replays and live feed.
 - `reports/` holds derived evaluation and leakage evidence. Keep raw timing, classifications, datasets and model bundles in ignored `.local/`, outside Git and the public site.
 
+## Delivery
+
+Verify each project change, commit it, then push every commit to GitHub `origin` before reporting completion. Preserve existing history and report any push failure.
+
 ## Development Commands
 
 Run from the repository root:
