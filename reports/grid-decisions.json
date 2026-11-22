@@ -1,0 +1,1353 @@
+{
+  "2024-01": {
+    "listing_url": "https://www.fia.com/documents/championships/fia-formula-one-world-championship-14/season/season-2024-2043/event/Bahrain%20Grand%20Prix",
+    "cutoff_utc": "2024-03-02T14:30:00Z",
+    "reason": "ok",
+    "decisions": []
+  },
+  "2024-02": {
+    "listing_url": "https://www.fia.com/documents/championships/fia-formula-one-world-championship-14/season/season-2024-2043/event/Saudi%20Arabian%20Grand%20Prix",
+    "cutoff_utc": "2024-03-09T16:30:00Z",
+    "reason": "partial_drivers",
+    "decisions": [],
+    "unresolved": [
+      {
+        "car": 24,
+        "driver": "ZHO",
+        "document": null,
+        "url": "https://www.fia.com/sites/default/files/decision-document/2024%20Saudi%20Arabian%20Grand%20Prix%20-%20Decision%20-%20Car%2024%20-%20Failing%20to%20set%20a%20lap%20time%20within%20107%25.pdf",
+        "available_utc": "2024-03-08T18:54:00Z",
+        "reason": "eligibility_107_pdf_unavailable"
+      }
+    ]
+  },
+  "2024-03": {
+    "listing_url": "https://www.fia.com/documents/championships/fia-formula-one-world-championship-14/season/season-2024-2043/event/Australian%20Grand%20Prix",
+    "cutoff_utc": "2024-03-24T03:30:00Z",
+    "reason": "ok",
+    "decisions": [
+      {
+        "driver": "PER",
+        "kind": "places",
+        "available_utc": "2024-03-23T08:09:00Z",
+        "url": "https://www.fia.com/sites/default/files/decision-document/2024%20Australian%20Grand%20Prix%20-%20Infringement%20-%20Car%2011%20-%20Impeding%20of%20Car%2027.pdf",
+        "document": 36,
+        "places": 3,
+        "sha256": "b03a2efa39c63f7c9e55315c7cf1fa5e212cf8584bdb0bb61422920216dea01d",
+        "copy_url": "https://raw.githubusercontent.com/TracingInsights/DDocs/51188d899b885ef3e46ca05854dea50be55c9172/documents/2024/australian-grand-prix/infringement-car-11-impeding-of-car-27.pdf",
+        "published_clock": "2024-03-23 09:09"
+      },
+      {
+        "driver": "ZHO",
+        "kind": "pit",
+        "available_utc": "2024-03-24T01:55:00Z",
+        "url": "https://www.fia.com/sites/default/files/decision-document/2024%20Australian%20Grand%20Prix%20-%20Infringement%20-%20Car%2024%20-%20Changes%20made%20during%20Parc%20Ferme.pdf",
+        "document": 43,
+        "sha256": "391430f9096497d794f154b1fcdcbd795e553a5b46a6594c3f549145b0cb9ce9",
+        "copy_url": "https://raw.githubusercontent.com/TracingInsights/DDocs/51188d899b885ef3e46ca05854dea50be55c9172/documents/2024/australian-grand-prix/infringement-car-24-changes-made-during-parc-ferme.pdf",
+        "published_clock": "2024-03-24 02:55"
+      }
+    ]
+  },
+  "2024-04": {
+    "listing_url": "https://www.fia.com/documents/championships/fia-formula-one-world-championship-14/season/season-2024-2043/event/Japanese%20Grand%20Prix",
+    "cutoff_utc": "2024-04-07T04:30:00Z",
+    "reason": "ok",
+    "decisions": []
+  },
+  "2024-05": {
+    "listing_url": "https://www.fia.com/documents/championships/fia-formula-one-world-championship-14/season/season-2024-2043/event/Chinese%20Grand%20Prix",
+    "cutoff_utc": "2024-04-21T06:30:00Z",
+    "reason": "ok",
+    "decisions": [
+      {
+        "driver": "SAR",
+        "kind": "pit",
+        "available_utc": "2024-04-21T05:35:00Z",
+        "url": "https://www.fia.com/sites/default/files/decision-document/2024%20Chinese%20Grand%20Prix%20-%20Infringement%20-%20Car%202%20-%20Changes%20made%20during%20Parc%20Ferme.pdf",
+        "document": 58,
+        "sha256": "e485fefa1a2a0ecdd09cabc7f0d33fdc9e95b9478b5c1dd990b3e2a4d31b55e6",
+        "copy_url": "https://raw.githubusercontent.com/TracingInsights/DDocs/51188d899b885ef3e46ca05854dea50be55c9172/documents/2024/chinese-grand-prix/infringement-car-2-changes-made-during-parc-ferme.pdf",
+        "published_clock": "2024-04-21 06:35"
+      }
+    ]
+  },
+  "2024-06": {
+    "listing_url": "https://www.fia.com/documents/championships/fia-formula-one-world-championship-14/season/season-2024-2043/event/Miami%20Grand%20Prix",
+    "cutoff_utc": "2024-05-05T19:30:00Z",
+    "reason": "ok",
+    "decisions": [
+      {
+        "driver": "HAM",
+        "kind": "other",
+        "available_utc": "2024-05-04T01:01:00Z",
+        "url": "https://www.fia.com/sites/default/files/decision-document/2024%20Miami%20Grand%20Prix%20-%20Decision%20-%20Car%2044%20-%20Pit%20lane%20infringement.pdf",
+        "document": 27,
+        "detail": "no_action",
+        "sha256": "4d0a6babf4b56cf95964074265ed2af6ba9526cc194aa546c5253efd27075ba5",
+        "copy_url": "https://raw.githubusercontent.com/TracingInsights/DDocs/51188d899b885ef3e46ca05854dea50be55c9172/documents/2024/miami-grand-prix/decision-car-44-pit-lane-infringement.pdf",
+        "published_clock": "2024-05-04 02:01"
+      },
+      {
+        "driver": "GAS",
+        "kind": "other",
+        "available_utc": "2024-05-05T01:47:00Z",
+        "url": "https://www.fia.com/sites/default/files/decision-document/2024%20Miami%20Grand%20Prix%20-%20Decision%20-%20Car%2010%20-%20Alleged%20pit%20lane%20infringement.pdf",
+        "document": 66,
+        "detail": "no_action",
+        "sha256": "6eccb73ecebbd61687afb711ba25d7949215b8ae2b720401b5ad2a2732a0a0e2",
+        "copy_url": "https://raw.githubusercontent.com/TracingInsights/DDocs/51188d899b885ef3e46ca05854dea50be55c9172/documents/2024/miami-grand-prix/decision-car-10-alleged-pit-lane-infringement.pdf",
+        "published_clock": "2024-05-05 02:47"
+      }
+    ]
+  },
+  "2024-07": {
+    "listing_url": "https://www.fia.com/documents/championships/fia-formula-one-world-championship-14/season/season-2024-2043/event/Emilia%20Romagna%20Grand%20Prix",
+    "cutoff_utc": "2024-05-19T12:30:00Z",
+    "reason": "partial_drivers",
+    "decisions": [
+      {
+        "driver": "PER",
+        "kind": "other",
+        "available_utc": "2024-05-17T18:09:00Z",
+        "url": "https://www.fia.com/sites/default/files/decision-document/2024%20Emilia%20Romagna%20Grand%20Prix%20-%20Decision%20-%20Car%2011%20-%20Alleged%20impeding%20of%20Car%2016.pdf",
+        "document": 22,
+        "detail": "no_action",
+        "sha256": "2932132fa93f844034fe119a3b5ba29cbc88afd45d561090c4c0e52b3a3fe922",
+        "copy_url": "https://raw.githubusercontent.com/TracingInsights/DDocs/51188d899b885ef3e46ca05854dea50be55c9172/documents/2024/emilia-romagna-grand-prix/decision-car-11-alleged-impeding-of-car-16.pdf",
+        "published_clock": "2024-05-17 19:09"
+      },
+      {
+        "driver": "PIA",
+        "kind": "places",
+        "available_utc": "2024-05-18T18:19:00Z",
+        "url": "https://www.fia.com/sites/default/files/decision-document/2024%20Emilia%20Romagna%20Grand%20Prix%20-%20Infringement%20-%20Car%2081%20-%20Impeding%20of%20Car%2020.pdf",
+        "document": 40,
+        "places": 3,
+        "sha256": "d0b3e694274c1dcdebe8fe574c622339401a8aa08945f5093d517de58357c345",
+        "copy_url": "https://raw.githubusercontent.com/TracingInsights/DDocs/51188d899b885ef3e46ca05854dea50be55c9172/documents/2024/emilia-romagna-grand-prix/infringement-car-81-impeding-of-car-20.pdf",
+        "published_clock": "2024-05-18 19:19"
+      },
+      {
+        "driver": "ALO",
+        "kind": "pit",
+        "available_utc": "2024-05-19T11:46:00Z",
+        "url": "https://www.fia.com/sites/default/files/decision-document/2024%20Emilia%20Romagna%20Grand%20Prix%20-%20Infringement%20-%20Car%2014%20-%20Changes%20made%20during%20Parc%20Ferme%20(Corrected).pdf",
+        "document": 47,
+        "sha256": "c7f1ee651e2d8ab55956cd78daf28f9b5458367d88cfdac0550e6a4974e705ef",
+        "copy_url": "https://raw.githubusercontent.com/TracingInsights/DDocs/51188d899b885ef3e46ca05854dea50be55c9172/documents/2024/emilia-romagna-grand-prix/infringement-car-14-changes-made-during-parc-ferme-corrected.pdf",
+        "published_clock": "2024-05-19 12:46"
+      }
+    ],
+    "unresolved": [
+      {
+        "car": 2,
+        "driver": "SAR",
+        "document": null,
+        "url": "https://www.fia.com/sites/default/files/decision-document/2024%20Emilia%20Romagna%20Grand%20Prix%20-%20Decision%20-%20Car%202%20-%20Failing%20to%20set%20a%20lap%20time%20within%20107%25.pdf",
+        "available_utc": "2024-05-18T18:45:00Z",
+        "reason": "eligibility_107_pdf_unavailable"
+      }
+    ]
+  },
+  "2024-08": {
+    "listing_url": "https://www.fia.com/documents/championships/fia-formula-one-world-championship-14/season/season-2024-2043/event/Monaco%20Grand%20Prix",
+    "cutoff_utc": "2024-05-26T12:30:00Z",
+    "reason": "ok",
+    "decisions": [
+      {
+        "driver": "SAI",
+        "kind": "other",
+        "available_utc": "2024-05-25T18:49:00Z",
+        "url": "https://www.fia.com/sites/default/files/decision-document/2024%20Monaco%20Grand%20Prix%20-%20Decision%20-%20Car%2055%20-%20Alleged%20impeding%20of%20Car%2023.pdf",
+        "document": 36,
+        "detail": "no_action",
+        "sha256": "73846e57b288b970610e5575954a941fedb164fe6b996005c86cdba2aa7998ff",
+        "copy_url": "https://raw.githubusercontent.com/TracingInsights/DDocs/51188d899b885ef3e46ca05854dea50be55c9172/documents/2024/monaco-grand-prix/decision-car-55-alleged-impeding-of-car-23.pdf",
+        "published_clock": "2024-05-25 19:49"
+      },
+      {
+        "driver": "HUL",
+        "kind": "other",
+        "available_utc": "2024-05-25T19:04:00Z",
+        "url": "https://www.fia.com/sites/default/files/decision-document/2024%20Monaco%20Grand%20Prix%20-%20Decision%20-%20Car%2027%20-%20Alleged%20impeding%20of%20Car%2031.pdf",
+        "document": 35,
+        "detail": "no_action",
+        "sha256": "7dd782ab03fa07daea47ae5c8cb43d339f94d9bfbf23d529fa6844f0bf809876",
+        "copy_url": "https://raw.githubusercontent.com/TracingInsights/DDocs/51188d899b885ef3e46ca05854dea50be55c9172/documents/2024/monaco-grand-prix/decision-car-27-alleged-impeding-of-car-31.pdf",
+        "published_clock": "2024-05-25 20:04"
+      },
+      {
+        "driver": "MAG",
+        "kind": "other",
+        "available_utc": "2024-05-25T19:24:00Z",
+        "url": "https://www.fia.com/sites/default/files/decision-document/2024%20Monaco%20Grand%20Prix%20-%20Infringement%20-%20Car%2020%20-%20Technical%20non-compliance.pdf",
+        "document": 37,
+        "detail": "dsq",
+        "sha256": "6df45f15ffb343687eac76b566125aa55f0d7ad610bc8d13b7ada99a2c305b38",
+        "copy_url": "https://raw.githubusercontent.com/TracingInsights/DDocs/51188d899b885ef3e46ca05854dea50be55c9172/documents/2024/monaco-grand-prix/infringement-car-20-technical-non-compliance.pdf",
+        "published_clock": "2024-05-25 20:24"
+      },
+      {
+        "driver": "HUL",
+        "kind": "other",
+        "available_utc": "2024-05-25T19:24:00Z",
+        "url": "https://www.fia.com/sites/default/files/decision-document/2024%20Monaco%20Grand%20Prix%20-%20Infringement%20-%20Car%2027%20-%20Technical%20non-compliance.pdf",
+        "document": 38,
+        "detail": "dsq",
+        "sha256": "f1c55fd6303ae58e19be7871c16caba0d73dff04d3575f09a3e3cafc0e44aea8",
+        "copy_url": "https://raw.githubusercontent.com/TracingInsights/DDocs/51188d899b885ef3e46ca05854dea50be55c9172/documents/2024/monaco-grand-prix/infringement-car-27-technical-non-compliance.pdf",
+        "published_clock": "2024-05-25 20:24"
+      }
+    ]
+  },
+  "2024-09": {
+    "listing_url": "https://www.fia.com/documents/championships/fia-formula-one-world-championship-14/season/season-2024-2043/event/Canadian%20Grand%20Prix",
+    "cutoff_utc": "2024-06-09T17:30:00Z",
+    "reason": "ok",
+    "decisions": [
+      {
+        "driver": "VER",
+        "kind": "other",
+        "available_utc": "2024-06-09T00:22:00Z",
+        "url": "https://www.fia.com/sites/default/files/decision-document/2024%20Canadian%20Grand%20Prix%20-%20Decision%20-%20Car%201%20-%20Alleged%20Pit%20Lane%20infringement.pdf",
+        "document": 36,
+        "detail": "no_action",
+        "sha256": "d74b38d5ed66cf7f9635993e22944f78d75138eae589960a376a53be466d7c65",
+        "copy_url": "https://raw.githubusercontent.com/TracingInsights/DDocs/51188d899b885ef3e46ca05854dea50be55c9172/documents/2024/canadian-grand-prix/decision-car-1-alleged-pit-lane-infringement.pdf",
+        "published_clock": "2024-06-09 01:22"
+      },
+      {
+        "driver": "ZHO",
+        "kind": "pit",
+        "available_utc": "2024-06-09T16:58:00Z",
+        "url": "https://www.fia.com/sites/default/files/decision-document/2024%20Canadian%20Grand%20Prix%20-%20Infringement%20-%20Car%2024%20-%20Changes%20made%20during%20Parc%20Ferme.pdf",
+        "document": 44,
+        "sha256": "ecfeef435afcc41693035eb944d1ceecee050cccc1b494c7be4cd8408e75da68",
+        "copy_url": "https://raw.githubusercontent.com/TracingInsights/DDocs/51188d899b885ef3e46ca05854dea50be55c9172/documents/2024/canadian-grand-prix/infringement-car-24-changes-made-during-parc-ferme.pdf",
+        "published_clock": "2024-06-09 17:58"
+      },
+      {
+        "driver": "BOT",
+        "kind": "pit",
+        "available_utc": "2024-06-09T16:58:00Z",
+        "url": "https://www.fia.com/sites/default/files/decision-document/2024%20Canadian%20Grand%20Prix%20-%20Infringement%20-%20Car%2077%20-%20Changes%20made%20during%20Parc%20Ferme.pdf",
+        "document": 45,
+        "sha256": "e437653a8b191aaaa008f24163b81830e3a482f6ca697d730d2284e4e4f8393a",
+        "copy_url": "https://raw.githubusercontent.com/TracingInsights/DDocs/51188d899b885ef3e46ca05854dea50be55c9172/documents/2024/canadian-grand-prix/infringement-car-77-changes-made-during-parc-ferme.pdf",
+        "published_clock": "2024-06-09 17:58"
+      }
+    ]
+  },
+  "2024-10": {
+    "listing_url": "https://www.fia.com/documents/championships/fia-formula-one-world-championship-14/season/season-2024-2043/event/Spanish%20Grand%20Prix",
+    "cutoff_utc": "2024-06-23T12:30:00Z",
+    "reason": "ok",
+    "decisions": [
+      {
+        "driver": "SAR",
+        "kind": "places",
+        "available_utc": "2024-06-22T17:49:00Z",
+        "url": "https://www.fia.com/sites/default/files/decision-document/2024%20Spanish%20Grand%20Prix%20-%20Infringement%20-%20Car%202%20-%20Impeding%20of%20Car%2018.pdf",
+        "document": 36,
+        "places": 3,
+        "sha256": "c9e597762d7bd75e75306f3e60629d9ecf0d5f5d4e277130639eded8d2c35009",
+        "copy_url": "https://raw.githubusercontent.com/TracingInsights/DDocs/51188d899b885ef3e46ca05854dea50be55c9172/documents/2024/spanish-grand-prix/infringement-car-2-impeding-of-car-18.pdf",
+        "published_clock": "2024-06-22 18:49"
+      },
+      {
+        "driver": "ALB",
+        "kind": "pit",
+        "available_utc": "2024-06-23T10:58:00Z",
+        "url": "https://www.fia.com/sites/default/files/decision-document/2024%20Spanish%20Grand%20Prix%20-%20Infringement%20-%20Car%2023%20-%20Changes%20made%20during%20Parc%20Ferme.pdf",
+        "document": 41,
+        "sha256": "7d1e624610bad223e121a9bd33c9cbaad1b7b66037bfe1dbf1cf363c3ec32b65",
+        "copy_url": "https://raw.githubusercontent.com/TracingInsights/DDocs/51188d899b885ef3e46ca05854dea50be55c9172/documents/2024/spanish-grand-prix/infringement-car-23-changes-made-during-parc-ferme.pdf",
+        "published_clock": "2024-06-23 11:58"
+      }
+    ]
+  },
+  "2024-11": {
+    "listing_url": "https://www.fia.com/documents/championships/fia-formula-one-world-championship-14/season/season-2024-2043/event/Austrian%20Grand%20Prix",
+    "cutoff_utc": "2024-06-30T12:30:00Z",
+    "reason": "ok",
+    "decisions": [
+      {
+        "driver": "ZHO",
+        "kind": "pit",
+        "available_utc": "2024-06-30T10:59:00Z",
+        "url": "https://www.fia.com/sites/default/files/decision-document/2024%20Austrian%20Grand%20Prix%20-%20Infringement%20-%20Car%2024%20%20-%20Changes%20made%20during%20Parc%20Ferme.pdf",
+        "document": 59,
+        "sha256": "261d9065abb92c677cd090e2939dfa4a5a953dadd5d2837b95214f269585764e",
+        "copy_url": "https://raw.githubusercontent.com/TracingInsights/DDocs/51188d899b885ef3e46ca05854dea50be55c9172/documents/2024/austrian-grand-prix/infringement-car-24-changes-made-during-parc-ferme.pdf",
+        "published_clock": "2024-06-30 11:59"
+      }
+    ]
+  },
+  "2024-12": {
+    "listing_url": "https://www.fia.com/documents/championships/fia-formula-one-world-championship-14/season/season-2024-2043/event/British%20Grand%20Prix",
+    "cutoff_utc": "2024-07-07T13:30:00Z",
+    "reason": "ok",
+    "decisions": [
+      {
+        "driver": "GAS",
+        "kind": "back",
+        "available_utc": "2024-07-05T15:16:00Z",
+        "url": "https://www.fia.com/sites/default/files/decision-document/2024%20British%20Grand%20Prix%20-%20Infringement%20-%20Car%2010%20-%20PU%20elements.pdf",
+        "document": 18,
+        "sha256": "8516e6c194fb2e3ea59cb13b4a83132e7ef6cc2a55f5623a2b7531911ad6ba41",
+        "copy_url": "https://raw.githubusercontent.com/TracingInsights/DDocs/51188d899b885ef3e46ca05854dea50be55c9172/documents/2024/british-grand-prix/infringement-car-10-pu-elements.pdf",
+        "published_clock": "2024-07-05 16:16"
+      },
+      {
+        "driver": "PER",
+        "kind": "pit",
+        "available_utc": "2024-07-07T12:38:00Z",
+        "url": "https://www.fia.com/sites/default/files/decision-document/2024%20British%20Grand%20Prix%20-%20Infringement%20-%20Car%2011%20-%20Changes%20made%20during%20Parc%20Ferme.pdf",
+        "document": 43,
+        "sha256": "a92b3b5fc157b3d0128704aa4af35aec66e75cfc588b61da4671079e4e06f36a",
+        "copy_url": "https://raw.githubusercontent.com/TracingInsights/DDocs/51188d899b885ef3e46ca05854dea50be55c9172/documents/2024/british-grand-prix/infringement-car-11-changes-made-during-parc-ferme.pdf",
+        "published_clock": "2024-07-07 13:38"
+      }
+    ]
+  },
+  "2024-13": {
+    "listing_url": "https://www.fia.com/documents/championships/fia-formula-one-world-championship-14/season/season-2024-2043/event/Hungarian%20Grand%20Prix",
+    "cutoff_utc": "2024-07-21T12:30:00Z",
+    "reason": "ok",
+    "decisions": [
+      {
+        "driver": "GAS",
+        "kind": "pit",
+        "available_utc": "2024-07-21T11:37:00Z",
+        "url": "https://www.fia.com/sites/default/files/decision-document/2024%20Hungarian%20Grand%20Prix%20-%20Infringement%20-%20Car%2010%20-%20Changes%20made%20during%20Parc%20Ferme.pdf",
+        "document": 33,
+        "sha256": "694e60a5ed29de0f5c88a5163c85625b7be2c66fcfcb565b105dadfb479fefbe",
+        "copy_url": "https://raw.githubusercontent.com/TracingInsights/DDocs/51188d899b885ef3e46ca05854dea50be55c9172/documents/2024/hungarian-grand-prix/infringement-car-10-changes-made-during-parc-ferme.pdf",
+        "published_clock": "2024-07-21 12:37"
+      }
+    ]
+  },
+  "2024-14": {
+    "listing_url": "https://www.fia.com/documents/championships/fia-formula-one-world-championship-14/season/season-2024-2043/event/Belgian%20Grand%20Prix",
+    "cutoff_utc": "2024-07-28T12:30:00Z",
+    "reason": "ok",
+    "decisions": [
+      {
+        "driver": "VER",
+        "kind": "places",
+        "available_utc": "2024-07-26T13:37:00Z",
+        "url": "https://www.fia.com/sites/default/files/decision-document/2024%20Belgian%20Grand%20Prix%20-%20Infringement%20-%20Car%201%20-%20PU%20elements.pdf",
+        "document": 13,
+        "places": 10,
+        "sha256": "dbc89bf6dfabfe4a0b21eff7bc8e9062bfb15cd4cac5707426648b20f06343fe",
+        "copy_url": "https://raw.githubusercontent.com/TracingInsights/DDocs/51188d899b885ef3e46ca05854dea50be55c9172/documents/2024/belgian-grand-prix/infringement-car-1-pu-elements.pdf",
+        "published_clock": "2024-07-26 14:37"
+      },
+      {
+        "driver": "TSU",
+        "kind": "back",
+        "available_utc": "2024-07-26T14:02:00Z",
+        "url": "https://www.fia.com/sites/default/files/decision-document/2024%20Belgian%20Grand%20Prix%20-%20Infringement%20-%20Car%2022%20-%20PU%20elements.pdf",
+        "document": 18,
+        "sha256": "b877459ac16d4fda08940268cdb36e1e6713315996e94c399d7ca4d2c235be49",
+        "copy_url": "https://raw.githubusercontent.com/TracingInsights/DDocs/51188d899b885ef3e46ca05854dea50be55c9172/documents/2024/belgian-grand-prix/infringement-car-22-pu-elements.pdf",
+        "published_clock": "2024-07-26 15:02"
+      },
+      {
+        "driver": "ZHO",
+        "kind": "places",
+        "available_utc": "2024-07-27T17:25:00Z",
+        "url": "https://www.fia.com/sites/default/files/decision-document/2024%20Belgian%20Grand%20Prix%20-%20Infringement%20-%20Car%2024%20-%20Impeding%20of%20Car%201.pdf",
+        "document": 32,
+        "places": 3,
+        "sha256": "8a62428b2d79676ac145a6a974becf11812bacd13a9ef913544876fc6a738c08",
+        "copy_url": "https://raw.githubusercontent.com/TracingInsights/DDocs/51188d899b885ef3e46ca05854dea50be55c9172/documents/2024/belgian-grand-prix/infringement-car-24-impeding-of-car-1.pdf",
+        "published_clock": "2024-07-27 18:25"
+      }
+    ]
+  },
+  "2024-15": {
+    "listing_url": "https://www.fia.com/documents/championships/fia-formula-one-world-championship-14/season/season-2024-2043/event/Dutch%20Grand%20Prix",
+    "cutoff_utc": "2024-08-25T12:30:00Z",
+    "reason": "partial_drivers",
+    "decisions": [
+      {
+        "driver": "HAM",
+        "kind": "places",
+        "available_utc": "2024-08-25T09:51:00Z",
+        "url": "https://www.fia.com/sites/default/files/decision-document/2024%20Dutch%20Grand%20Prix%20-%20Infringement%20-%20Car%2044%20-%20impeding%20of%20Car%2011.pdf",
+        "document": 38,
+        "places": 3,
+        "sha256": "7fa07ab6677f8e58efb35abf016a2015d568e5952c8d0f5bd0cee4974413cab5",
+        "copy_url": "https://raw.githubusercontent.com/TracingInsights/DDocs/51188d899b885ef3e46ca05854dea50be55c9172/documents/2024/dutch-grand-prix/infringement-car-44-impeding-of-car-11.pdf",
+        "published_clock": "2024-08-25 10:51"
+      },
+      {
+        "driver": "MAG",
+        "kind": "pit",
+        "available_utc": "2024-08-25T11:27:00Z",
+        "url": "https://www.fia.com/sites/default/files/decision-document/2024%20Dutch%20Grand%20Prix%20-%20Infringement%20-%20Car%2020%20-%20Changes%20made%20during%20Parc%20Ferme.pdf",
+        "document": 47,
+        "sha256": "3fe52d4ddade3e7cc12807ac57e30a2bf1f9a94a625af1179d21cc38cc479c07",
+        "copy_url": "https://raw.githubusercontent.com/TracingInsights/DDocs/51188d899b885ef3e46ca05854dea50be55c9172/documents/2024/dutch-grand-prix/infringement-car-20-changes-made-during-parc-ferme.pdf",
+        "published_clock": "2024-08-25 12:27"
+      }
+    ],
+    "unresolved": [
+      {
+        "car": 23,
+        "driver": "ALB",
+        "document": 42,
+        "url": "https://www.fia.com/sites/default/files/decision-document/2024%20Dutch%20Grand%20Prix%20-%20Decision%20-%20Car%2023%20-%20Failing%20to%20set%20a%20lap%20time%20with%20107%25.pdf",
+        "available_utc": "2024-08-24T20:33:00Z",
+        "reason": "eligibility_107_pdf_unavailable"
+      },
+      {
+        "car": 2,
+        "driver": "SAR",
+        "document": 36,
+        "url": "https://www.fia.com/sites/default/files/decision-document/2024%20Dutch%20Grand%20Prix%20-%20Decision%20-%20Car%202%20-%20107%25%20Time.pdf",
+        "available_utc": "2024-08-24T17:17:00Z",
+        "reason": "eligibility_107_pdf_unavailable"
+      }
+    ]
+  },
+  "2024-16": {
+    "listing_url": "https://www.fia.com/documents/championships/fia-formula-one-world-championship-14/season/season-2024-2043/event/Italian%20Grand%20Prix",
+    "cutoff_utc": "2024-09-01T12:30:00Z",
+    "reason": "ok",
+    "decisions": [
+      {
+        "driver": "PIA",
+        "kind": "other",
+        "available_utc": "2024-08-31T14:16:00Z",
+        "url": "https://www.fia.com/sites/default/files/decision-document/2024_italian_grand_prix_-_decision_-_car_81_-_alleged_impeding_of_car_3.pdf",
+        "document": 35,
+        "detail": "no_action",
+        "sha256": "e7036d3da7de73ed19647497d64cd3c69bfff5cb20821da7360799d50b9bce4c",
+        "copy_url": "https://raw.githubusercontent.com/TracingInsights/DDocs/51188d899b885ef3e46ca05854dea50be55c9172/documents/2024/italian-grand-prix/decision-car-81-alleged-impeding-of-car-3.pdf",
+        "published_clock": "2024-08-31 15:16"
+      }
+    ]
+  },
+  "2024-17": {
+    "listing_url": "https://www.fia.com/documents/championships/fia-formula-one-world-championship-14/season/season-2024-2043/event/Azerbaijan%20Grand%20Prix",
+    "cutoff_utc": "2024-09-15T10:30:00Z",
+    "reason": "ok",
+    "decisions": [
+      {
+        "driver": "ZHO",
+        "kind": "back",
+        "available_utc": "2024-09-14T10:41:00Z",
+        "url": "https://www.fia.com/sites/default/files/decision-document/2024%20Azerbaijan%20Grand%20Prix%20-%20Infringement%20-%20Car%2024%20-%20PU%20elements.pdf",
+        "document": 25,
+        "sha256": "c72a50d291886017f784bd95b2d49ee02c52f208e12cc18c7c69bd3153d4e3fc",
+        "copy_url": "https://raw.githubusercontent.com/TracingInsights/DDocs/51188d899b885ef3e46ca05854dea50be55c9172/documents/2024/azerbaijan-grand-prix/infringement-car-24-pu-elements.pdf",
+        "published_clock": "2024-09-14 11:41"
+      },
+      {
+        "driver": "GAS",
+        "kind": "other",
+        "available_utc": "2024-09-14T18:01:00Z",
+        "url": "https://www.fia.com/sites/default/files/decision-document/2024%20Azerbaijan%20Grand%20Prix%20-%20Infringement%20-%20Car%2010%20-%20Technical%20non-compliance%20(Fuel%20Flow%20Mass).pdf",
+        "document": 42,
+        "detail": "dsq",
+        "sha256": "9cdf5e8bf87b37d1dbf146a0337be2f1bf9827b2acca4b40b960c20f5eff8458",
+        "copy_url": "https://raw.githubusercontent.com/TracingInsights/DDocs/51188d899b885ef3e46ca05854dea50be55c9172/documents/2024/azerbaijan-grand-prix/infringement-car-10-technical-non-compliance-fuel-flow-mass.pdf",
+        "published_clock": "2024-09-14 19:01"
+      },
+      {
+        "driver": "HAM",
+        "kind": "pit",
+        "available_utc": "2024-09-15T09:55:00Z",
+        "url": "https://www.fia.com/sites/default/files/decision-document/2024%20Azerbaijan%20Grand%20Prix%20-%20Infringement%20-%20Car%2044%20-%20Changes%20made%20during%20Parc%20Ferme.pdf",
+        "document": 49,
+        "sha256": "90bd8625606d966517d01fceb8043bbfbcbfeca52115561706b6ecbb9b02a907",
+        "copy_url": "https://raw.githubusercontent.com/TracingInsights/DDocs/51188d899b885ef3e46ca05854dea50be55c9172/documents/2024/azerbaijan-grand-prix/infringement-car-44-changes-made-during-parc-ferme.pdf",
+        "published_clock": "2024-09-15 10:55"
+      },
+      {
+        "driver": "OCO",
+        "kind": "pit",
+        "available_utc": "2024-09-15T09:57:00Z",
+        "url": "https://www.fia.com/sites/default/files/decision-document/2024%20Azerbaijan%20Grand%20Prix%20-%20Infringement%20-%20Car%2031%20-%20Changes%20made%20during%20Parc%20Ferme.pdf",
+        "document": 50,
+        "sha256": "b2896f21ce4bc34c7a8572e609740a8f07ccf7ff21ded74b6b244eacd91e00ab",
+        "copy_url": "https://raw.githubusercontent.com/TracingInsights/DDocs/51188d899b885ef3e46ca05854dea50be55c9172/documents/2024/azerbaijan-grand-prix/infringement-car-31-changes-made-during-parc-ferme.pdf",
+        "published_clock": "2024-09-15 10:57"
+      }
+    ]
+  },
+  "2024-18": {
+    "listing_url": "https://www.fia.com/documents/championships/fia-formula-one-world-championship-14/season/season-2024-2043/event/Singapore%20Grand%20Prix",
+    "cutoff_utc": "2024-09-22T11:30:00Z",
+    "reason": "ok",
+    "decisions": []
+  },
+  "2024-19": {
+    "listing_url": "https://www.fia.com/documents/championships/fia-formula-one-world-championship-14/season/season-2024-2043/event/United%20States%20Grand%20Prix",
+    "cutoff_utc": "2024-10-20T18:30:00Z",
+    "reason": "ok",
+    "decisions": [
+      {
+        "driver": "LAW",
+        "kind": "back",
+        "available_utc": "2024-10-18T20:52:00Z",
+        "url": "https://www.fia.com/sites/default/files/decision-document/2024%20United%20States%20Grand%20Prix%20-%20Infringement%20-%20Car%2030%20-%20PU%20elements.pdf",
+        "document": 17,
+        "sha256": "4c9a2ac4092d2b81805da9a0c408d672e8ce288855043018009b9be12c5f7f98",
+        "copy_url": "https://raw.githubusercontent.com/TracingInsights/DDocs/51188d899b885ef3e46ca05854dea50be55c9172/documents/2024/united-states-grand-prix/infringement-car-30-pu-elements.pdf",
+        "published_clock": "2024-10-18 21:52"
+      },
+      {
+        "driver": "ZHO",
+        "kind": "places",
+        "available_utc": "2024-10-19T01:23:00Z",
+        "url": "https://www.fia.com/sites/default/files/decision-document/2024%20United%20States%20Grand%20Prix%20-%20Infringement%20-%20Car%2024%20-%20PU%20elements.pdf",
+        "document": 28,
+        "places": 5,
+        "sha256": "e52ef9aaa43d5e1f15e73f8f8b6e08a8982b0c9ab950d8b3736d8cbb896e15ae",
+        "copy_url": "https://raw.githubusercontent.com/TracingInsights/DDocs/51188d899b885ef3e46ca05854dea50be55c9172/documents/2024/united-states-grand-prix/infringement-car-24-pu-elements.pdf",
+        "published_clock": "2024-10-19 02:23"
+      }
+    ]
+  },
+  "2024-20": {
+    "listing_url": "https://www.fia.com/documents/championships/fia-formula-one-world-championship-14/season/season-2024-2043/event/Mexico%20City%20Grand%20Prix",
+    "cutoff_utc": "2024-10-27T19:30:00Z",
+    "reason": "ok",
+    "decisions": [
+      {
+        "driver": "OCO",
+        "kind": "pit",
+        "available_utc": "2024-10-27T17:52:00Z",
+        "url": "https://www.fia.com/sites/default/files/decision-document/2024%20Mexico%20City%20Grand%20Prix%20-%20Infringement%20-%20Car%2031%20-%20Changes%20made%20during%20Parc%20Ferme.pdf",
+        "document": 39,
+        "sha256": "4b76bc02dd70bce1fffd09e98017f5bfe5fb63c23f21d8e99121c4313ba68971",
+        "copy_url": "https://raw.githubusercontent.com/TracingInsights/DDocs/51188d899b885ef3e46ca05854dea50be55c9172/documents/2024/mexico-city-grand-prix/infringement-car-31-changes-made-during-parc-ferme.pdf",
+        "published_clock": "2024-10-27 18:52"
+      }
+    ]
+  },
+  "2024-21": {
+    "listing_url": "https://www.fia.com/documents/championships/fia-formula-one-world-championship-14/season/season-2024-2043/event/S%C3%A3o%20Paulo%20Grand%20Prix",
+    "cutoff_utc": "2024-11-03T15:00:00Z",
+    "reason": "ok",
+    "decisions": [
+      {
+        "driver": "VER",
+        "kind": "places",
+        "available_utc": "2024-11-01T15:39:00Z",
+        "url": "https://www.fia.com/sites/default/files/decision-document/2024%20S%C3%A3o%20Paulo%20Grand%20Prix%20-%20Infringement%20-%20Car%201%20-%20PU%20Elements.pdf",
+        "document": 16,
+        "places": 5,
+        "sha256": "3430c09119c9d2535480abb8e3d22c2e608648c43ba5c310e0f040817a40328a",
+        "copy_url": "https://raw.githubusercontent.com/TracingInsights/DDocs/51188d899b885ef3e46ca05854dea50be55c9172/documents/2024/s%C3%A3o-paulo-grand-prix/infringement-car-1-pu-elements.pdf",
+        "published_clock": "2024-11-01 16:39"
+      },
+      {
+        "driver": "SAI",
+        "kind": "pit",
+        "available_utc": "2024-11-03T14:16:00Z",
+        "url": "https://www.fia.com/sites/default/files/decision-document/2024%20S%C3%A3o%20Paulo%20Grand%20Prix%20-%20Infringement%20-%20Car%2055%20-%20Changes%20made%20during%20Parc%20Ferme.pdf",
+        "document": 61,
+        "sha256": "d326d28b724997dabe73c0daaab5692dff8125de788202a78e1084b252637b44",
+        "copy_url": "https://raw.githubusercontent.com/TracingInsights/DDocs/51188d899b885ef3e46ca05854dea50be55c9172/documents/2024/s%C3%A3o-paulo-grand-prix/infringement-car-55-changes-made-during-parc-ferme.pdf",
+        "published_clock": "2024-11-03 15:16"
+      }
+    ]
+  },
+  "2024-22": {
+    "listing_url": "https://www.fia.com/documents/championships/fia-formula-one-world-championship-14/season/season-2024-2043/event/Las%20Vegas%20Grand%20Prix",
+    "cutoff_utc": "2024-11-24T05:30:00Z",
+    "reason": "ok",
+    "decisions": [
+      {
+        "driver": "BOT",
+        "kind": "places",
+        "available_utc": "2024-11-22T03:06:00Z",
+        "url": "https://www.fia.com/sites/default/files/decision-document/2024%20Las%20Vegas%20Grand%20Prix%20-%20Infringement%20-%20Car%2077%20-%20PU%20elements.pdf",
+        "document": 12,
+        "places": 5,
+        "sha256": "5475afeab95548398faaa3f1a5321b30101170b5954bd300b48e140917a96124",
+        "copy_url": "https://raw.githubusercontent.com/TracingInsights/DDocs/51188d899b885ef3e46ca05854dea50be55c9172/documents/2024/las-vegas-grand-prix/infringement-car-77-pu-elements.pdf",
+        "published_clock": "2024-11-22 04:06"
+      },
+      {
+        "driver": "COL",
+        "kind": "pit",
+        "available_utc": "2024-11-24T03:29:00Z",
+        "url": "https://www.fia.com/sites/default/files/decision-document/2024%20Las%20Vegas%20Grand%20Prix%20-%20Infringement%20-%20Car%2043%20-%20Changes%20made%20during%20Parc%20Ferme.pdf",
+        "document": 30,
+        "sha256": "be852b4772ff33df54734c27e3ff25737edefa597a778ae2532dd3a72c4f229f",
+        "copy_url": "https://raw.githubusercontent.com/TracingInsights/DDocs/51188d899b885ef3e46ca05854dea50be55c9172/documents/2024/las-vegas-grand-prix/infringement-car-43-changes-made-during-parc-ferme.pdf",
+        "published_clock": "2024-11-24 04:29"
+      }
+    ]
+  },
+  "2024-23": {
+    "listing_url": "https://www.fia.com/documents/championships/fia-formula-one-world-championship-14/season/season-2024-2043/event/Qatar%20Grand%20Prix",
+    "cutoff_utc": "2024-12-01T15:30:00Z",
+    "reason": "ok",
+    "decisions": [
+      {
+        "driver": "VER",
+        "kind": "places",
+        "available_utc": "2024-11-30T22:08:00Z",
+        "url": "https://www.fia.com/sites/default/files/decision-document/2024%20Qatar%20Grand%20Prix%20-%20Infringement%20-%20Car%201%20-%20Alleged%20driving%20unnecessarily%20slowly.pdf",
+        "document": 49,
+        "places": 1,
+        "sha256": "10d383167ac324d58c6301b810d8d0b373106c962a1fe8295f3921f2391a8837",
+        "copy_url": "https://raw.githubusercontent.com/TracingInsights/DDocs/51188d899b885ef3e46ca05854dea50be55c9172/documents/2024/qatar-grand-prix/infringement-car-1-alleged-driving-unnecessarily-slowly.pdf",
+        "published_clock": "2024-11-30 23:08"
+      }
+    ]
+  },
+  "2024-24": {
+    "listing_url": "https://www.fia.com/documents/championships/fia-formula-one-world-championship-14/season/season-2024-2043/event/Abu%20Dhabi%20Grand%20Prix",
+    "cutoff_utc": "2024-12-08T12:30:00Z",
+    "reason": "ok",
+    "decisions": [
+      {
+        "driver": "ALB",
+        "kind": "places",
+        "available_utc": "2024-12-06T10:58:00Z",
+        "url": "https://www.fia.com/sites/default/files/decision-document/2024%20Abu%20Dhabi%20Grand%20Prix%20-%20Infringement%20-%20Car%2023%20-%20RNC%20Changes.pdf",
+        "document": 19,
+        "places": 5,
+        "sha256": "b8a9c4cb49896e1af69e729f9e2b1ef594a617c6f369440d0e4fb4b7ed3a86e6",
+        "copy_url": "https://raw.githubusercontent.com/TracingInsights/DDocs/51188d899b885ef3e46ca05854dea50be55c9172/documents/2024/abu-dhabi-grand-prix/infringement-car-23-rnc-changes.pdf",
+        "published_clock": "2024-12-06 11:58"
+      },
+      {
+        "driver": "COL",
+        "kind": "places",
+        "available_utc": "2024-12-06T10:59:00Z",
+        "url": "https://www.fia.com/sites/default/files/decision-document/2024%20Abu%20Dhabi%20Grand%20Prix%20-%20Infringement%20-%20Car%2043%20-%20RNC%20Changes.pdf",
+        "document": 20,
+        "places": 5,
+        "sha256": "5f5f4cd97ed8f3965a94c36a7acd501ad566f7bf3468ba72a3314d39b7f482dc",
+        "copy_url": "https://raw.githubusercontent.com/TracingInsights/DDocs/51188d899b885ef3e46ca05854dea50be55c9172/documents/2024/abu-dhabi-grand-prix/infringement-car-43-rnc-changes.pdf",
+        "published_clock": "2024-12-06 11:59"
+      },
+      {
+        "driver": "LEC",
+        "kind": "places",
+        "available_utc": "2024-12-06T10:59:00Z",
+        "url": "https://www.fia.com/sites/default/files/decision-document/2024%20Abu%20Dhabi%20Grand%20Prix%20-%20Infringement%20-%20Car%2016%20-%20PU%20Elements.pdf",
+        "document": 22,
+        "places": 10,
+        "sha256": "b0dd4a5a33f3a7377942bd9643d941162fbd379e820a3938af715f777e0743da",
+        "copy_url": "https://raw.githubusercontent.com/TracingInsights/DDocs/51188d899b885ef3e46ca05854dea50be55c9172/documents/2024/abu-dhabi-grand-prix/infringement-car-16-pu-elements.pdf",
+        "published_clock": "2024-12-06 11:59"
+      },
+      {
+        "driver": "HAM",
+        "kind": "other",
+        "available_utc": "2024-12-06T11:49:00Z",
+        "url": "https://www.fia.com/sites/default/files/decision-document/2024%20Abu%20Dhabi%20Grand%20Prix%20-%20Decision%20-%20Car%2044%20-%20Alleged%20impeding%20of%20car%204.pdf",
+        "document": 24,
+        "detail": "no_action",
+        "sha256": "1ac6b3dbb70dd418b8ecdac8fd26e466272575d2dfd30e68e4622ea9831eb76f",
+        "copy_url": "https://raw.githubusercontent.com/TracingInsights/DDocs/51188d899b885ef3e46ca05854dea50be55c9172/documents/2024/abu-dhabi-grand-prix/decision-car-44-alleged-impeding-of-car-4.pdf",
+        "published_clock": "2024-12-06 12:49"
+      },
+      {
+        "driver": "HUL",
+        "kind": "places",
+        "available_utc": "2024-12-07T17:24:00Z",
+        "url": "https://www.fia.com/sites/default/files/decision-document/2024%20Abu%20Dhabi%20Grand%20Prix%20-%20Infringement%20-%20Car%2027%20-%20Alleged%20failure%20to%20follow%20Race%20Director's%20instructions%20(Pit%20Exit%20Road).pdf",
+        "document": 37,
+        "places": 3,
+        "sha256": "55c359565223c5f06ebd193fb1ed6d9496560cd5537cb9415ed3b8a16e69ee0c",
+        "copy_url": "https://raw.githubusercontent.com/TracingInsights/DDocs/51188d899b885ef3e46ca05854dea50be55c9172/documents/2024/abu-dhabi-grand-prix/infringement-car-27-alleged-failure-to-follow-race-directors-instructions-pit-exit-road.pdf",
+        "published_clock": "2024-12-07 18:24"
+      }
+    ]
+  },
+  "2025-01": {
+    "listing_url": "https://www.fia.com/documents/championships/fia-formula-one-world-championship-14/season/season-2025-2071/event/Australian%20Grand%20Prix",
+    "cutoff_utc": "2025-03-16T03:30:00Z",
+    "reason": "ok",
+    "decisions": [
+      {
+        "driver": "BEA",
+        "kind": "pit",
+        "available_utc": "2025-03-16T00:55:00Z",
+        "url": "https://www.fia.com/system/files/decision-document/2025_australian_grand_prix_-_infringement_-_car_87_-_changes_made_during_parc_ferme.pdf",
+        "document": 31,
+        "sha256": "16f1b63a7fec2d7a7a6d7b9f313cd947a3ea88619be456f01944687c5cf87dba",
+        "copy_url": "https://raw.githubusercontent.com/TracingInsights/DDocs/51188d899b885ef3e46ca05854dea50be55c9172/documents/2025/australian-grand-prix/infringement-car-87-changes-made-during-parc-ferme.pdf",
+        "published_clock": "2025-03-16 01:55"
+      }
+    ]
+  },
+  "2025-02": {
+    "listing_url": "https://www.fia.com/documents/championships/fia-formula-one-world-championship-14/season/season-2025-2071/event/Chinese%20Grand%20Prix",
+    "cutoff_utc": "2025-03-23T06:30:00Z",
+    "reason": "ok",
+    "decisions": [
+      {
+        "driver": "BEA",
+        "kind": "other",
+        "available_utc": "2025-03-22T09:05:00Z",
+        "url": "https://www.fia.com/system/files/decision-document/2025_chinese_grand_prix_-_decision_-_car_87_-_alleged_impeding_of_car_18.pdf",
+        "document": 58,
+        "detail": "no_action",
+        "sha256": "47ccf8902784e7b8b3d7065073da5b37e7064b1484011287c2d58690c13e6e02",
+        "copy_url": "https://raw.githubusercontent.com/TracingInsights/DDocs/51188d899b885ef3e46ca05854dea50be55c9172/documents/2025/chinese-grand-prix/decision-car-87-alleged-impeding-of-car-18.pdf",
+        "published_clock": "2025-03-22 10:05"
+      },
+      {
+        "driver": "LAW",
+        "kind": "pit",
+        "available_utc": "2025-03-23T05:23:00Z",
+        "url": "https://www.fia.com/system/files/decision-document/2025_chinese_grand_prix_-_infringement_-_car_30_-_changes_made_during_parc_ferme.pdf",
+        "document": 68,
+        "sha256": "1190343915e2d5034588800c0297254b2472b502266d4bc4a705c1bd2eb948ec",
+        "copy_url": "https://raw.githubusercontent.com/TracingInsights/DDocs/51188d899b885ef3e46ca05854dea50be55c9172/documents/2025/chinese-grand-prix/infringement-car-30-changes-made-during-parc-ferme.pdf",
+        "published_clock": "2025-03-23 06:23"
+      }
+    ]
+  },
+  "2025-03": {
+    "listing_url": "https://www.fia.com/documents/championships/fia-formula-one-world-championship-14/season/season-2025-2071/event/Japanese%20Grand%20Prix",
+    "cutoff_utc": "2025-04-06T04:30:00Z",
+    "reason": "ok",
+    "decisions": [
+      {
+        "driver": "SAI",
+        "kind": "places",
+        "available_utc": "2025-04-05T09:47:00Z",
+        "url": "https://www.fia.com/system/files/decision-document/2025_japanese_grand_prix_-_infringement_-_car_55_-_impeding_of_car_44.pdf",
+        "document": 38,
+        "places": 3,
+        "sha256": "81de8dfcf79f8c5edfa4998f5ad915f86c8f691fd7bd9024ea7ce3cfb03e4d3c",
+        "copy_url": "https://raw.githubusercontent.com/TracingInsights/DDocs/51188d899b885ef3e46ca05854dea50be55c9172/documents/2025/japanese-grand-prix/infringement-car-55-impeding-of-car-44.pdf",
+        "published_clock": "2025-04-05 10:47"
+      }
+    ]
+  },
+  "2025-04": {
+    "listing_url": "https://www.fia.com/documents/championships/fia-formula-one-world-championship-14/season/season-2025-2071/event/Bahrain%20Grand%20Prix",
+    "cutoff_utc": "2025-04-13T14:30:00Z",
+    "reason": "ok",
+    "decisions": [
+      {
+        "driver": "RUS",
+        "kind": "places",
+        "available_utc": "2025-04-12T20:21:00Z",
+        "url": "https://www.fia.com/system/files/decision-document/2025_bahrain_grand_prix_-_infringement_-_car_63_-_alleged_failure_to_follow_race_directors_instructions_fast_lane.pdf",
+        "document": 33,
+        "places": 1,
+        "sha256": "105393436de11f4f887614f79fe5090c9bd5b2b1645f202bce5ca836db6f32b4",
+        "copy_url": "https://raw.githubusercontent.com/TracingInsights/DDocs/51188d899b885ef3e46ca05854dea50be55c9172/documents/2025/bahrain-grand-prix/infringement-car-63-alleged-failure-to-follow-race-directors-instructions-fast-lane.pdf",
+        "published_clock": "2025-04-12 21:21"
+      },
+      {
+        "driver": "ANT",
+        "kind": "places",
+        "available_utc": "2025-04-12T20:25:00Z",
+        "url": "https://www.fia.com/system/files/decision-document/2025_bahrain_grand_prix_-_infringement_-_car_12_-_alleged_failure_to_follow_race_directors_instructions_fast_lane.pdf",
+        "document": 34,
+        "places": 1,
+        "sha256": "61627e4db3537e5ff1e6332a25221e76191a89efe53fee983e2731a3b8f64bf7",
+        "copy_url": "https://raw.githubusercontent.com/TracingInsights/DDocs/51188d899b885ef3e46ca05854dea50be55c9172/documents/2025/bahrain-grand-prix/infringement-car-12-alleged-failure-to-follow-race-directors-instructions-fast-lane.pdf",
+        "published_clock": "2025-04-12 21:25"
+      }
+    ]
+  },
+  "2025-05": {
+    "listing_url": "https://www.fia.com/documents/championships/fia-formula-one-world-championship-14/season/season-2025-2071/event/Saudi%20Arabian%20Grand%20Prix",
+    "cutoff_utc": "2025-04-20T16:30:00Z",
+    "reason": "ok",
+    "decisions": [
+      {
+        "driver": "HAM",
+        "kind": "other",
+        "available_utc": "2025-04-18T19:38:00Z",
+        "url": "https://www.fia.com/system/files/decision-document/2025_saudi_arabian_grand_prix_-_decision_-_car_44_-_alleged_impeding_of_car_23.pdf",
+        "document": 20,
+        "detail": "no_action",
+        "sha256": "86830346889e7ab105a7d2c3f2ba6b60f0ea29fb8927fad27dd65d0afe833953",
+        "copy_url": "https://raw.githubusercontent.com/TracingInsights/DDocs/51188d899b885ef3e46ca05854dea50be55c9172/documents/2025/saudi-arabian-grand-prix/decision-car-44-alleged-impeding-of-car-23.pdf",
+        "published_clock": "2025-04-18 20:38"
+      }
+    ]
+  },
+  "2025-06": {
+    "listing_url": "https://www.fia.com/documents/championships/fia-formula-one-world-championship-14/season/season-2025-2071/event/Miami%20Grand%20Prix",
+    "cutoff_utc": "2025-05-04T19:30:00Z",
+    "reason": "ok",
+    "decisions": [
+      {
+        "driver": "GAS",
+        "kind": "pit",
+        "available_utc": "2025-05-04T17:56:00Z",
+        "url": "https://www.fia.com/system/files/decision-document/2025_miami_grand_prix_-_infringement_-_car_10_-_corrected_-_changes_made_during_parc_ferme.pdf",
+        "document": 68,
+        "sha256": "5cdc6ef660ffb80dfb7d29ae95f83a0655e2c7221881b2b3b975cc3565d2a8e5",
+        "copy_url": "https://raw.githubusercontent.com/TracingInsights/DDocs/51188d899b885ef3e46ca05854dea50be55c9172/documents/2025/miami-grand-prix/infringement-car-10-corrected-changes-made-during-parc-ferme.pdf",
+        "published_clock": "2025-05-04 18:56"
+      }
+    ]
+  },
+  "2025-07": {
+    "listing_url": "https://www.fia.com/documents/championships/fia-formula-one-world-championship-14/season/season-2025-2071/event/Emilia%20Romagna%20Grand%20Prix",
+    "cutoff_utc": "2025-05-18T12:30:00Z",
+    "reason": "ok",
+    "decisions": [
+      {
+        "driver": "BOR",
+        "kind": "other",
+        "available_utc": "2025-05-16T19:59:00Z",
+        "url": "https://www.fia.com/system/files/decision-document/2025_emilia_romagna_grand_prix_-_decision_-_car_5_-_alleged_yellow_flag_infringement.pdf",
+        "document": 20,
+        "detail": "no_action",
+        "sha256": "f62c69228f85aa63f01cf350e71ce25b617b8af9585ba400169c49c6390e4d85",
+        "copy_url": "https://raw.githubusercontent.com/TracingInsights/DDocs/51188d899b885ef3e46ca05854dea50be55c9172/documents/2025/emilia-romagna-grand-prix/decision-car-5-alleged-yellow-flag-infringement.pdf",
+        "published_clock": "2025-05-16 20:59"
+      },
+      {
+        "driver": "COL",
+        "kind": "places",
+        "available_utc": "2025-05-17T17:51:00Z",
+        "url": "https://www.fia.com/system/files/decision-document/2025_emilia_romagna_grand_prix_-_infringement_-_car_43_-_alleged_failure_to_follow_race_directors_instructions_fast_lane.pdf",
+        "document": 28,
+        "places": 1,
+        "sha256": "ec1b91dae12a16a521bf928a793d638415458b9477444c0f52507fc516aef5dc",
+        "copy_url": "https://raw.githubusercontent.com/TracingInsights/DDocs/51188d899b885ef3e46ca05854dea50be55c9172/documents/2025/emilia-romagna-grand-prix/infringement-car-43-alleged-failure-to-follow-race-directors-instructions-fast-lane.pdf",
+        "published_clock": "2025-05-17 18:51"
+      },
+      {
+        "driver": "TSU",
+        "kind": "pit",
+        "available_utc": "2025-05-18T11:29:00Z",
+        "url": "https://www.fia.com/system/files/decision-document/2025_emilia_romagna_grand_prix_-_infringement_-_car_22_-_pu_elements_and_parc_ferme.pdf",
+        "document": 38,
+        "sha256": "bf6988c1362aeacf959a6b414c49299fe76a53ec14758e69bb261ebe13b38a44",
+        "copy_url": "https://raw.githubusercontent.com/TracingInsights/DDocs/51188d899b885ef3e46ca05854dea50be55c9172/documents/2025/emilia-romagna-grand-prix/infringement-car-22-pu-elements-and-parc-ferme.pdf",
+        "published_clock": "2025-05-18 12:29"
+      }
+    ]
+  },
+  "2025-08": {
+    "listing_url": "https://www.fia.com/documents/championships/fia-formula-one-world-championship-14/season/season-2025-2071/event/Monaco%20Grand%20Prix",
+    "cutoff_utc": "2025-05-25T12:30:00Z",
+    "reason": "ok",
+    "decisions": [
+      {
+        "driver": "STR",
+        "kind": "places",
+        "available_utc": "2025-05-23T14:37:00Z",
+        "url": "https://www.fia.com/system/files/decision-document/2025_monaco_grand_prix_-_infringement_-_car_18_-_incident_with_car_16_in_turn_6.pdf",
+        "document": 17,
+        "places": 1,
+        "sha256": "a3df130b5dae5fa52b36b31f92c24d5da350ea06ad6ba08025d7b4d3ee62470c",
+        "copy_url": "https://raw.githubusercontent.com/TracingInsights/DDocs/51188d899b885ef3e46ca05854dea50be55c9172/documents/2025/monaco-grand-prix/infringement-car-18-incident-with-car-16-in-turn-6.pdf",
+        "published_clock": "2025-05-23 15:37"
+      },
+      {
+        "driver": "BEA",
+        "kind": "places",
+        "available_utc": "2025-05-23T18:22:00Z",
+        "url": "https://www.fia.com/system/files/decision-document/2025_monaco_grand_prix_-_infringement_-_car_87_-_alleged_failure_to_comply_with_red_flag.pdf",
+        "document": 22,
+        "places": 10,
+        "sha256": "c2cfa74e98e0b7e44468e91ea84955e6df11be50d141276d473314f189449cd2",
+        "copy_url": "https://raw.githubusercontent.com/TracingInsights/DDocs/51188d899b885ef3e46ca05854dea50be55c9172/documents/2025/monaco-grand-prix/infringement-car-87-alleged-failure-to-comply-with-red-flag.pdf",
+        "published_clock": "2025-05-23 19:22"
+      },
+      {
+        "driver": "TSU",
+        "kind": "other",
+        "available_utc": "2025-05-23T18:23:00Z",
+        "url": "https://www.fia.com/system/files/decision-document/2025_monaco_grand_prix_-_decision_-_car_22_-_alleged_failing_to_slow_for_yellow_flags.pdf",
+        "document": 23,
+        "detail": "no_action",
+        "sha256": "b3d3a71f462e2df6d018b9ac448c8290f858cbbe96f8d4347a222e11980912ad",
+        "copy_url": "https://raw.githubusercontent.com/TracingInsights/DDocs/51188d899b885ef3e46ca05854dea50be55c9172/documents/2025/monaco-grand-prix/decision-car-22-alleged-failing-to-slow-for-yellow-flags.pdf",
+        "published_clock": "2025-05-23 19:23"
+      },
+      {
+        "driver": "COL",
+        "kind": "other",
+        "available_utc": "2025-05-24T13:50:00Z",
+        "url": "https://www.fia.com/system/files/decision-document/2025_monaco_grand_prix_-_decision_-_car_43_-_alleged_failure_to_comply_with_red_flag.pdf",
+        "document": 28,
+        "detail": "no_action",
+        "sha256": "5417903254c25e54443ea1e5105d264d50f3f6ba71a3e20c1fc7424e18e80a89",
+        "copy_url": "https://raw.githubusercontent.com/TracingInsights/DDocs/51188d899b885ef3e46ca05854dea50be55c9172/documents/2025/monaco-grand-prix/decision-car-43-alleged-failure-to-comply-with-red-flag.pdf",
+        "published_clock": "2025-05-24 14:50"
+      },
+      {
+        "driver": "SAI",
+        "kind": "other",
+        "available_utc": "2025-05-24T13:53:00Z",
+        "url": "https://www.fia.com/system/files/decision-document/2025_monaco_grand_prix_-_decision_-_car_55_-_alleged_failure_to_comply_with_red_flag_in_p2.pdf",
+        "document": 29,
+        "detail": "no_action",
+        "sha256": "d7daba346bb98bd373b8056fe01ed5f73746a27660a1c10f136df277c82eaba2",
+        "copy_url": "https://raw.githubusercontent.com/TracingInsights/DDocs/51188d899b885ef3e46ca05854dea50be55c9172/documents/2025/monaco-grand-prix/decision-car-55-alleged-failure-to-comply-with-red-flag-in-p2.pdf",
+        "published_clock": "2025-05-24 14:53"
+      },
+      {
+        "driver": "STR",
+        "kind": "places",
+        "available_utc": "2025-05-24T17:27:00Z",
+        "url": "https://www.fia.com/system/files/decision-document/2025_monaco_grand_prix_-_infringement_-_car_18_-_impeding_car_10_in_turn_10.pdf",
+        "document": 37,
+        "places": 3,
+        "sha256": "613735fb266e2360fb6ec65e2b961cfd25ed4005fb40af93b5cf69ecef5c97f8",
+        "copy_url": "https://raw.githubusercontent.com/TracingInsights/DDocs/51188d899b885ef3e46ca05854dea50be55c9172/documents/2025/monaco-grand-prix/infringement-car-18-impeding-car-10-in-turn-10.pdf",
+        "published_clock": "2025-05-24 18:27"
+      },
+      {
+        "driver": "HAM",
+        "kind": "places",
+        "available_utc": "2025-05-24T18:07:00Z",
+        "url": "https://www.fia.com/system/files/decision-document/2025_monaco_grand_prix_-_infringement_-_car_44_-_impeding_of_car_1.pdf",
+        "document": 38,
+        "places": 3,
+        "sha256": "087ea4f91dd5d3b68aa8a32913cbfa9c3c40403c04e95e9b82172dcee50e1a69",
+        "copy_url": "https://raw.githubusercontent.com/TracingInsights/DDocs/51188d899b885ef3e46ca05854dea50be55c9172/documents/2025/monaco-grand-prix/infringement-car-44-impeding-of-car-1.pdf",
+        "published_clock": "2025-05-24 19:07"
+      }
+    ]
+  },
+  "2025-09": {
+    "listing_url": "https://www.fia.com/documents/championships/fia-formula-one-world-championship-14/season/season-2025-2071/event/Spanish%20Grand%20Prix",
+    "cutoff_utc": "2025-06-01T12:30:00Z",
+    "reason": "ok",
+    "decisions": [
+      {
+        "driver": "TSU",
+        "kind": "pit",
+        "available_utc": "2025-06-01T11:49:00Z",
+        "url": "https://www.fia.com/system/files/decision-document/2025_spanish_grand_prix_-_infringement_-_car_22_-_changes_made_during_parc_ferme.pdf",
+        "document": 31,
+        "sha256": "059eefc586bb2b72a08467ebc925053e5988e4b0de490c1a5583df43587e590f",
+        "copy_url": "https://raw.githubusercontent.com/TracingInsights/DDocs/51188d899b885ef3e46ca05854dea50be55c9172/documents/2025/spanish-grand-prix/infringement-car-22-changes-made-during-parc-ferme.pdf",
+        "published_clock": "2025-06-01 12:49"
+      }
+    ]
+  },
+  "2025-10": {
+    "listing_url": "https://www.fia.com/documents/championships/fia-formula-one-world-championship-14/season/season-2025-2071/event/Canadian%20Grand%20Prix",
+    "cutoff_utc": "2025-06-15T17:30:00Z",
+    "reason": "ok",
+    "decisions": [
+      {
+        "driver": "BOR",
+        "kind": "other",
+        "available_utc": "2025-06-14T21:05:00Z",
+        "url": "https://www.fia.com/system/files/decision-document/2025_canadian_grand_prix_-_decision_-_car_5_-_alleged_red_flag_infringement.pdf",
+        "document": 29,
+        "detail": "no_action",
+        "sha256": "5b428cb2c86e8a0c6d89e914b5aa71b686cfca823160ef28878de4d166e620cf",
+        "copy_url": "https://raw.githubusercontent.com/TracingInsights/DDocs/51188d899b885ef3e46ca05854dea50be55c9172/documents/2025/canadian-grand-prix/decision-car-5-alleged-red-flag-infringement.pdf",
+        "published_clock": "2025-06-14 22:05"
+      },
+      {
+        "driver": "TSU",
+        "kind": "places",
+        "available_utc": "2025-06-14T21:08:00Z",
+        "url": "https://www.fia.com/system/files/decision-document/2025_canadian_grand_prix_-_infringement_-_car_22_-_overtaking_under_red_flag_conditions.pdf",
+        "document": 31,
+        "places": 10,
+        "sha256": "4ee23ef9bf839ec7c9976bf6fb0495c09a9446315678edfdb73d297dac701211",
+        "copy_url": "https://raw.githubusercontent.com/TracingInsights/DDocs/51188d899b885ef3e46ca05854dea50be55c9172/documents/2025/canadian-grand-prix/infringement-car-22-overtaking-under-red-flag-conditions.pdf",
+        "published_clock": "2025-06-14 22:08"
+      },
+      {
+        "driver": "HAD",
+        "kind": "places",
+        "available_utc": "2025-06-14T23:43:00Z",
+        "url": "https://www.fia.com/system/files/decision-document/2025_canadian_grand_prix_-_infringement_-_car_6_-_impeding_car_55.pdf",
+        "document": 38,
+        "places": 3,
+        "sha256": "be410eca4acfa74d1920996ea3c41f03a8a104dca5230088ec527539376fa838",
+        "copy_url": "https://raw.githubusercontent.com/TracingInsights/DDocs/51188d899b885ef3e46ca05854dea50be55c9172/documents/2025/canadian-grand-prix/infringement-car-6-impeding-car-55.pdf",
+        "published_clock": "2025-06-15 00:43"
+      },
+      {
+        "driver": "LAW",
+        "kind": "pit",
+        "available_utc": "2025-06-15T17:13:00Z",
+        "url": "https://www.fia.com/system/files/decision-document/2025_canadian_grand_prix_-_infringement_-_car_30_-_pu_elements_and_changes_made_during_parc_ferme.pdf",
+        "document": 46,
+        "sha256": "c6c56eab1d056c4d5d252cb1e4a78963848716929395758664727a47efc2e6e7",
+        "copy_url": "https://raw.githubusercontent.com/TracingInsights/DDocs/51188d899b885ef3e46ca05854dea50be55c9172/documents/2025/canadian-grand-prix/infringement-car-30-pu-elements-and-changes-made-during-parc-ferme.pdf",
+        "published_clock": "2025-06-15 18:13"
+      }
+    ]
+  },
+  "2025-11": {
+    "listing_url": "https://www.fia.com/documents/championships/fia-formula-one-world-championship-14/season/season-2025-2071/event/Austrian%20Grand%20Prix",
+    "cutoff_utc": "2025-06-29T12:30:00Z",
+    "reason": "ok",
+    "decisions": []
+  },
+  "2025-12": {
+    "listing_url": "https://www.fia.com/documents/championships/fia-formula-one-world-championship-14/season/season-2025-2071/event/British%20Grand%20Prix",
+    "cutoff_utc": "2025-07-06T13:30:00Z",
+    "reason": "ok",
+    "decisions": [
+      {
+        "driver": "BEA",
+        "kind": "places",
+        "available_utc": "2025-07-05T14:08:00Z",
+        "url": "https://www.fia.com/system/files/decision-document/2025_british_grand_prix_-_infringement_-_car_87_-_failure_to_comply_with_red_flag_corrected.pdf",
+        "document": 25,
+        "places": 10,
+        "sha256": "141fdf87ea6cd8ec38db057c52213b640956a8f393f6351f32c61092d68878e0",
+        "copy_url": "https://raw.githubusercontent.com/TracingInsights/DDocs/51188d899b885ef3e46ca05854dea50be55c9172/documents/2025/british-grand-prix/infringement-car-87-failure-to-comply-with-red-flag-corrected.pdf",
+        "published_clock": "2025-07-05 15:08"
+      }
+    ]
+  },
+  "2025-13": {
+    "listing_url": "https://www.fia.com/documents/championships/fia-formula-one-world-championship-14/season/season-2025-2071/event/Belgian%20Grand%20Prix",
+    "cutoff_utc": "2025-07-27T12:30:00Z",
+    "reason": "ok",
+    "decisions": [
+      {
+        "driver": "GAS",
+        "kind": "other",
+        "available_utc": "2025-07-25T17:37:00Z",
+        "url": "https://www.fia.com/system/files/decision-document/2025_belgian_grand_prix_-_decision_-_car_10_-_allegedly_impeding_car_22.pdf",
+        "document": 25,
+        "detail": "no_action",
+        "sha256": "ac37809d8f9d11000f3d0572634ca693229c18d3e34a081e125f4fc33f7a3b80",
+        "copy_url": "https://raw.githubusercontent.com/TracingInsights/DDocs/51188d899b885ef3e46ca05854dea50be55c9172/documents/2025/belgian-grand-prix/decision-car-10-allegedly-impeding-car-22.pdf",
+        "published_clock": "2025-07-25 18:37"
+      },
+      {
+        "driver": "ALO",
+        "kind": "pit",
+        "available_utc": "2025-07-27T11:39:00Z",
+        "url": "https://www.fia.com/system/files/decision-document/2025_belgian_grand_prix_-_infringement_-_car_14_-_pu_elements.pdf",
+        "document": 56,
+        "sha256": "49e27a2e820d6abfccf2cf1ae0ee24fdf83078e1d4277b2cc25734fa7e52813c",
+        "copy_url": "https://raw.githubusercontent.com/TracingInsights/DDocs/51188d899b885ef3e46ca05854dea50be55c9172/documents/2025/belgian-grand-prix/infringement-car-14-pu-elements.pdf",
+        "published_clock": "2025-07-27 12:39"
+      },
+      {
+        "driver": "HAM",
+        "kind": "pit",
+        "available_utc": "2025-07-27T11:49:00Z",
+        "url": "https://www.fia.com/system/files/decision-document/2025_belgian_grand_prix_-_infringement_-_car_44_-_pu_elements.pdf",
+        "document": 58,
+        "sha256": "c4dd860334b0a5e3779cdcfe064f17167e87aa9655bc209bd952ee19a0950a42",
+        "copy_url": "https://raw.githubusercontent.com/TracingInsights/DDocs/51188d899b885ef3e46ca05854dea50be55c9172/documents/2025/belgian-grand-prix/infringement-car-44-pu-elements.pdf",
+        "published_clock": "2025-07-27 12:49"
+      },
+      {
+        "driver": "ANT",
+        "kind": "pit",
+        "available_utc": "2025-07-27T11:52:00Z",
+        "url": "https://www.fia.com/system/files/decision-document/2025_belgian_grand_prix_-_infringement_-_car_12_-_pu_elements.pdf",
+        "document": 57,
+        "sha256": "ffae07a7fe1f3a3a11a387df53570f0cef7cd210dd23809bdb83ba59332a21c8",
+        "copy_url": "https://raw.githubusercontent.com/TracingInsights/DDocs/51188d899b885ef3e46ca05854dea50be55c9172/documents/2025/belgian-grand-prix/infringement-car-12-pu-elements.pdf",
+        "published_clock": "2025-07-27 12:52"
+      },
+      {
+        "driver": "SAI",
+        "kind": "pit",
+        "available_utc": "2025-07-27T12:00:00Z",
+        "url": "https://www.fia.com/system/files/decision-document/2025_belgian_grand_prix_-_infringement_-_car_55_-_changes_made_during_parc_ferme.pdf",
+        "document": 60,
+        "sha256": "4f3ef11e1c5bfd89f3a34a50954a3fd7a1291e3e4306375ec16c8ab1a9e3e2e8",
+        "copy_url": "https://raw.githubusercontent.com/TracingInsights/DDocs/51188d899b885ef3e46ca05854dea50be55c9172/documents/2025/belgian-grand-prix/infringement-car-55-changes-made-during-parc-ferme.pdf",
+        "published_clock": "2025-07-27 13:00"
+      }
+    ]
+  },
+  "2025-14": {
+    "listing_url": "https://www.fia.com/documents/championships/fia-formula-one-world-championship-14/season/season-2025-2071/event/Hungarian%20Grand%20Prix",
+    "cutoff_utc": "2025-08-03T12:30:00Z",
+    "reason": "ok",
+    "decisions": [
+      {
+        "driver": "TSU",
+        "kind": "pit",
+        "available_utc": "2025-08-03T12:02:00Z",
+        "url": "https://www.fia.com/system/files/decision-document/2025_hungarian_grand_prix_-_infringement_-_car_22_-_changes_made_during_parc_ferme.pdf",
+        "document": 31,
+        "sha256": "1a11809d2deab927e5ea321de5c8121664dab4792e5696f24ac6f7f36881ffb2",
+        "copy_url": "https://raw.githubusercontent.com/TracingInsights/DDocs/51188d899b885ef3e46ca05854dea50be55c9172/documents/2025/hungarian-grand-prix/infringement-car-22-changes-made-during-parc-ferme.pdf",
+        "published_clock": "2025-08-03 13:02"
+      }
+    ]
+  },
+  "2025-15": {
+    "listing_url": "https://www.fia.com/documents/championships/fia-formula-one-world-championship-14/season/season-2025-2071/event/Dutch%20Grand%20Prix",
+    "cutoff_utc": "2025-08-31T12:30:00Z",
+    "reason": "ok",
+    "decisions": [
+      {
+        "driver": "BEA",
+        "kind": "pit",
+        "available_utc": "2025-08-31T11:57:00Z",
+        "url": "https://www.fia.com/system/files/decision-document/2025_dutch_grand_prix_-_infringement_-_car_87_-_changes_made_during_parc_ferme.pdf",
+        "document": 41,
+        "sha256": "7f4b9e51821cd678653fedf99f83bf2325e3b1826924b13986ac2b9fac6d72bf",
+        "copy_url": "https://raw.githubusercontent.com/TracingInsights/DDocs/51188d899b885ef3e46ca05854dea50be55c9172/documents/2025/dutch-grand-prix/infringement-car-87-changes-made-during-parc-ferme.pdf",
+        "published_clock": "2025-08-31 12:57"
+      }
+    ]
+  },
+  "2025-16": {
+    "listing_url": "https://www.fia.com/documents/championships/fia-formula-one-world-championship-14/season/season-2025-2071/event/Italian%20Grand%20Prix",
+    "cutoff_utc": "2025-09-07T12:30:00Z",
+    "reason": "ok",
+    "decisions": [
+      {
+        "driver": "HAD",
+        "kind": "pit",
+        "available_utc": "2025-09-07T12:23:00Z",
+        "url": "https://www.fia.com/system/files/decision-document/2025_italian_grand_prix_-_infringement_-_car_6_-_changes_made_during_parc_ferme.pdf",
+        "document": 34,
+        "sha256": "0ef1d41aece21b45d7fa1bd61fd4d3f35cfd851ee6c177a040e3318642c5c386",
+        "copy_url": "https://raw.githubusercontent.com/TracingInsights/DDocs/51188d899b885ef3e46ca05854dea50be55c9172/documents/2025/italian-grand-prix/infringement-car-6-changes-made-during-parc-ferme.pdf",
+        "published_clock": "2025-09-07 13:23"
+      },
+      {
+        "driver": "GAS",
+        "kind": "pit",
+        "available_utc": "2025-09-07T12:24:00Z",
+        "url": "https://www.fia.com/system/files/decision-document/2025_italian_grand_prix_-_infringement_-_car_10_-_changes_made_during_parc_ferme.pdf",
+        "document": 35,
+        "sha256": "cba3688eab2c134e19235f20d784b56d38beb0e6093a3be88ef9fb38acd4adfb",
+        "copy_url": "https://raw.githubusercontent.com/TracingInsights/DDocs/51188d899b885ef3e46ca05854dea50be55c9172/documents/2025/italian-grand-prix/infringement-car-10-changes-made-during-parc-ferme.pdf",
+        "published_clock": "2025-09-07 13:24"
+      }
+    ]
+  },
+  "2025-17": {
+    "listing_url": "https://www.fia.com/documents/championships/fia-formula-one-world-championship-14/season/season-2025-2071/event/Azerbaijan%20Grand%20Prix",
+    "cutoff_utc": "2025-09-21T10:30:00Z",
+    "reason": "ok",
+    "decisions": [
+      {
+        "driver": "OCO",
+        "kind": "other",
+        "available_utc": "2025-09-20T17:29:00Z",
+        "url": "https://www.fia.com/system/files/decision-document/2025_azerbaijan_grand_prix_-_infringement_-_car_31_-_failure_of_rear_wing_main_plane_tip_deflection_test.pdf",
+        "document": 31,
+        "detail": "dsq",
+        "sha256": "396b784455a694401ac15230a7b94fdd1d94b2571a3bf9f5dead9a417a40b613",
+        "copy_url": "https://raw.githubusercontent.com/TracingInsights/DDocs/51188d899b885ef3e46ca05854dea50be55c9172/documents/2025/azerbaijan-grand-prix/infringement-car-31-failure-of-rear-wing-main-plane-tip-deflection-test.pdf",
+        "published_clock": "2025-09-20 18:29"
+      }
+    ]
+  },
+  "2025-18": {
+    "listing_url": "https://www.fia.com/documents/championships/fia-formula-one-world-championship-14/season/season-2025-2071/event/Singapore%20Grand%20Prix",
+    "cutoff_utc": "2025-10-05T11:30:00Z",
+    "reason": "ok",
+    "decisions": [
+      {
+        "driver": "HAM",
+        "kind": "other",
+        "available_utc": "2025-10-04T13:31:00Z",
+        "url": "https://www.fia.com/system/files/decision-document/2025_singapore_grand_prix_-_decision_-_car_44_-_allegedly_failing_to_comply_with_a_red_flag.pdf",
+        "document": 26,
+        "detail": "no_action",
+        "sha256": "00920c942c530705083a7b3c7e6cac1a100ac79a8555b5e0c033489eebb80fab",
+        "copy_url": "https://raw.githubusercontent.com/TracingInsights/DDocs/51188d899b885ef3e46ca05854dea50be55c9172/documents/2025/singapore-grand-prix/decision-car-44-allegedly-failing-to-comply-with-a-red-flag.pdf",
+        "published_clock": "2025-10-04 14:31"
+      },
+      {
+        "driver": "RUS",
+        "kind": "other",
+        "available_utc": "2025-10-04T17:02:00Z",
+        "url": "https://www.fia.com/system/files/decision-document/2025_singapore_grand_prix_-_decision_-_car_63_-_allegedly_failing_to_slow_under_yellow_flags.pdf",
+        "document": 37,
+        "detail": "no_action",
+        "sha256": "6de17c355e42f4f686f53c30abd0e0052228edcaeacbb65bf52a8618057c4de0",
+        "copy_url": "https://raw.githubusercontent.com/TracingInsights/DDocs/51188d899b885ef3e46ca05854dea50be55c9172/documents/2025/singapore-grand-prix/decision-car-63-allegedly-failing-to-slow-under-yellow-flags.pdf",
+        "published_clock": "2025-10-04 18:02"
+      },
+      {
+        "driver": "BOR",
+        "kind": "other",
+        "available_utc": "2025-10-04T17:17:00Z",
+        "url": "https://www.fia.com/system/files/decision-document/2025_singapore_grand_prix_-_decision_-_car_5_-_alleged_yellow_flag_infringement.pdf",
+        "document": 38,
+        "detail": "no_action",
+        "sha256": "a5726849cb5df2e510cbd189c1f8ef9e6f371324aabaf34841a1f6b2358d90b8",
+        "copy_url": "https://raw.githubusercontent.com/TracingInsights/DDocs/51188d899b885ef3e46ca05854dea50be55c9172/documents/2025/singapore-grand-prix/decision-car-5-alleged-yellow-flag-infringement.pdf",
+        "published_clock": "2025-10-04 18:17"
+      },
+      {
+        "driver": "HUL",
+        "kind": "other",
+        "available_utc": "2025-10-04T17:18:00Z",
+        "url": "https://www.fia.com/system/files/decision-document/2025_singapore_grand_prix_-_decision_-_car_27_-_alleged_yellow_flag_infringement.pdf",
+        "document": 39,
+        "detail": "no_action",
+        "sha256": "974d7c3b3eba3fca29817a6b4b34f128f5290cb587d72f23abce092e9cd7fa88",
+        "copy_url": "https://raw.githubusercontent.com/TracingInsights/DDocs/51188d899b885ef3e46ca05854dea50be55c9172/documents/2025/singapore-grand-prix/decision-car-27-alleged-yellow-flag-infringement.pdf",
+        "published_clock": "2025-10-04 18:18"
+      },
+      {
+        "driver": "TSU",
+        "kind": "other",
+        "available_utc": "2025-10-04T17:18:00Z",
+        "url": "https://www.fia.com/system/files/decision-document/2025_singapore_grand_prix_-_decision_-_car_22_-_alleged_yellow_flag_infringement.pdf",
+        "document": 40,
+        "detail": "no_action",
+        "sha256": "58c06391db7c1f3c116bd7b9277a99a7294a87b9148cb729d2ff8f510c6367b3",
+        "copy_url": "https://raw.githubusercontent.com/TracingInsights/DDocs/51188d899b885ef3e46ca05854dea50be55c9172/documents/2025/singapore-grand-prix/decision-car-22-alleged-yellow-flag-infringement.pdf",
+        "published_clock": "2025-10-04 18:18"
+      },
+      {
+        "driver": "ALB",
+        "kind": "other",
+        "available_utc": "2025-10-04T17:42:00Z",
+        "url": "https://www.fia.com/system/files/decision-document/2025_singapore_grand_prix_-_infringement_-_car_23_-_technical_regulations_drs.pdf",
+        "document": 42,
+        "detail": "dsq",
+        "sha256": "f547926ed674180b85dc77fbb4d7e537963ee6c38c1623b36a5b1900d2c30eb2",
+        "copy_url": "https://raw.githubusercontent.com/TracingInsights/DDocs/51188d899b885ef3e46ca05854dea50be55c9172/documents/2025/singapore-grand-prix/infringement-car-23-technical-regulations-drs.pdf",
+        "published_clock": "2025-10-04 18:42"
+      },
+      {
+        "driver": "SAI",
+        "kind": "other",
+        "available_utc": "2025-10-04T17:43:00Z",
+        "url": "https://www.fia.com/system/files/decision-document/2025_singapore_grand_prix_-_infringement_-_car_55_-_technical_regulations_drs.pdf",
+        "document": 43,
+        "detail": "dsq",
+        "sha256": "e9332ddf365abeb326563b7beeb299a78eed7dcd8804d448c3885b2103256f3b",
+        "copy_url": "https://raw.githubusercontent.com/TracingInsights/DDocs/51188d899b885ef3e46ca05854dea50be55c9172/documents/2025/singapore-grand-prix/infringement-car-55-technical-regulations-drs.pdf",
+        "published_clock": "2025-10-04 18:43"
+      },
+      {
+        "driver": "GAS",
+        "kind": "pit",
+        "available_utc": "2025-10-05T11:13:00Z",
+        "url": "https://www.fia.com/system/files/decision-document/2025_singapore_grand_prix_-_infringement_-_car_10_-_changes_made_during_parc_ferme.pdf",
+        "document": 51,
+        "sha256": "ab78d0fa1ba8e3ee62339628040d86c0b4900ed7b85f9e6cbc1db625af006dfb",
+        "copy_url": "https://raw.githubusercontent.com/TracingInsights/DDocs/51188d899b885ef3e46ca05854dea50be55c9172/documents/2025/singapore-grand-prix/infringement-car-10-changes-made-during-parc-ferme.pdf",
+        "published_clock": "2025-10-05 12:13"
+      },
+      {
+        "driver": "ALB",
+        "kind": "pit",
+        "available_utc": "2025-10-05T11:14:00Z",
+        "url": "https://www.fia.com/system/files/decision-document/2025_singapore_grand_prix_-_infringement_-_car_23_-_changes_made_during_parc_ferme.pdf",
+        "document": 52,
+        "sha256": "809fe1067f393a7255bb6db652517bf16a746bdb9808f357d8b94c66fa203ed4",
+        "copy_url": "https://raw.githubusercontent.com/TracingInsights/DDocs/51188d899b885ef3e46ca05854dea50be55c9172/documents/2025/singapore-grand-prix/infringement-car-23-changes-made-during-parc-ferme.pdf",
+        "published_clock": "2025-10-05 12:14"
+      }
+    ]
+  },
+  "2025-19": {
+    "listing_url": "https://www.fia.com/documents/championships/fia-formula-one-world-championship-14/season/season-2025-2071/event/United%20States%20Grand%20Prix",
+    "cutoff_utc": "2025-10-19T18:30:00Z",
+    "reason": "ok",
+    "decisions": [
+      {
+        "driver": "STR",
+        "kind": "places",
+        "available_utc": "2025-10-18T19:40:00Z",
+        "url": "https://www.fia.com/system/files/decision-document/2025_united_states_grand_prix_-_infringement_-_car_18_-_causing_a_collision_with_car_31.pdf",
+        "document": 32,
+        "places": 5,
+        "sha256": "e200ce610692cdd6cca0ac7fbce64f2ffd6bf75dc21addf8363efa05e3ef5836",
+        "copy_url": "https://raw.githubusercontent.com/TracingInsights/DDocs/51188d899b885ef3e46ca05854dea50be55c9172/documents/2025/united-states-grand-prix/infringement-car-18-causing-a-collision-with-car-31.pdf",
+        "published_clock": "2025-10-18 20:40"
+      }
+    ]
+  },
+  "2025-20": {
+    "listing_url": "https://www.fia.com/documents/championships/fia-formula-one-world-championship-14/season/season-2025-2071/event/Mexico%20City%20Grand%20Prix",
+    "cutoff_utc": "2025-10-26T19:30:00Z",
+    "reason": "ok",
+    "decisions": []
+  },
+  "2025-21": {
+    "listing_url": "https://www.fia.com/documents/championships/fia-formula-one-world-championship-14/season/season-2025-2071/event/S%C3%A3o%20Paulo%20Grand%20Prix",
+    "cutoff_utc": "2025-11-09T16:30:00Z",
+    "reason": "ok",
+    "decisions": [
+      {
+        "driver": "OCO",
+        "kind": "pit",
+        "available_utc": "2025-11-09T15:27:00Z",
+        "url": "https://www.fia.com/system/files/decision-document/2025_sao_paulo_grand_prix_-_infringement_-_car_31_-_pu_elements_and_changes_made_during_parc_ferme.pdf",
+        "document": 55,
+        "sha256": "103a15f96676f917b37b0513490e7d676dd1f9022cf840a0778b596a67bf03c1",
+        "copy_url": "https://raw.githubusercontent.com/TracingInsights/DDocs/51188d899b885ef3e46ca05854dea50be55c9172/documents/2025/s%C3%A3o-paulo-grand-prix/infringement-car-31-pu-elements-and-changes-made-during-parc-ferme.pdf",
+        "published_clock": "2025-11-09 16:27"
+      },
+      {
+        "driver": "VER",
+        "kind": "pit",
+        "available_utc": "2025-11-09T15:33:00Z",
+        "url": "https://www.fia.com/system/files/decision-document/2025_sao_paulo_grand_prix_-_infringement_-_car_1_-_pu_elements_and_changes_made_during_parc_ferme.pdf",
+        "document": 56,
+        "sha256": "f6fb32d3a75997b63b8bf022cd8196400d427c9eb9c8413356f9cb9b0ac2042f",
+        "copy_url": "https://raw.githubusercontent.com/TracingInsights/DDocs/51188d899b885ef3e46ca05854dea50be55c9172/documents/2025/s%C3%A3o-paulo-grand-prix/infringement-car-1-pu-elements-and-changes-made-during-parc-ferme.pdf",
+        "published_clock": "2025-11-09 16:33"
+      }
+    ]
+  },
+  "2025-22": {
+    "listing_url": "https://www.fia.com/documents/championships/fia-formula-one-world-championship-14/season/season-2025-2071/event/Las%20Vegas%20Grand%20Prix",
+    "cutoff_utc": "2025-11-23T03:30:00Z",
+    "reason": "ok",
+    "decisions": [
+      {
+        "driver": "BOR",
+        "kind": "other",
+        "available_utc": "2025-11-21T12:16:00Z",
+        "url": "https://www.fia.com/system/files/decision-document/2025_las_vegas_grand_prix_-_decision_-_car_5_-_alleged_failure_to_slow_for_yellow_flags.pdf",
+        "document": 12,
+        "detail": "no_action",
+        "sha256": "c4c0b3c436f65135d1b2c679d5917afac9574d2b99f9200360d256b40a3934c3",
+        "copy_url": "https://raw.githubusercontent.com/TracingInsights/DDocs/51188d899b885ef3e46ca05854dea50be55c9172/documents/2025/las-vegas-grand-prix/decision-car-5-alleged-failure-to-slow-for-yellow-flags.pdf",
+        "published_clock": "2025-11-21 13:16"
+      },
+      {
+        "driver": "TSU",
+        "kind": "pit",
+        "available_utc": "2025-11-23T00:56:00Z",
+        "url": "https://www.fia.com/system/files/decision-document/2025_las_vegas_grand_prix_-_infringement_-_car_22_-_changes_made_during_parc_ferme.pdf",
+        "document": 43,
+        "sha256": "4de97f25dd95d96b0370863a07f4f8cf99771234ec895d7e89ea34e24ee1c6d6",
+        "copy_url": "https://raw.githubusercontent.com/TracingInsights/DDocs/51188d899b885ef3e46ca05854dea50be55c9172/documents/2025/las-vegas-grand-prix/infringement-car-22-changes-made-during-parc-ferme.pdf",
+        "published_clock": "2025-11-23 01:56"
+      }
+    ]
+  },
+  "2025-23": {
+    "listing_url": "https://www.fia.com/documents/championships/fia-formula-one-world-championship-14/season/season-2025-2071/event/Qatar%20Grand%20Prix",
+    "cutoff_utc": "2025-11-30T15:30:00Z",
+    "reason": "ok",
+    "decisions": [
+      {
+        "driver": "COL",
+        "kind": "pit",
+        "available_utc": "2025-11-30T13:33:00Z",
+        "url": "https://www.fia.com/system/files/decision-document/2025_qatar_grand_prix_-_infringement_-_car_43_-_changes_made_during_parc_ferme_0.pdf",
+        "document": 55,
+        "sha256": "06626da0755814e9384c700e43ff4492a3e739a4c40baee930ec309132475c84",
+        "copy_url": "https://raw.githubusercontent.com/TracingInsights/DDocs/51188d899b885ef3e46ca05854dea50be55c9172/documents/2025/qatar-grand-prix/infringement-car-43-changes-made-during-parc-ferme.pdf",
+        "published_clock": "2025-11-30 14:33"
+      }
+    ]
+  },
+  "2025-24": {
+    "listing_url": "https://www.fia.com/documents/championships/fia-formula-one-world-championship-14/season/season-2025-2071/event/Abu%20Dhabi%20Grand%20Prix",
+    "cutoff_utc": "2025-12-07T12:30:00Z",
+    "reason": "ok",
+    "decisions": []
+  }
+}
