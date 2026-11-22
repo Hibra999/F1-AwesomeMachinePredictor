@@ -236,6 +236,10 @@ class RaceState:
                 self.pits[d] += 1
                 self.last_pit[d] = (at, self.progress.get(d, (0, 0.0))[0])
                 self.stint_laps[d].clear()
+        elif kind == "session":
+            if e.get("initial"):
+                for code, completed in e.get("completed_laps", {}).items():
+                    self.progress.setdefault(code, (completed, float("inf")))
         elif kind == "leader_lap":
             self.last_lap = max(self.last_lap, int(e["lap"]))
         elif kind == "lap":
@@ -257,7 +261,7 @@ class RaceState:
                 self.recent_pace[d].append(seconds)
                 self.stint_laps[d].append((lap, seconds))
                 self.pace[d].append(seconds)
-        elif kind != "session":
+        else:
             raise ValueError(f"unknown event {kind}")
 
     def rank(self, codes, cutoff):

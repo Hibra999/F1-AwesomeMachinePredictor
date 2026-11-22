@@ -142,6 +142,7 @@ def watch(args, work, bundle, records):
     docs = get_documents(gp, work, as_of=min(now(), gp["race"]))
     for e in ordered([*document_events(docs), *_read_events(args.events)], now()):
         state.apply(e)
+    finish_seen = False
     for batch in live_batches(gp, seconds=args.seconds):
         if not batch:
             continue
@@ -163,7 +164,9 @@ def watch(args, work, bundle, records):
                 _publish(feed, args.out, args.gist)
                 lag = next((at - e["source_at"] for e in batch if e.get("source_at") is not None), None)
                 print(f"Live lap {lap} · cutoff {utc(at)} · packet lag {lag}", flush=True)
-        if phase in {"Finished", "Finalised", "Ends"}:
+        finish_seen |= phase == "Finished"
+        distance = feed["event"]["scheduled_laps"]
+        if phase in {"Finalised", "Ends"} or (finish_seen and distance is not None and lap >= distance):
             if not initial and published_laps:
                 feed["complete"] = True
                 feed["updated_utc"] = utc(now())

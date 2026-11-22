@@ -231,6 +231,11 @@ class _RaceFeed:
                 emit("lap", driver=entry["id"], lap=lap, seconds=seconds, stint=None, tyre_age=None)
                 had_crossing = True
 
+        if initial:
+            # Counts are present on subscription; crossing timestamps are not.
+            batch[0]["completed_laps"] = {entry["id"]: self.laps[n] for n, entry in self.roster.items()
+                                           if n in self.laps}
+
         lap = self.clock.get("current_lap", 0) - 1
         total = self.clock.get("total_laps")
         confirmed = (self.status in _COUNTING and lap > self.leader_lap
