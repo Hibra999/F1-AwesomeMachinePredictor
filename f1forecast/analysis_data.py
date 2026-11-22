@@ -58,5 +58,6 @@ def analysis_data(root=ROOT):
 
 if __name__ == "__main__":
     path = ROOT / "site" / ANALYSIS_JSON
-    path.write_text(json.dumps(analysis_data(), ensure_ascii=False, allow_nan=False, separators=(",", ":")) + "\n", encoding="utf-8")
+    path.write_text(json.dumps(analysis_data(), ensure_ascii=False, allow_nan=False, separators=(",", ":")) + "\n",
+                    encoding="utf-8", newline="\n")
     print(ANALYSIS_JSON)
