@@ -1,0 +1,10 @@
+.venv/
+.local/
+__pycache__/
+*.py[cod]
+.env
+.env.*
+catboost_info/
+*.joblib
+*.ff1pkl
+*.sqlite

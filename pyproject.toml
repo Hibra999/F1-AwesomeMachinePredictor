@@ -1,0 +1,22 @@
+[project]
+name = "f1-awesome-machine-predictor"
+version = "0.1.0"
+description = "Pronóstico probabilístico causal de podios de Fórmula 1"
+requires-python = ">=3.12,<3.13"
+dependencies = [
+  "beautifulsoup4==4.15.0",
+  "catboost==1.2.10",
+  "fastf1==3.9.2",
+  "joblib==1.6.0",
+  "lightgbm==4.7.0",
+  "ngboost==0.5.11",
+  "numpy==2.5.5",
+  "pandas==2.3.3",
+  "pypdf==6.21.4",
+  "requests==2.34.2",
+  "scikit-learn==1.9.1",
+  "scipy==1.18.1",
+]
+
+[tool.uv]
+package = false
