@@ -1,0 +1,271 @@
+{
+  "target": "timing position at the next observed race cut is numerically lower than at the current cut",
+  "not_an_overtake_label": true,
+  "selected_for_forecast": false,
+  "seed": 55293,
+  "limitations": [
+    "Position gains can arise from pits, retirements, corrections or timing order; not passes.",
+    "Proxy uses only same-roster adjacent RaceState cuts and prior timing records; official ranks enter only the podium comparison.",
+    "No model fit uses held-out circuit rows; causal timing history may still include past rounds from any circuit.",
+    "Both podium models use the same GP and cuts, and calibration uses later pre-test blocks only.",
+    "Circuit bootstrap is descriptive for these historical splits and excludes model refitting uncertainty."
+  ],
+  "corpus_years": [
+    2022,
+    2023,
+    2024,
+    2025
+  ],
+  "corpus_gps": 92,
+  "test_years": [
+    2024,
+    2025
+  ],
+  "expected_test_gps": 48,
+  "proxy_coverage": {
+    "retained_pairs_skipping_laps": 0,
+    "roster_change_pairs_excluded": 2,
+    "gps_without_usable_pairs": 12
+  },
+  "official_examples_skipped": {
+    "without_timing_record": 12
+  },
+  "folds": [
+    {
+      "held_out_circuits": [
+        "albert_park",
+        "americas",
+        "interlagos",
+        "monaco",
+        "rodriguez",
+        "silverstone",
+        "vegas",
+        "yas_marina"
+      ],
+      "gain_train_gps": 26,
+      "eligible_gain_test_gps": 13,
+      "gain_train_prior_given_not_first": 0.136065894744742,
+      "proxy": {
+        "gps": 13,
+        "cuts": 775,
+        "driver_pairs": 15500,
+        "positive_rate": 0.11202627388828185,
+        "mean_probability": 0.15239582433809865,
+        "roc_auc": 0.7440618955217407,
+        "brier": 0.0950955844498843,
+        "prior_brier": 0.09912859483227751
+      },
+      "downstream": {
+        "inner_blocks": [
+          {
+            "purpose": "podium_fit",
+            "starts_at_utc_epoch": 1656633600.0,
+            "gain_train_gps": 7,
+            "podium_gps": 8,
+            "cuts": 102
+          },
+          {
+            "purpose": "podium_fit",
+            "starts_at_utc_epoch": 1672531200.0,
+            "gain_train_gps": 15,
+            "podium_gps": 2,
+            "cuts": 25
+          },
+          {
+            "purpose": "temperature",
+            "starts_at_utc_epoch": 1688169600.0,
+            "gain_train_gps": 18,
+            "podium_gps": 8,
+            "cuts": 480
+          }
+        ],
+        "podium_train_gps": 10,
+        "podium_train_cuts": 127,
+        "eligible_test_gps": 13,
+        "without_gain": {
+          "temperature": 1.3,
+          "calibration_brier": 0.062039694131267434
+        },
+        "with_gain": {
+          "temperature": 1.3,
+          "calibration_brier": 0.062039694131267434
+        },
+        "gps": 13,
+        "cuts": 789,
+        "circuits": 8,
+        "test_brier_without_gain": 0.06272638269735961,
+        "test_brier_with_gain": 0.06272638269735961,
+        "delta_brier_with_minus_without": 0.0,
+        "delta_circuit_bootstrap_95": [
+          0.0,
+          0.0
+        ]
+      }
+    },
+    {
+      "held_out_circuits": [
+        "bahrain",
+        "imola",
+        "jeddah",
+        "marina_bay",
+        "miami",
+        "shanghai",
+        "suzuka",
+        "villeneuve"
+      ],
+      "gain_train_gps": 29,
+      "eligible_gain_test_gps": 14,
+      "gain_train_prior_given_not_first": 0.14377304763742688,
+      "proxy": {
+        "gps": 14,
+        "cuts": 803,
+        "driver_pairs": 16060,
+        "positive_rate": 0.12145799765688893,
+        "mean_probability": 0.1530330325930637,
+        "roc_auc": 0.7491169702957501,
+        "brier": 0.09770458810155795,
+        "prior_brier": 0.10617037945635432
+      },
+      "downstream": {
+        "inner_blocks": [
+          {
+            "purpose": "podium_fit",
+            "starts_at_utc_epoch": 1656633600.0,
+            "gain_train_gps": 4,
+            "podium_gps": 11,
+            "cuts": 152
+          },
+          {
+            "purpose": "podium_fit",
+            "starts_at_utc_epoch": 1672531200.0,
+            "gain_train_gps": 15,
+            "podium_gps": 2,
+            "cuts": 25
+          },
+          {
+            "purpose": "temperature",
+            "starts_at_utc_epoch": 1688169600.0,
+            "gain_train_gps": 17,
+            "podium_gps": 12,
+            "cuts": 723
+          }
+        ],
+        "podium_train_gps": 13,
+        "podium_train_cuts": 177,
+        "eligible_test_gps": 14,
+        "without_gain": {
+          "temperature": 1.0,
+          "calibration_brier": 0.05900936792096514
+        },
+        "with_gain": {
+          "temperature": 1.0,
+          "calibration_brier": 0.05900936792096514
+        },
+        "gps": 14,
+        "cuts": 817,
+        "circuits": 8,
+        "test_brier_without_gain": 0.039457861046384886,
+        "test_brier_with_gain": 0.039457861046384886,
+        "delta_brier_with_minus_without": 0.0,
+        "delta_circuit_bootstrap_95": [
+          0.0,
+          0.0
+        ]
+      }
+    },
+    {
+      "held_out_circuits": [
+        "baku",
+        "catalunya",
+        "hungaroring",
+        "losail",
+        "monza",
+        "red_bull_ring",
+        "spa",
+        "zandvoort"
+      ],
+      "gain_train_gps": 26,
+      "eligible_gain_test_gps": 13,
+      "gain_train_prior_given_not_first": 0.12666452383384041,
+      "proxy": {
+        "gps": 13,
+        "cuts": 768,
+        "driver_pairs": 15360,
+        "positive_rate": 0.1215975952940948,
+        "mean_probability": 0.14676622688843743,
+        "roc_auc": 0.7165396370359955,
+        "brier": 0.09977099793249262,
+        "prior_brier": 0.10603509879771256
+      },
+      "downstream": {
+        "inner_blocks": [
+          {
+            "purpose": "podium_fit",
+            "starts_at_utc_epoch": 1656633600.0,
+            "gain_train_gps": 7,
+            "podium_gps": 8,
+            "cuts": 102
+          },
+          {
+            "purpose": "podium_fit",
+            "starts_at_utc_epoch": 1672531200.0,
+            "gain_train_gps": 15,
+            "podium_gps": 2,
+            "cuts": 26
+          },
+          {
+            "purpose": "temperature",
+            "starts_at_utc_epoch": 1688169600.0,
+            "gain_train_gps": 18,
+            "podium_gps": 8,
+            "cuts": 473
+          }
+        ],
+        "podium_train_gps": 10,
+        "podium_train_cuts": 128,
+        "eligible_test_gps": 13,
+        "without_gain": {
+          "temperature": 0.75,
+          "calibration_brier": 0.06615515991995594
+        },
+        "with_gain": {
+          "temperature": 0.75,
+          "calibration_brier": 0.06615515991995594
+        },
+        "gps": 13,
+        "cuts": 781,
+        "circuits": 8,
+        "test_brier_without_gain": 0.06454870306693926,
+        "test_brier_with_gain": 0.06454870306693926,
+        "delta_brier_with_minus_without": 0.0,
+        "delta_circuit_bootstrap_95": [
+          0.0,
+          0.0
+        ]
+      }
+    }
+  ],
+  "proxy": {
+    "gps": 40,
+    "cuts": 2346,
+    "driver_pairs": 46920,
+    "positive_rate": 0.11843805666418354,
+    "mean_probability": 0.15078922805619652,
+    "roc_auc": 0.7368302249978659,
+    "brier": 0.09752824510981778,
+    "prior_brier": 0.10383783323947078
+  },
+  "downstream": {
+    "gps": 40,
+    "cuts": 2387,
+    "circuits": 24,
+    "test_brier_without_gain": 0.05517465423963184,
+    "test_brier_with_gain": 0.05517465423963184,
+    "delta_brier_with_minus_without": 0.0,
+    "delta_circuit_bootstrap_95": [
+      0.0,
+      0.0
+    ]
+  },
+  "downstream_status": "improvement_not_demonstrated"
+}

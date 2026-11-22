@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <title>Podio probable · Pronósticos de automovilismo</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <header class="masthead">
+    <div class="shell masthead-inner">
+      <div class="wordmark"><span class="wordmark-mark" aria-hidden="true"></span>Podio probable</div>
+      <p id="live-status" class="status" role="status" data-testid="live-status">Cargando el estado de la publicación…</p>
+    </div>
+  </header>
+  <main class="shell">
+    <section class="hero" aria-labelledby="event-name">
+      <div>
+        <p class="eyebrow">Análisis de carrera · Fórmula 1</p>
+        <h1 id="event-name" data-testid="event-name">Probabilidades de podio</h1>
+        <div class="badges" id="badges" hidden>
+          <span id="mode" class="badge badge-mode" data-testid="mode"></span>
+          <span id="origin" class="badge" data-testid="origin"></span>
+          <span id="freshness" class="badge badge-warning" data-testid="freshness" hidden>Datos anteriores</span>
+        </div>
+      </div>
+      <div class="event-control">
+        <label for="event-select">Seleccionar evento</label>
+        <select id="event-select" data-testid="event-select" disabled>
+          <option>Cargando eventos…</option>
+        </select>
+      </div>
+    </section>
+
+    <dl id="schedule" class="schedule panel" hidden>
+      <div><dt>Libres 1 · UTC</dt><dd id="fp1-utc"></dd></div>
+      <div><dt>Corte previo · UTC</dt><dd id="pre-race-utc"></dd></div>
+      <div><dt>Carrera · UTC</dt><dd id="race-utc"></dd></div>
+      <div><dt>Vueltas previstas</dt><dd id="scheduled-laps"></dd></div>
+    </dl>
+
+    <div id="notice" class="notice" role="status" data-testid="notice">
+      <p id="notice-text">Cargando el catálogo…</p>
+      <button id="retry" type="button" hidden>Reintentar</button>
+    </div>
+
+    <section id="timeline-panel" class="panel timeline-panel" aria-labelledby="timeline-title" hidden>
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">Ventana de predicción</p>
+          <h2 id="timeline-title">Cronología</h2>
+        </div>
+        <p id="playback-status" class="muted" data-testid="playback-status"></p>
+      </div>
+      <div class="timeline-readout">
+        <label for="timeline" id="checkpoint" data-testid="checkpoint"></label>
+        <span id="checkpoint-count" class="muted" data-testid="checkpoint-count"></span>
+      </div>
+      <input id="timeline" data-testid="timeline" type="range" min="0" max="0" value="0" step="1">
+      <div class="transport">
+        <button id="previous" data-testid="previous" type="button">Anterior</button>
+        <button id="play" data-testid="play" class="primary" type="button">Reproducir</button>
+        <button id="pause" data-testid="pause" type="button">Pausar</button>
+        <button id="next" data-testid="next" type="button">Siguiente</button>
+        <button id="follow" data-testid="follow" type="button" aria-pressed="false" hidden>Seguir actualizaciones</button>
+      </div>
+      <dl class="metadata">
+        <div><dt>Corte del modelo · UTC</dt><dd id="cutoff" data-testid="cutoff"></dd></div>
+        <div><dt>Publicación · UTC</dt><dd id="published" data-testid="published"></dd></div>
+        <div><dt>Versión del modelo</dt><dd id="version" data-testid="version"></dd></div>
+      </dl>
+    </section>
+
+    <section id="podium-panel" class="panel podium-panel" aria-labelledby="podium-title" hidden>
+      <div>
+        <p class="eyebrow">Predicción conjunta · MAP</p>
+        <h2 id="podium-title">Podio ordenado más probable</h2>
+        <p class="muted">La probabilidad corresponde a esos tres pilotos en ese orden.</p>
+      </div>
+      <ol id="podium" class="podium" data-testid="podium"></ol>
+      <div class="joint"><strong id="joint-probability" data-testid="joint-probability"></strong><span>Probabilidad conjunta</span></div>
+    </section>
+
+    <div id="analysis-panel" class="analysis" hidden>
+      <section class="panel ranking-panel" aria-labelledby="ranking-title">
+        <p class="eyebrow">Distribución del modelo</p>
+        <h2 id="ranking-title">Probabilidades por piloto</h2>
+        <p class="muted">Selecciona una columna para cambiar el orden.</p>
+        <table id="ranking" data-testid="ranking" aria-label="Clasificación por probabilidades">
+          <thead>
+            <tr>
+              <th scope="col"><span aria-label="Puesto del ranking">#</span></th>
+              <th scope="col">Piloto</th>
+              <th scope="col" aria-sort="none"><button type="button" data-metric="first" aria-label="Ordenar por probabilidad de terminar primero">1.º</button></th>
+              <th scope="col" aria-sort="none"><button type="button" data-metric="second" aria-label="Ordenar por probabilidad de terminar segundo">2.º</button></th>
+              <th scope="col" aria-sort="none"><button type="button" data-metric="third" aria-label="Ordenar por probabilidad de terminar tercero">3.º</button></th>
+              <th scope="col" aria-sort="descending"><button type="button" data-metric="podium" aria-label="Ordenar por probabilidad de podio">Podio</button></th>
+            </tr>
+          </thead>
+          <tbody id="ranking-body"></tbody>
+        </table>
+      </section>
+      <section class="panel chart-panel" aria-labelledby="chart-title">
+        <p class="eyebrow">Hasta el corte seleccionado</p>
+        <h2 id="chart-title">Evolución por vuelta</h2>
+        <div class="driver-control">
+          <label for="driver-select">Piloto de la gráfica</label>
+          <select id="driver-select" data-testid="driver-select"></select>
+        </div>
+        <p id="chart-empty" class="chart-empty muted" data-testid="chart-empty"></p>
+        <svg id="chart" data-testid="chart" viewBox="0 0 480 240" role="img" aria-labelledby="chart-svg-title chart-svg-desc" hidden></svg>
+        <ul id="chart-legend" class="chart-legend" aria-label="Probabilidades en la última vuelta mostrada" hidden></ul>
+      </section>
+    </div>
+
+    <dl id="publication" class="publication panel" hidden>
+      <div><dt>Fuente de los datos</dt><dd id="source" data-testid="source"></dd></div>
+      <div><dt>Última actualización del documento · UTC</dt><dd id="updated" data-testid="updated"></dd></div>
+    </dl>
+    <footer>
+      <a href="https://github.com/Hibra999/F1-AwesomeMachinePredictor">Código, evaluación y fuentes</a>.
+      Las reconstrucciones históricas no son publicaciones originales.
+      <br>This website is unofficial and is not associated in any way with the Formula 1 companies.
+      F1, FORMULA ONE, FORMULA 1, FIA FORMULA ONE WORLD CHAMPIONSHIP, GRAND PRIX and related marks are trade marks of Formula One Licensing B.V.
+    </footer>
+  </main>
+</body>
+</html>
